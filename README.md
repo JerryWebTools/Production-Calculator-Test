@@ -45,3 +45,6 @@ When Bag Tare is zero, the existing Gross Bag Weight / EA result card displays '
 
 ## Approved compact header preview
 Back and Home stay together at the left; the line and operation appear on one line in the center; Settings uses a matching outlined style at right. On smaller screens the heading font scales down without wrapping. Existing calculator behavior and cards are unchanged.
+
+
+Mobile readability test: single-column fields and results at <=599px, 18px form inputs to avoid iOS focus zoom. Desktop and home layout unchanged.

@@ -75,3 +75,27 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
   .compactHeader #settingsBtn::first-letter{font-size:17px}
   .compactHeader .headerTitle h1{font-size:clamp(10px,3.25vw,15px);letter-spacing:-.045em;white-space:nowrap}
 }
+
+/* v2.3 mobile readability test: leave desktop and home layout unchanged. */
+@media (max-width: 599px) {
+  #calc .grid, #settings .grid {grid-template-columns:minmax(0,1fr);gap:17px}
+  #calc label, #settings label, #preferences label, #packAll label {font-size:16px;line-height:1.4}
+  #calc input, #calc select, #settings input, #settings select,
+  #preferences select, #packAll input, #calcId {font-size:18px;min-height:49px;padding:12px}
+  #calc .card, #settings.card, #preferences.card {padding:16px}
+  #calc h2, #settings h2, #preferences h2 {font-size:21px}
+  #calc .tiny, #settings .tiny, #preferences .tiny {font-size:14px;line-height:1.45}
+  #calc button, #settings button, #preferences button {min-height:44px;font-size:15px}
+  #calc .twocards, #calc .resultgrid {grid-template-columns:minmax(0,1fr);gap:12px}
+  #calc .mini strong {font-size:16px}
+  #calc .number {font-size:27px;overflow-wrap:anywhere}
+  #calc .huge {font-size:clamp(27px,8vw,38px);white-space:normal;overflow-wrap:anywhere;letter-spacing:-.02em}
+  #calc .resultgrid > div {padding:4px 0}
+  #calc .detailrow {font-size:15px}
+  #calc .extra strong {font-size:16px}
+  #calc .extra input {width:85px;min-height:46px}
+  #calc .sample-row {grid-template-columns:minmax(0,1fr);gap:9px;border-bottom:1px solid var(--edge);padding-bottom:12px}
+  #calc .sample-row label {font-size:15px}
+  #calc .saveRow {align-items:stretch}
+  #calc .saveRow input {min-width:0}
+}
