@@ -48,3 +48,8 @@ Back and Home stay together at the left; the line and operation appear on one li
 
 
 Mobile readability test: single-column fields and results at <=599px, 18px form inputs to avoid iOS focus zoom. Desktop and home layout unchanged.
+
+### iPhone header update (approved two-row layout)
+- On mobile widths below 600px, inside app screens: large centered title on the first row; larger Back, Home, Settings on the second row.
+- The Home screen and desktop layout are unchanged.
+- No changes to calculation logic or app.js.

@@ -99,3 +99,59 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
   #calc .saveRow {align-items:stretch}
   #calc .saveRow input {min-width:0}
 }
+
+/* v2.3 iPhone approved: two-row header only inside the app, not Home or desktop. */
+@media (max-width: 599px) {
+  .compactHeader.insideView .compactHeaderLine {
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    column-gap:10px;
+    row-gap:12px;
+    align-items:center;
+  }
+  .compactHeader.insideView .headerTitle {
+    grid-column:1 / -1;
+    grid-row:1;
+    order:unset;
+    width:100%;
+    text-align:center;
+    min-width:0;
+  }
+  .compactHeader.insideView .headerTitle h1 {
+    font-size:clamp(21px,5.8vw,27px);
+    font-weight:800;
+    letter-spacing:-.025em;
+    line-height:1.2;
+    margin:4px 0;
+    white-space:nowrap;
+    overflow:visible;
+  }
+  .compactHeader.insideView .globalNav {
+    grid-column:1;
+    grid-row:2;
+    order:unset;
+    display:flex;
+    justify-content:stretch;
+    gap:9px;
+    min-width:0;
+  }
+  .compactHeader.insideView .globalNav .navBack {
+    flex:1 1 0;
+    min-width:0;
+    min-height:52px;
+    padding:12px 14px!important;
+    font-size:16px!important;
+    border-radius:12px!important;
+  }
+  .compactHeader.insideView #settingsBtn {
+    grid-column:2;
+    grid-row:2;
+    order:unset;
+    min-width:54px;
+    min-height:52px;
+    padding:12px!important;
+    border-radius:12px;
+    font-size:0;
+  }
+  .compactHeader.insideView #settingsBtn::first-letter {font-size:20px}
+}
