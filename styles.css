@@ -1,0 +1,77 @@
+:root{color-scheme:dark;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#0b1220;color:#e7eefc}*{box-sizing:border-box}body{margin:0}.app{max-width:760px;margin:auto;padding:16px 12px 45px}header{margin-bottom:14px}.eyebrow{font-size:11px;letter-spacing:1.5px;color:#94a3b8;font-weight:700}.version{color:#60a5fa}.headerline,.sectionhead,.toprow,.saveRow,.actions{display:flex;justify-content:space-between;align-items:center;gap:10px}h1{font-size:25px;margin:4px 0}h2{font-size:18px;margin:0 0 10px}p{margin:7px 0}.muted{color:#a5b4ca}.tiny{font-size:12px}.lines{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.lines button{min-height:86px;text-align:left;font-size:19px;font-weight:750}.lines small{display:block;font-size:12px;font-weight:400;margin-top:5px;color:#a5b4ca}.card{background:#152033;border:1px solid #2c3d56;border-radius:15px;padding:14px;margin:11px 0}.center{text-align:center;padding:34px 15px}.bigemoji{font-size:48px;margin-bottom:15px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}label{display:block;font-size:12px;font-weight:650;color:#b9c9de}input,select,button{font:inherit}input,select{width:100%;background:#0b1627;color:#f4f7ff;border:1px solid #41516a;border-radius:9px;padding:10px;margin-top:5px;min-width:0}input:focus,select:focus{outline:2px solid #5da8fa;outline-offset:1px}button{cursor:pointer;background:#1b2d45;color:#e8f1ff;border:1px solid #41516a;border-radius:10px;padding:10px 13px;font-weight:650}button:hover{background:#28405e}.primary{background:#2563eb;border-color:#3b82f6;color:#fff}.primary:hover{background:#1d4ed8}.secondary{background:#1d2b40}.small{font-size:12px;padding:8px}.link{background:none;border:0;color:#a8c9ff;padding:6px 0}.toprow{margin:12px 0}.pill{font-size:12px;background:#1c3654;border-radius:30px;padding:6px 10px}.inline{display:flex;gap:5px}.inline select{width:75px;flex-shrink:0}.extra{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.extra input{width:63px;text-align:center;margin:0}.square{padding:7px 12px}.extra strong{margin-right:5px;font-size:13px}.twocards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.twocards .card{margin:0}.mini strong{font-size:12px}.number{font-size:22px;font-weight:750;margin:10px 0 2px}.result{border-color:#3b6db1}.result h2{font-size:20px}.resultgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}.huge{font-size:clamp(21px,5vw,34px);font-weight:800;letter-spacing:-1px;white-space:nowrap}details{border-top:1px solid #30445f;padding-top:12px}summary{cursor:pointer;color:#c5d8f6}.detailrow{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #293a52;font-size:13px}.detailrow strong{text-align:right}.saveRow input{margin:0;flex:1}.saveRow button{white-space:nowrap}.saveRow+.secondary{margin-top:12px}.sample-row{display:grid;grid-template-columns:1fr 1fr 80px auto;gap:5px;align-items:end;margin:10px 0}.sample-row button{padding:9px}.sample-row label{font-size:11px}.error{color:#fecaca;background:#6b1d2c;border-radius:8px;padding:10px}.savedItem{border:1px solid #344966;border-radius:12px;padding:12px;margin-top:11px}.savedHead{display:flex;justify-content:space-between;gap:10px}.savedHead strong{font-size:15px}.savedHead .right{text-align:right}.savedItem .actions{justify-content:flex-start;flex-wrap:wrap;margin-top:10px}.savedItem details{margin-top:10px}.danger{color:#fecaca}.settingmodified{color:#fbbf24}.actions{justify-content:flex-start;flex-wrap:wrap;margin-top:13px}footer{text-align:center;color:#687e9b;font-size:11px;margin-top:24px}[hidden]{display:none!important}@media(max-width:420px){.app{padding:11px 9px 30px}.card{padding:11px}.grid{gap:9px}.lines button{font-size:17px}.number{font-size:19px}.huge{font-size:clamp(19px,5.2vw,26px)}.sample-row{grid-template-columns:1fr 1fr 70px auto}.sample-row button{font-size:11px;padding:8px 5px}}
+
+/* v2.3 appearance and mobile quick calculator */
+:root{--accent:#2563eb;--bg:#0b1220;--fg:#e7eefc;--panel:#152033;--edge:#2c3d56;--input:#0b1627;--muted:#a5b4ca;background:var(--bg);color:var(--fg)}
+:root[data-theme="light"]{color-scheme:light;--bg:#f4f5f8;--fg:#17191e;--panel:#fff;--edge:#d9dee8;--input:#fff;--muted:#667085}
+body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-color:var(--edge)}.muted,.lines small{color:var(--muted)}label{color:var(--muted)}input,select{background:var(--input);color:var(--fg);border-color:var(--edge)}.primary,.lines button,.quickKeys button,.quickHome{background:var(--accent);border-color:var(--accent);color:white}.lines button small{color:white}.lines button{min-height:125px;text-align:center;border-radius:15px}.lines .quickHome{grid-column:1/-1;min-height:100px}.lines button:hover,.primary:hover,.quickKeys button:hover{filter:brightness(.92);background:var(--accent)}.secondary{background:var(--panel);color:var(--fg);border-color:var(--edge)}.link{color:var(--fg)}.pill{color:var(--fg);background:var(--panel)}.result{border-color:var(--edge)}.quickKeys{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-top:15px}.quickKeys button{height:72px;font-size:40px;line-height:1;border-radius:15px;padding:0;font-weight:550}.quickKeys button[data-key="AC"]{font-size:29px}.calcDisplay{background:var(--bg);padding:16px 12px;border-radius:14px;margin-top:12px;text-align:right;min-height:134px}.calcDisplay #quickExpression{min-height:20px;font-size:13px}.calcDisplay #quickNumber{font-size:clamp(36px,10vw,58px);font-weight:650;overflow-wrap:anywhere}.calcDisplay #quickConverted{font-size:23px;font-weight:650;margin-top:5px}.historyItem{display:flex;justify-content:space-between;width:100%;margin:6px 0;background:var(--panel);color:var(--fg);border-color:var(--edge);text-align:left}.historyItem small{color:var(--muted)}#preferences label{margin:14px 0}#preferences select{margin-top:8px}#packAllOutput{margin-top:15px}.sectionhead:has(#quickSummary){justify-content:flex-end;margin-bottom:8px}#quickSummary{font-size:14px}
+:root[data-theme="light"] .eyebrow,:root[data-theme="light"] footer{color:#667085}:root[data-theme="light"] .detailrow{border-color:#e5e7eb}:root[data-theme="light"] summary{color:#334155}:root[data-theme="light"] .secondary{color:#17191e}
+@media(max-width:390px){.quickKeys button{height:69px}.lines button{min-height:118px;font-size:17px}}
+
+/* v2.3 visual refinement: accent-colored boxes throughout production lines. */
+#calc .card, #modeScreen.card, #settings.card, #preferences.card, #saved.card, #coming.card, #packAll.card,
+#calc .twocards .card {background:var(--accent);border-color:var(--accent);color:#fff}
+#calc .card h2,#calc .card strong,#calc .card .number,#calc .card .huge,
+#calc .card .muted,#calc .card label,#calc .card summary,#calc .card .tiny,
+#modeScreen.card h2,#settings.card h2,#preferences.card h2,#saved.card h2,
+#settings.card label,#preferences.card label,#settings.card .muted,#preferences.card .muted,
+#saved.card .muted,#saved.card summary,#packAll.card .muted,#packAll.card label,
+#calc .card .detailrow,#calc .card .detailrow strong {color:#fff}
+#calc .card input,#calc .card select,#settings.card input,#settings.card select,
+#preferences.card select,#packAll.card input {background:var(--input);color:var(--fg);border-color:var(--edge)}
+#calc .card .secondary,#settings.card .secondary,#preferences.card .secondary,#saved.card .secondary {background:var(--panel);color:var(--fg);border-color:var(--edge)}
+#calc .card .primary,#settings.card .primary,#preferences.card .primary {background:rgba(0,0,0,.22);border-color:rgba(255,255,255,.55);color:#fff}
+#calc .card .detailrow,#calc .card details {border-color:rgba(255,255,255,.35)}
+#calc .card .settingmodified {color:#fff}
+/* The Quick Calculator stays portrait-sized on desktop, and fills the phone width. */
+#quick {width:100%;max-width:390px;margin:0 auto}
+#quick .card{width:100%}
+#quick .quickKeys{gap:6px}
+#quick .quickKeys button{height:clamp(69px,18vw,76px)}
+#quick .calcDisplay{min-height:170px}
+#quick #quickNumber{font-size:clamp(40px,11vw,58px)}
+@media(min-width:600px){#quick .quickKeys button{height:76px}#quick #quickNumber{font-size:58px}}
+@media(max-width:390px){#quick{max-width:100%}#quick .quickKeys button{height:clamp(64px,18vw,72px)}}
+
+/* Keep the original result card; use readable text when tare is zero. */
+#secondKg.tare-prompt { font-size: 0.95rem; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
+
+/* v2.3 navigation accessibility: no changes to calculation cards/layout */
+.globalNav{display:flex;justify-content:flex-end;margin:0 0 8px}
+.globalNav[hidden]{display:none!important}
+.globalNav .homeShortcut{min-height:48px;min-width:112px;padding:12px 20px;font-size:16px;font-weight:750;border-radius:11px}
+.navBack{min-height:48px;padding:11px 18px!important;border:2px solid var(--accent)!important;border-radius:11px!important;font-size:16px!important;font-weight:750!important;background:var(--panel)!important;color:var(--fg)!important}
+.navBack:focus-visible,.homeShortcut:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+
+/* Live answer: preserve existing expression and number layout. */
+#quickLiveResult{font-size:22px;font-weight:550;color:var(--muted);text-align:right;margin-top:3px}
+
+/* v2.3 compact header: navigation, mode, title and settings share one row. */
+.compactHeader{margin-bottom:10px}
+.compactHeaderLine{display:flex;align-items:center;gap:8px;flex-wrap:nowrap}
+.headerTitle{min-width:0;flex:1 1 auto}
+.headerTitle h1{font-size:clamp(15px,2.7vw,21px);margin:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.headerTitle #subtitle{font-size:11px;margin:0}
+.compactHeader.insideView #subtitle{display:none}
+.compactHeader .globalNav{display:flex;align-items:center;justify-content:flex-end;gap:6px;margin:0;flex:0 0 auto}
+.compactHeader .navBack{min-height:40px;min-width:74px;padding:8px 10px!important;font-size:13px!important;font-weight:750!important;border:2px solid var(--accent)!important;background:var(--panel)!important;color:var(--fg)!important;border-radius:10px!important;text-align:center}
+.compactHeader .homeShortcut{min-width:74px}
+.compactHeader #settingsBtn{flex:0 0 auto;min-height:40px;font-size:12px;padding:8px;border-radius:10px}
+.compactHeader #modeLabel{font-size:12px;padding:8px 9px;border:2px solid var(--accent);border-radius:10px;white-space:nowrap;min-height:40px;display:flex;align-items:center}
+@media(max-width:520px){.compactHeader .eyebrow{font-size:9px}.compactHeaderLine{gap:5px}.headerTitle h1{font-size:14px}.compactHeader .navBack{min-width:62px;padding:7px 6px!important;font-size:12px!important}.compactHeader .homeShortcut{min-width:62px}.compactHeader #settingsBtn{font-size:0;padding:7px 8px;min-width:40px}.compactHeader #settingsBtn::first-letter{font-size:17px}.compactHeader #modeLabel{font-size:10px;padding:7px 6px;max-width:78px;white-space:normal;text-align:center}}
+
+/* Approved compact header: Back/Home | Line · Operation | Settings. */
+.compactHeaderLine{display:flex;align-items:center;gap:8px;flex-wrap:nowrap}
+.compactHeader .globalNav{order:0;justify-content:flex-start;gap:6px;margin:0;flex:0 0 auto}
+.compactHeader .headerTitle{order:1;flex:1 1 auto;min-width:0;text-align:center}
+.compactHeader #settingsBtn{order:2;flex:0 0 auto;min-height:42px;border:2px solid var(--accent);background:var(--panel);color:var(--fg);font-size:13px;font-weight:750;border-radius:10px;padding:8px 12px}
+.compactHeader .headerTitle h1{font-size:clamp(18px,2.6vw,29px);font-weight:800;white-space:nowrap;overflow:visible;text-overflow:clip;letter-spacing:-.035em}
+.compactHeader #modeLabel{display:none!important}
+.compactHeader .navBack,.compactHeader .homeShortcut{min-height:42px;min-width:74px;padding:8px 10px!important;font-size:13px!important}
+@media(max-width:520px){
+  .compactHeaderLine{gap:4px}
+  .compactHeader .globalNav{gap:4px}
+  .compactHeader .navBack,.compactHeader .homeShortcut{min-width:53px;min-height:40px;padding:7px 5px!important;font-size:11px!important}
+  .compactHeader #settingsBtn{min-width:37px;min-height:40px;padding:7px 5px;font-size:0}
+  .compactHeader #settingsBtn::first-letter{font-size:17px}
+  .compactHeader .headerTitle h1{font-size:clamp(10px,3.25vw,15px);letter-spacing:-.045em;white-space:nowrap}
+}
