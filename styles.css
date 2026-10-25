@@ -155,3 +155,45 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
   }
   .compactHeader.insideView #settingsBtn::first-letter {font-size:20px}
 }
+
+/* Consolidated v2.3: independent, fixed-height mobile calculator. Desktop remains compact. */
+#quick {position:relative}
+#quick .quickMain{display:flex;flex-direction:column;gap:9px}
+.quickToolbar,.quickTools,.quickOverlayHead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.quickToolbar h2{margin:0;text-align:center;font-size:17px}
+.quickToolbar button,.quickTools button{font-size:14px;min-height:43px;padding:9px}
+.quickTools button{flex:1}
+.quickLast{border:1px solid var(--edge);border-radius:12px;padding:8px 12px;min-height:54px}
+.quickLastValue{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#quick .calcDisplay{flex:1;display:flex;flex-direction:column;justify-content:flex-end;min-height:115px;margin:0;padding:8px 12px}
+#quick #quickNumber{font-size:clamp(32px,9vw,54px)}
+#quick #quickConverted{font-size:16px;margin:2px 0}
+#quick .quickKeys{margin:0;flex:none}
+#quick .quickKeys button{font-size:clamp(25px,7vw,35px)}
+#quick .quickKeys button[data-key="AC"]{font-size:22px}
+.quickOverlay{position:absolute;inset:0;background:var(--bg);padding:14px;overflow-y:auto;z-index:4;border-radius:12px}
+.quickOverlayHead{margin-bottom:18px}
+.quickOverlayHead h2{margin:0;font-size:21px}
+.quickOverlay label{font-size:16px;margin:14px 0}
+.quickOverlay input,.quickOverlay select{font-size:18px;min-height:49px}
+.quickHistoryList{display:flex;flex-direction:column;gap:5px}
+.unitPair{display:grid;grid-template-columns:minmax(0,1fr) 46px minmax(0,1fr);gap:8px;align-items:end}
+.unitPair #unitSwap{height:49px;margin-bottom:0}
+.unitAnswer{background:var(--panel);border:1px solid var(--edge);padding:17px;border-radius:12px;margin:16px 0;display:flex;flex-direction:column;gap:5px}
+.unitAnswer strong{font-size:28px;overflow-wrap:anywhere}
+.legacyConversions{margin-top:20px}
+.legacyConversions #converterToggle{margin:10px 0}
+@media(max-width:599px){
+  body.quick-active{overflow:hidden}
+  body.quick-active .app{max-width:none;height:100dvh;min-height:0;padding:0 0 env(safe-area-inset-bottom);display:flex;flex-direction:column}
+  body.quick-active header,body.quick-active footer{display:none}
+  body.quick-active #quick{display:flex!important;flex:1;min-height:0;width:100%;max-width:none;margin:0}
+  body.quick-active #quick .quickMain{margin:0;border:0;border-radius:0;min-height:0;width:100%;padding:10px 12px 7px;gap:7px}
+  body.quick-active #quick .quickKeys{gap:6px}
+  body.quick-active #quick .quickKeys button{height:clamp(40px,calc((100dvh - 345px - env(safe-area-inset-bottom))/5),74px);min-height:0;border-radius:13px}
+  body.quick-active #quick .calcDisplay{min-height:45px}
+  body.quick-active #quick .quickOverlay{border-radius:0;padding:16px 14px calc(20px + env(safe-area-inset-bottom))}
+  body.quick-active .quickToolbar button{min-height:44px}
+  body.quick-active #quick .quickLast{padding:6px 10px;min-height:45px}
+}
+@media(max-height:690px) and (max-width:599px){body.quick-active #quick .quickMain{gap:4px}body.quick-active #quick .quickKeys button{height:clamp(37px,calc((100dvh - 300px)/5),65px)}body.quick-active #quick .quickLast{min-height:40px}body.quick-active #quick .quickTools button{min-height:38px}}
