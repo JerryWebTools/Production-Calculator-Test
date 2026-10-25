@@ -19,3 +19,6 @@ TEST BEFORE PUBLISHING TO MAIN:
 6. Test both iPhone Safari and desktop browsers.
 
 Known limitations: Records/history use localStorage (per device/browser, not synced); the included service worker caches the app after the first successful online visit, but offline operation should still be tested on the actual iPhone. Wordle-style mode accepts any five-letter guess, not dictionary-validated. Word Search uses tap-start/tap-end rather than drag. Crossword currently has one introductory puzzle per language; trivia has a starter set of 15 questions. These are deliberately small, basic starter games.
+
+## Small UI adjustment (test build 2)
+The existing Converter ON/OFF button now appears directly in Quick Calculator between History and Unit Converter. It continues to control the original live conversion beneath the calculator result. The original conversion unit selection remains inside Unit Converter > Original Quick Calculator Conversions. No production formulas were changed.

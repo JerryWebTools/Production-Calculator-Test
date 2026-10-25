@@ -197,3 +197,9 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
   body.quick-active #quick .quickLast{padding:6px 10px;min-height:45px}
 }
 @media(max-height:690px) and (max-width:599px){body.quick-active #quick .quickMain{gap:4px}body.quick-active #quick .quickKeys button{height:clamp(37px,calc((100dvh - 300px)/5),65px)}body.quick-active #quick .quickLast{min-height:40px}body.quick-active #quick .quickTools button{min-height:38px}}
+
+/* v2.3 test adjustment: keep converter ON/OFF visible between History and Unit Converter. */
+#quick .quickTools{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.25fr);gap:6px}
+#quick .quickTools button{width:100%;min-width:0;padding:9px 4px;font-size:clamp(11px,2.9vw,14px);white-space:nowrap}
+#quick #converterToggle[aria-pressed="true"]{border-color:var(--accent);color:var(--fg)}
+#quick #converterToggle[aria-pressed="false"]{opacity:.75}
