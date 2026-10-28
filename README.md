@@ -33,3 +33,18 @@ The existing Converter ON/OFF button now appears directly in Quick Calculator be
 
 ## v2.4 HTML integration fix
 The index.html now includes JS Studio branding, v2.4 version labels, the What's New modal and Settings button, iPhone home-screen icon metadata, and refreshed asset version tags.
+
+
+## v2.4 install guide addition
+- Bilingual installation instructions in Settings for iPhone/iPad Safari and Android Chrome.
+- Optional dismissible browser banner (not shown when installed to Home Screen).
+- QR code points to **official** Production Calculator URL, not Test.
+- Copy link and What's New access in general Settings.
+- Preserve Quick Calculator v2.3.1 touch handling.
+
+## v2.4 manual Refresh App addition (TEST)
+- Adds bilingual Refresh App control in general Settings.
+- Checks the online HTML endpoint (no-store), asks the service worker to update, and reloads the app.
+- Does not delete localStorage, saved calculations, history, or preferences.
+- This is a manual reload, NOT a version comparison or a guarantee that a new version exists.
+- Test on iPhone Home Screen and Safari before releasing to production.

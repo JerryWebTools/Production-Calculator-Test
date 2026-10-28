@@ -227,3 +227,21 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 .whatsNewNote{font-size:13px;opacity:.8;line-height:1.5}
 #whatsNewClose{width:100%;min-height:48px;margin-top:8px}
 @media(prefers-reduced-motion:reduce){.whatsNewDialog{animation:none}}
+
+/* v2.4: optional home-screen installation guide */
+.installBanner{border:1px solid #3176ad;border-radius:12px;background:rgba(14,85,142,.15);padding:12px 14px;margin:10px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.installBanner[hidden]{display:none!important}
+.installBanner>div{display:flex;gap:8px;flex-wrap:wrap}
+.installSection{border-top:1px solid rgba(145,170,200,.25);margin-top:20px;padding-top:16px}
+.installSection h3{margin:0 0 8px}
+.installPlatforms{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:12px 0}
+.installPlatforms>div{padding:12px;border:1px solid rgba(145,170,200,.25);border-radius:10px}
+.installPlatforms ol{padding-left:22px;margin:10px 0 0}
+.installPlatforms li{margin-bottom:8px}
+.installQr{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:16px 0}
+.installQr img{width:176px;height:176px;background:#fff;border-radius:10px;padding:7px;object-fit:contain}
+.installQr>div{display:flex;flex-direction:column;align-items:flex-start;gap:8px;flex:1;min-width:180px}
+.installQr p{margin:0}
+#whatsNewPrefs{margin-top:12px}
+
+.appRefreshSection{border-top:1px solid rgba(145,170,200,.25);margin-top:20px;padding-top:16px}.appRefreshSection h3{margin:0 0 8px}.appRefreshSection p{margin:8px 0}

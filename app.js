@@ -8,7 +8,7 @@ const fmt=(x,d)=>Number(x).toLocaleString('en-US',{minimumFractionDigits:d,maxim
 const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const validPositive=x=>Number.isFinite(x)&&x>0;
 const persist=(key,obj)=>{try{localStorage.setItem(key,JSON.stringify(obj));return true}catch{alert('Unable to save on this device. Check browser storage settings.');return false}};
-function show(view){['home','modeScreen','coming','calc','settings','saved','quick','preferences','brain'].forEach(id=>$(id).hidden=id!==view);$('settingsBtn').hidden=false;document.body.classList.toggle('quick-active',view==='quick');document.body.classList.toggle('brain-active',view==='brain');const navOn=view!=='home'&&view!=='quick'&&view!=='brain';$('globalNav').hidden=!navOn;['back','modeBack','quickBack'].forEach(id=>$(id).hidden=true);const backId=view==='calc'?'back':view==='modeScreen'?'modeBack':view==='quick'?'quickBack':null;if(backId)$(backId).hidden=false;$('modeLabel').hidden=true;document.querySelector('header').classList.toggle('insideView',navOn);}
+function show(view){['home','modeScreen','coming','calc','settings','saved','quick','preferences','brain'].forEach(id=>$(id).hidden=id!==view);$('settingsBtn').hidden=false;document.body.classList.toggle('quick-active',view==='quick');if($('installBanner'))$('installBanner').hidden=view!=='home'||window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true||(()=>{try{return localStorage.getItem('production-calculator-install-banner-dismissed')==='yes'}catch{return false}})();document.body.classList.toggle('brain-active',view==='brain');const navOn=view!=='home'&&view!=='quick'&&view!=='brain';$('globalNav').hidden=!navOn;['back','modeBack','quickBack'].forEach(id=>$(id).hidden=true);const backId=view==='calc'?'back':view==='modeScreen'?'modeBack':view==='quick'?'quickBack':null;if(backId)$(backId).hidden=false;$('modeLabel').hidden=true;document.querySelector('header').classList.toggle('insideView',navOn);}
 function title(name,sub){$('title').textContent=(document.querySelector('#calc:not([hidden])')&&sub&&['Treat & Pack','Treat Only','Pack Only'].includes(sub))?name+' · '+sub:name;$('subtitle').textContent=sub;}
 function home(){line=null;mode=null;show('home');title('Select a Line','Choose a production line.');}
 function openLine(v){line=v;if(v==='bulk'){show('coming');title('Bulk Line','Work in progress');return;}if(v==='3'||v==='4'){show('modeScreen');title('Line '+v,'Choose a calculation mode.');return;}openCalc(v==='1'?'treat':'standalone');}
@@ -130,6 +130,50 @@ function closeWhatsNew(){
   try{localStorage.setItem(RELEASE_KEY,'seen')}catch{}
   if(whatsNewPreviouslyFocused&&whatsNewPreviouslyFocused.isConnected)whatsNewPreviouslyFocused.focus();
 }
+// Install guide: static instructions work without network; QR links to the official production site.
+const INSTALL_URL='https://jerrywebtools.github.io/Production-Calculator/';
+const INSTALL_DISMISS_KEY='production-calculator-install-banner-dismissed';
+const installCopy={
+ en:{heading:'Install Prod Calc',intro:'Add Prod Calc to your phone’s Home Screen for quick access.',ios:'iPhone / iPad · Safari',android:'Android · Chrome',iosSteps:['Open Prod Calc in Safari.','Tap the Share button (square with arrow).','Choose Add to Home Screen.','Confirm the name Prod Calc and tap Add.'],androidSteps:['Open Prod Calc in Chrome.','Tap the three-dot menu.','Choose Install app or Add to Home screen.','Confirm the installation.'],qr:'Scan to open Prod Calc',qrNote:'This QR code opens the official app (not the test version).',open:'Open official Prod Calc',copy:'Copy link',copied:'Link copied',banner:'Want faster access? Add Prod Calc to your Home Screen.',show:'Show Instructions',dismiss:'Not Now'},
+ es:{heading:'Instalar Prod Calc',intro:'Agrega Prod Calc a la pantalla de inicio de tu teléfono para abrirla fácilmente.',ios:'iPhone / iPad · Safari',android:'Android · Chrome',iosSteps:['Abre Prod Calc en Safari.','Toca Compartir (cuadro con flecha).','Selecciona Agregar a pantalla de inicio.','Confirma el nombre Prod Calc y toca Agregar.'],androidSteps:['Abre Prod Calc en Chrome.','Toca el menú de tres puntos.','Selecciona Instalar app o Agregar a pantalla principal.','Confirma la instalación.'],qr:'Escanea para abrir Prod Calc',qrNote:'Este código QR abre la aplicación oficial (no la versión de pruebas).',open:'Abrir Prod Calc oficial',copy:'Copiar enlace',copied:'Enlace copiado',banner:'¿Quieres acceso rápido? Agrega Prod Calc a tu pantalla de inicio.',show:'Ver instrucciones',dismiss:'Ahora no'}
+};
+function applyInstallCopy(){
+ const v=installCopy[prefs.language==='es'?'es':'en'];
+ for(const [id,key] of [['installHeading','heading'],['installIntro','intro'],['installIosTitle','ios'],['installAndroidTitle','android'],['installQrTitle','qr'],['installQrNote','qrNote'],['installLink','open'],['installCopy','copy'],['installBannerText','banner'],['installBannerShow','show'],['installBannerDismiss','dismiss']])$(id).textContent=v[key];
+ for(const [id,key] of [['installIosSteps','iosSteps'],['installAndroidSteps','androidSteps']]){const el=$(id);el.replaceChildren();v[key].forEach(step=>{const li=document.createElement('li');li.textContent=step;el.append(li)});}
+}
+function standaloneInstall(){return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;}
+function showInstallBanner(){let dismissed=false;try{dismissed=localStorage.getItem(INSTALL_DISMISS_KEY)==='yes'}catch{}$('installBanner').hidden=standaloneInstall()||dismissed;}
+$('installBannerShow').addEventListener('click',()=>{openPrefs();$('installHeading').scrollIntoView({block:'center',behavior:'smooth'});});
+$('installBannerDismiss').addEventListener('click',()=>{$('installBanner').hidden=true;try{localStorage.setItem(INSTALL_DISMISS_KEY,'yes')}catch{}});
+$('installCopy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(INSTALL_URL);$('installCopyStatus').textContent=installCopy[prefs.language==='es'?'es':'en'].copied}catch{window.prompt('Copy URL:',INSTALL_URL)}});
+// Manual refresh: check connectivity and request the latest service worker before reloading.
+// Does not clear localStorage, IndexedDB, or saved calculator history.
+const refreshText={
+ en:{heading:'Refresh App',help:'Reload Prod Calc to get the latest published files. Requires internet. Your saved calculations and settings stay on this device.',button:'↻ Refresh App',working:'Checking for updated files…',offline:'Unable to reach the app server. Check your connection and try again.',failed:'Could not refresh. Please try again when connected.'},
+ es:{heading:'Actualizar aplicación',help:'Vuelve a cargar Prod Calc para obtener los archivos más recientes. Requiere internet. Tus cálculos y ajustes guardados permanecen en este dispositivo.',button:'↻ Actualizar aplicación',working:'Buscando archivos actualizados…',offline:'No se pudo conectar al servidor. Revisa tu conexión e inténtalo de nuevo.',failed:'No se pudo actualizar. Inténtalo de nuevo cuando tengas conexión.'}
+};
+function applyRefreshCopy(){const t=refreshText[prefs.language==='es'?'es':'en'];$('refreshHeading').textContent=t.heading;$('refreshHelp').textContent=t.help;if(!$('refreshAppBtn').disabled)$('refreshAppBtn').textContent=t.button;}
+$('prefLanguage').addEventListener('change',applyRefreshCopy);
+applyRefreshCopy();
+$('refreshAppBtn').addEventListener('click',async()=>{
+ const t=refreshText[prefs.language==='es'?'es':'en'];
+ const btn=$('refreshAppBtn'),status=$('refreshAppStatus');
+ btn.disabled=true;status.textContent=t.working;
+ try{
+  // This request must reach the server; a cached/offline fallback is not enough.
+  const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),10000);
+  let response;
+  try{response=await fetch('./index.html?refresh_check='+Date.now(),{cache:'no-store',signal:controller.signal});}finally{clearTimeout(timeout)}
+  if(!response.ok||response.type==='opaque')throw Error('unavailable');
+  if('serviceWorker' in navigator){const reg=await navigator.serviceWorker.getRegistration();if(reg)await reg.update();}
+  const url=new URL(window.location.href);url.searchParams.set('refresh',Date.now().toString());
+  window.location.replace(url.toString());
+ }catch(error){status.textContent=t.offline;btn.disabled=false;btn.textContent=t.button;}
+});
+$('whatsNewPrefs').addEventListener('click',showWhatsNew);
+$('prefLanguage').addEventListener('change',applyInstallCopy);
+applyInstallCopy();showInstallBanner();
 $('whatsNewOpen').addEventListener('click',showWhatsNew);
 $('whatsNewClose').addEventListener('click',closeWhatsNew);
 $('whatsNewModal').addEventListener('click',e=>{if(e.target===$('whatsNewModal'))closeWhatsNew()});
