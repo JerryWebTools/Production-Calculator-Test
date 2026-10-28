@@ -1,5 +1,5 @@
 /* Offline cache for this GitHub Pages app, scoped to the current repository. */
-const CACHE='production-calculator-v23-consolidated-test-2';
+const CACHE='production-calculator-v231-quick-performance-hotfix';
 const FILES=['./','./index.html','./app.js','./styles.css','./brain.js','./brain.css'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('production-calculator-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));});

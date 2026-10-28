@@ -203,3 +203,7 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #quick .quickTools button{width:100%;min-width:0;padding:9px 4px;font-size:clamp(11px,2.9vw,14px);white-space:nowrap}
 #quick #converterToggle[aria-pressed="true"]{border-color:var(--accent);color:var(--fg)}
 #quick #converterToggle[aria-pressed="false"]{opacity:.75}
+
+/* v2.3.1 hotfix: prevent iOS double-tap zoom on the calculator keypad. */
+#quick .quickKeys, #quick .quickKeys button {touch-action:manipulation; -webkit-tap-highlight-color:transparent;}
+#quick .quickKeys button {user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;}

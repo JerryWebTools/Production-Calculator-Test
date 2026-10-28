@@ -22,3 +22,10 @@ Known limitations: Records/history use localStorage (per device/browser, not syn
 
 ## Small UI adjustment (test build 2)
 The existing Converter ON/OFF button now appears directly in Quick Calculator between History and Unit Converter. It continues to control the original live conversion beneath the calculator result. The original conversion unit selection remains inside Unit Converter > Original Quick Calculator Conversions. No production formulas were changed.
+
+## v2.3.1 Quick Calculator performance hotfix
+- Prevents iOS Safari double-tap zoom on keypad buttons using touch-action manipulation and immediate touchstart handling.
+- Avoids rebuilding the complete saved History list on every key press; History is rendered only while open.
+- Retains mouse and keyboard click behavior and all existing production math.
+- Refreshes offline service-worker cache and CSS/JS cache-busting for rollout.
+- Test on the separate GitHub Pages test repository before releasing to the main repository.
