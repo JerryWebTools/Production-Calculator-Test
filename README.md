@@ -29,3 +29,7 @@ The existing Converter ON/OFF button now appears directly in Quick Calculator be
 - Retains mouse and keyboard click behavior and all existing production math.
 - Refreshes offline service-worker cache and CSS/JS cache-busting for rollout.
 - Test on the separate GitHub Pages test repository before releasing to the main repository.
+
+
+## v2.4 HTML integration fix
+The index.html now includes JS Studio branding, v2.4 version labels, the What's New modal and Settings button, iPhone home-screen icon metadata, and refreshed asset version tags.
