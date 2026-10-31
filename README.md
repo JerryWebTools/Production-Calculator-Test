@@ -1,11 +1,9 @@
-# Production Calculator v2.5 TEST — Build 5
+# Production Calculator v2.5 TEST — Build 6
 
-TEST ONLY — NOT FOR PRODUCTION.
-
-- Fix: Build 4 app.js incorrectly identified itself as Build 3, leaving Update Available visible after update.
-- Update banner now appears only for a higher build number.
-- Includes Line 4 Treat Only and Treat & Pack guides and the corrected Line 3 Treat Only footer from Build 4.
-- New What’s New Build 5 (English and Spanish).
-- No changes to production formulas or operator-selected Extra EA.
-
-Upload all contents to the root of the TEST repository.
+- New: Leg (Concetti Pack Only) seven-step bilingual How Was This Calculated? guide.
+- Guide is informational and reads the same computed result as the existing calculator.
+- Both Calculation Breakdown and How Was This Calculated? remain available.
+- Existing formula unchanged: for Pack Only, net bag = base × (1 + overpack) × (1 + chemical when treated); total = ceil(net bag × order EA + samples); gross = net + bag tare.
+- What’s New and local version identifier updated to Build 6.
+- TEST banner, TEST icons, offline caching, Update Available and Update Now retained.
+- Do not deploy to production until reviewed and approved.
