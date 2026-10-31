@@ -275,3 +275,55 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
  .compactHeader #homeRefreshBtn{min-height:40px;padding:7px 7px;font-size:11px}
  .compactHeader .headerTitle h1{font-size:clamp(12px,3.4vw,16px)}
 }
+
+/* v2.5 TEST: center the Home title relative to the entire page, not the buttons.
+   Keep the approved inside-calculator header unchanged. */
+@media (min-width: 700px) {
+  .compactHeader:not(.insideView) .compactHeaderLine {
+    display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;
+  }
+  .compactHeader:not(.insideView) .headerTitle {grid-column:2;grid-row:1;text-align:center;justify-self:center;}
+  .compactHeader:not(.insideView) .headerActions {grid-column:3;grid-row:1;justify-self:end;}
+}
+@media (max-width: 699px) {
+  .compactHeader:not(.insideView) .compactHeaderLine {
+    display:grid;grid-template-columns:minmax(0,1fr);row-gap:12px;
+  }
+  .compactHeader:not(.insideView) .headerTitle {grid-column:1;grid-row:1;text-align:center;width:100%;}
+  .compactHeader:not(.insideView) .headerTitle h1 {font-size:clamp(22px,5vw,29px);white-space:normal;}
+  .compactHeader:not(.insideView) .headerActions {grid-column:1;grid-row:2;justify-self:center;}
+}
+
+/* v2.5 TEST: Refresh on the left, centered title, Settings on the right.
+   Only the Home view is affected; calculator navigation stays unchanged. */
+.compactHeader:not(.insideView) .compactHeaderLine {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  align-items:center;
+  column-gap:12px;
+}
+.compactHeader:not(.insideView) .headerActions {display:contents;}
+.compactHeader:not(.insideView) #homeRefreshBtn {
+  grid-column:1;grid-row:1;justify-self:start;
+}
+.compactHeader:not(.insideView) .headerTitle {
+  grid-column:2;grid-row:1;justify-self:center;text-align:center;width:auto;
+}
+.compactHeader:not(.insideView) #settingsBtn {
+  grid-column:3;grid-row:1;justify-self:end;
+}
+@media(max-width:699px){
+  .compactHeader:not(.insideView) .compactHeaderLine {
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    row-gap:10px;
+  }
+  .compactHeader:not(.insideView) .headerTitle {
+    grid-column:1 / -1;grid-row:1;width:100%;
+  }
+  .compactHeader:not(.insideView) #homeRefreshBtn {
+    grid-column:1;grid-row:2;justify-self:start;
+  }
+  .compactHeader:not(.insideView) #settingsBtn {
+    grid-column:2;grid-row:2;justify-self:end;
+  }
+}
