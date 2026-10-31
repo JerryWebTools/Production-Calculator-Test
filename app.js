@@ -37,53 +37,59 @@ function renderStandaloneGuide(){
  const r=lastResult, el=$('guideContent');
  if(!r||r.line!=='standalone'){el.replaceChildren();return;}
  const es=prefs.language==='es';
- const n=x=>fmt(x,5), pct=x=>fmt(x,2), perBagOver=r.base*(1+r.over/100),
-       overAdded=perBagOver-r.base, chemAdded=r.netBag-perBagOver,
-       seedOrder=r.netBag*r.orderEa, raw=seedOrder+r.samples;
  const text=(en,sp)=>es?sp:en;
+ const n=x=>Number(x).toLocaleString('en-US',{maximumFractionDigits:5});
+ const w=x=>fmt(x,5);
+ const pct=x=>n(x);
+ const overAdded=r.base*r.over/100;
+ const perBagOver=r.base+overAdded;
+ const chemAdded=perBagOver*r.chem/100;
+ const seedOrder=r.netBag*r.orderEa;
+ const raw=r.rawTotalKg;
+ const totalLbs=r.totalLb;
  const row=(label,value)=>`<div class="guideRow"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`;
  const block=(num,title,explain,formula,result)=>`<section class="guideStep"><div class="guideStepTitle"><span class="guideNum">${num}</span><strong>${esc(title)}</strong></div><p>${esc(explain)}</p><div class="guideMath">${esc(formula)}</div>${result?`<div class="guideResult">${esc(result)}</div>`:''}</section>`;
  const size=r.packSize, unit=r.packUnit;
  let firstFormula,firstExplain;
  if(unit==='KS'||unit==='MS'){
    const seeds=size*(unit==='KS'?1000:1000000);
-   firstFormula=`${size} ${unit} × ${unit==='KS'?'1,000':'1,000,000'} = ${fmt(seeds,0)} seeds\n${fmt(seeds,0)} ÷ ${fmt(r.pc,2)} seeds/LB = ${n(r.base*F)} LB\n${n(r.base*F)} LB ÷ ${F} = ${n(r.base)} KG`;
-   firstExplain=text('KS means thousands of seeds; MS means millions. PC is seeds per pound. Divide by 2.2046 to convert pounds to kilograms.','KS significa miles de semillas; MS significa millones. PC indica semillas por libra. Dividimos entre 2.2046 para convertir libras a kilogramos.');
+   firstFormula=`${n(size)} ${unit} × ${unit==='KS'?'1,000':'1,000,000'} = ${fmt(seeds,0)} ${text('seeds','semillas')}\n${fmt(seeds,0)} ÷ ${n(r.pc)} = ${n(r.base*F)} LB\n${n(r.base*F)} LB ÷ ${F} = ${w(r.base)} KG`;
+   firstExplain=text(`Each bag needs ${fmt(seeds,0)} seeds. With ${n(r.pc)} seeds in one pound, we find the pounds needed, then change pounds to kilograms (KG).`, `Cada bolsa necesita ${fmt(seeds,0)} semillas. Como hay ${n(r.pc)} semillas en una libra, calculamos las libras y luego las convertimos a kilogramos (KG).`);
  }else if(unit==='LB'){
-   firstFormula=`${size} LB ÷ ${F} = ${n(r.base)} KG`;
-   firstExplain=text('The pack size is in pounds. Divide by 2.2046 to convert to kilograms.','El tamaño del empaque está en libras. Dividimos entre 2.2046 para convertir a kilogramos.');
+   firstFormula=`${n(size)} LB ÷ ${F} = ${w(r.base)} KG`;
+   firstExplain=text('The pack size is in pounds (LB). We change it to kilograms (KG).','El tamaño de la bolsa está en libras (LB). Lo convertimos a kilogramos (KG).');
+ }else if(unit==='G'){
+   firstFormula=`${n(size)} G ÷ 1,000 = ${w(r.base)} KG`;
+   firstExplain=text('The pack size is in grams. There are 1,000 grams in one kilogram.','El tamaño está en gramos. Un kilogramo tiene 1,000 gramos.');
  }else{
-   firstFormula=`${size} KG = ${n(r.base)} KG`;
-   firstExplain=text('The pack size is already in kilograms; no unit conversion is needed.','El tamaño del empaque ya está en kilogramos; no necesita conversión.');
+   firstFormula=`${n(size)} KG = ${w(r.base)} KG`;
+   firstExplain=text('The pack size is already in kilograms (KG). No conversion is needed.','El tamaño ya está en kilogramos (KG). No necesitamos convertirlo.');
  }
- const chemExplain=r.condition==='untreated'
-  ?text('Untreated seed: the calculator applies 0% chemical weight. No chemical weight is added.','Semilla sin tratar: la calculadora aplica 0% de peso químico. No se agrega peso químico.')
-  :r.chem===0
-   ?text('Chemical weight is 0% for the selected crop/settings. No chemical weight is added.','El peso químico es 0% según el cultivo y la configuración. No se agrega peso químico.')
-   :text('Chemical weight is applied after overpack. The percentage comes from Formula Settings for this crop and seed type.','El peso químico se aplica después del overpack. El porcentaje viene de Formula Settings para este cultivo y tipo de semilla.');
+ const chemExplain=r.chem===0
+   ?text('No chemical weight is added for this order.','No se agrega peso de tratamiento químico a esta orden.')
+   :text(`The treatment adds ${pct(r.chem)}% to the weight. We calculate that extra weight and add it to the seed weight from Step 2.`,`El tratamiento agrega ${pct(r.chem)}% al peso. Calculamos ese peso adicional y lo sumamos al peso del paso 2.`);
  const tareExplain=r.tareKg>0
-   ?text('Bag tare is the empty bag weight. It is included in the gross scale target, NOT in the total seed required.','La tara es el peso de la bolsa vacía. Se incluye en el peso bruto para la báscula, NO en la semilla total requerida.')
-   :text('No bag tare was entered. Enter the empty bag weight to calculate a usable gross scale target.','No se ingresó tara. Ingresa el peso de la bolsa vacía para obtener el peso bruto de báscula.');
- const totalLbs=r.totalKg*F;
- el.innerHTML=`<p class="guideIntro">${esc(text('Follow each step using the values from THIS calculation. All intermediate math uses full precision; displayed figures are rounded.','Sigue cada paso con los valores de ESTE cálculo. Las operaciones usan precisión completa; los números mostrados están redondeados.'))}</p>
- <div class="guideInput"><strong>${esc(text('Order inputs','Datos de la orden'))}</strong>
+   ?text('The tare is the weight of the empty bag. Add it to the net weight to find what the scale should show. The empty bag is not included in the total seed needed.','La tara es el peso de la bolsa vacía. Se suma al peso neto para saber cuánto debe marcar la báscula. La bolsa vacía no se incluye en la semilla total necesaria.')
+   :text('Enter the weight of the empty bag (tare) to find the total bag weight for the scale.','Ingresa el peso de la bolsa vacía (tara) para calcular el peso total que debe marcar la báscula.');
+ el.innerHTML=`<p class="guideIntro">${esc(text('These steps show how your order was calculated. The app keeps the full numbers for accuracy; some numbers below are shortened to make them easier to read.','Estos pasos muestran cómo se calculó tu orden. La app conserva los números completos para mayor precisión; algunos se muestran con menos decimales para facilitar la lectura.'))}</p>
+ <div class="guideInput"><strong>${esc(text('Order details','Datos de la orden'))}</strong>
  ${row(text('Crop / seed type','Cultivo / tipo de semilla'),`${NAMES[r.crop]} · ${r.seed==='commercial'?'Commercial':'Parent / Basic'}`)}
  ${row(text('Condition','Condición'),r.condition==='treated'?text('Treated','Tratada'):text('Untreated','Sin tratar'))}
- ${row(text('Pack size / order','Tamaño / orden'),`${size} ${unit} × ${r.orderEa} EA`)}
- ${r.pc!==null?row('PC (seeds/LB)',`${r.pc}`):''}
+ ${row(text('Pack size / order','Tamaño / orden'),`${n(size)} ${unit} × ${r.orderEa} EA`)}
+ ${r.pc!==null?row(text('Seeds per pound (PC)','Semillas por libra (PC)'),n(r.pc)):''}
  ${row('Overpack / Chemical',`${pct(r.over)}% / ${pct(r.chem)}%`)}</div>
- ${block(1,text('Convert pack size to KG per bag','Convertir el tamaño a KG por bolsa'),firstExplain,firstFormula,`${text('Base seed','Semilla base')}: ${n(r.base)} KG / EA`)}
- ${block(2,text('Add overpack','Agregar overpack'),text('Overpack is extra seed weight. A 1% setting means multiply by 1.01; 0.5% means 1.005. The rate can be changed in Formula Settings.','El overpack es peso adicional de semilla. Un ajuste de 1% significa multiplicar por 1.01; 0.5% significa 1.005. La tasa se puede cambiar en Formula Settings.'),`${n(r.base)} × (1 + ${r.over}/100) = ${n(perBagOver)} KG`,`${text('Added','Agregado')}: ${n(overAdded)} KG / EA`)}
- ${block(3,text('Apply chemical weight','Aplicar peso químico'),chemExplain,`${n(perBagOver)} × (1 + ${r.chem}/100) = ${n(r.netBag)} KG`,`${text('Chemical weight added','Peso químico agregado')}: ${n(chemAdded)} KG / EA`)}
- ${block(4,text('Find net seed weight per bag','Obtener peso neto por bolsa'),text('This is the final seed-content weight per bag, including configured adjustments, but not the empty bag.','Este es el peso final del contenido por bolsa, con los ajustes configurados, pero sin la bolsa vacía.'),`${n(r.base)} × ${n(1+r.over/100)} × ${n(1+r.chem/100)} = ${n(r.netBag)} KG`,`${text('Net seed weight','Peso neto')}: ${fmt(r.netBag,3)} KG / EA`)}
- ${block(5,text('Find gross scale weight','Obtener peso bruto de báscula'),tareExplain,`${n(r.netBag)} + ${n(r.tareKg)} = ${n(r.scaleBag)} KG`,r.tareKg>0?`${text('Gross bag weight','Peso bruto')}: ${fmt(r.scaleBag,3)} KG / EA`:text('Gross target pending bag tare','Falta la tara para el peso bruto'))}
- ${block(6,text('Calculate the order and samples','Calcular la orden y las muestras'),text('Multiply net seed weight by the ordered bags (EA), then add regular and custom samples. The bag tare is not added.','Multiplica el peso neto por las bolsas ordenadas (EA) y agrega muestras regulares y personalizadas. No se agrega la tara.'),`${n(r.netBag)} × ${r.orderEa} EA = ${n(seedOrder)} KG\n${n(seedOrder)} + ${n(r.regular)} (${text('regular','regulares')}) + ${n(r.customSampleKg)} (${text('custom','personalizadas')}) = ${n(raw)} KG`,`${text('Before rounding','Antes de redondear')}: ${n(raw)} KG`)}
- ${block(7,text('Round Up to the Next Whole Kilogram','Redondear hacia arriba al siguiente kilogramo entero'),text('We round up so there is enough seed for the order. Even a small fraction of a kilogram means we use the next whole number. If the weight is already a whole number, it stays the same. Pounds are calculated from the final kilogram total.','Redondeamos hacia arriba para tener suficiente semilla para la orden. Aunque sobre solo una pequeña fracción de kilogramo, usamos el siguiente número entero. Si el peso ya es un número entero, no cambia. Las libras se calculan usando el total final en kilogramos.'),`${text('Calculated weight','Peso calculado')}: ${n(raw)} KG\n${text('Rounded up','Redondeado hacia arriba')}: ${fmt(r.totalKg,0)} KG\n${fmt(r.totalKg,0)} KG × ${F} = ${fmt(totalLbs,2)} LB`,`${text('TOTAL SEED REQUIRED','SEMILLA TOTAL REQUERIDA')}: ${fmt(r.totalKg,0)} KG`)}
+ ${block(1,text('Calculate Seed Weight per Bag','Calcular el peso de semilla por bolsa'),firstExplain,firstFormula,`${text('Seed weight before extras','Peso de semilla antes de extras')}: ${w(r.base)} KG / EA`)}
+ ${block(2,text('Add Extra Seed (Overpack)','Agregar semilla extra (Overpack)'),text(`We add ${pct(r.over)}% extra seed to each bag to help make sure it has enough.`,`Agregamos ${pct(r.over)}% de semilla extra a cada bolsa para ayudar a asegurar que tenga suficiente.`),`${w(r.base)} KG × ${pct(r.over)}% = ${w(overAdded)} KG ${text('extra','extra')}\n${w(r.base)} + ${w(overAdded)} = ${w(perBagOver)} KG`,`${text('Weight after overpack','Peso con overpack')}: ${w(perBagOver)} KG / EA`)}
+ ${block(3,text('Add Chemical Weight','Agregar peso del tratamiento'),chemExplain,`${w(perBagOver)} KG × ${pct(r.chem)}% = ${w(chemAdded)} KG ${text('extra','extra')}\n${w(perBagOver)} + ${w(chemAdded)} = ${w(r.netBag)} KG`,`${text('Weight after treatment','Peso después del tratamiento')}: ${w(r.netBag)} KG / EA`)}
+ ${block(4,text('Calculate Net Weight','Calcular el peso neto'),text('Net weight is the weight inside one bag, including extra seed and treatment weight, but without the empty bag.','El peso neto es lo que va dentro de una bolsa, incluyendo la semilla extra y el tratamiento, pero sin la bolsa vacía.'),`${text('Weight from Step 3','Peso del paso 3')}: ${w(r.netBag)} KG`,`${text('NET WEIGHT PER BAG','PESO NETO POR BOLSA')}: ${fmt(r.netBag,3)} KG`)}
+ ${block(5,text('Calculate Gross Weight','Calcular el peso bruto'),tareExplain,`${w(r.netBag)} KG + ${w(r.tareKg)} KG ${text('(empty bag)','(bolsa vacía)')} = ${w(r.scaleBag)} KG`,r.tareKg>0?`${text('GROSS WEIGHT PER BAG','PESO BRUTO POR BOLSA')}: ${fmt(r.scaleBag,3)} KG`:text('Enter bag tare to get a scale target','Ingresa la tara para obtener el peso de báscula'))}
+ ${block(6,text('Calculate Total Seed Needed','Calcular la semilla total necesaria'),text('Multiply the net weight by the number of bags, then add regular and custom samples. Do not add the weight of the empty bags.','Multiplica el peso neto por la cantidad de bolsas. Después agrega las muestras regulares y las adicionales. No agregues el peso de las bolsas vacías.'),`${w(r.netBag)} KG × ${r.orderEa} EA = ${w(seedOrder)} KG\n${w(seedOrder)} + ${n(r.regular)} KG ${text('(regular samples)','(muestras regulares)')} + ${n(r.customSampleKg)} KG ${text('(custom samples)','(muestras adicionales)')} = ${w(raw)} KG`,`${text('Total before rounding','Total antes de redondear')}: ${w(raw)} KG`)}
+ ${block(7,text('Round Up the Total Weight','Redondear el peso total hacia arriba'),text('If the total includes part of a kilogram, use the next whole kilogram so there is enough seed. If it is already a whole number, leave it as it is.','Si el total tiene una fracción de kilogramo, usamos el siguiente kilogramo entero para tener suficiente semilla. Si ya es un número entero, no cambia.'),`${text('Calculated weight','Peso calculado')}: ${w(raw)} KG\n${text('Rounded up','Redondeado hacia arriba')}: ${fmt(r.totalKg,0)} KG\n${fmt(r.totalKg,0)} KG × ${F} = ${fmt(totalLbs,2)} LB`,`${text('TOTAL SEED REQUIRED','SEMILLA TOTAL REQUERIDA')}: ${fmt(r.totalKg,0)} KG`)}
  <div class="guideFinal"><strong>${esc(text('Final results','Resultados finales'))}</strong>
  ${row(text('Net seed / EA','Peso neto / EA'),`${fmt(r.netBag,3)} KG`)}
  ${row(text('Gross bag / EA','Peso bruto / EA'),r.tareKg>0?`${fmt(r.scaleBag,3)} KG`:text('Enter tare','Ingresa tara'))}
  ${row(text('Total seed required','Semilla total requerida'),`${fmt(r.totalKg,0)} KG / ${fmt(r.totalLb,2)} LB`)}</div>
- <p class="guideFoot">${esc(text('Note: percentages may be customized in Formula Settings. This guide explains the current app calculation; follow approved production SOPs for operational decisions.','Nota: los porcentajes pueden personalizarse en Formula Settings. Esta guía explica el cálculo de la app; sigue los SOP aprobados para las decisiones de producción.'))}</p>`;
+ <p class="guideFoot">${esc(text('This guide explains the current app calculation. Follow approved production SOPs. Overpack and chemical percentages can be changed in Formula Settings.','Esta guía explica el cálculo actual de la app. Sigue los SOP de producción aprobados. Los porcentajes de overpack y tratamiento se pueden cambiar en Formula Settings.'))}</p>`;
  $('guideSummary').textContent=text('📖 How Was This Calculated?','📖 ¿Cómo se calculó?');
 }
 $('standaloneGuide').addEventListener('toggle',()=>{if($('standaloneGuide').open)renderStandaloneGuide()});
