@@ -245,3 +245,18 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #whatsNewPrefs{margin-top:12px}
 
 .appRefreshSection{border-top:1px solid rgba(145,170,200,.25);margin-top:20px;padding-top:16px}.appRefreshSection h3{margin:0 0 8px}.appRefreshSection p{margin:8px 0}
+
+/* v2.5 Stand-Alone operator training guide */
+#standaloneGuide{margin-top:18px;padding-top:15px;border-top:1px solid var(--edge)}
+#standaloneGuide summary{list-style-position:inside;background:var(--panel);border:1px solid var(--accent);border-radius:12px;padding:14px;font-weight:750;color:var(--fg);touch-action:manipulation}
+#standaloneGuide .guideIntro,#standaloneGuide .guideFoot{font-size:13px;line-height:1.5;color:var(--muted);margin:12px 0}
+#standaloneGuide .guideInput,#standaloneGuide .guideFinal{border:1px solid var(--edge);border-radius:12px;padding:12px;margin:12px 0;background:var(--panel)}
+#standaloneGuide .guideRow{display:flex;justify-content:space-between;gap:10px;padding:7px 0;font-size:13px;border-bottom:1px solid var(--edge)}
+#standaloneGuide .guideRow strong{text-align:right;overflow-wrap:anywhere}
+#standaloneGuide .guideStep{border:1px solid var(--edge);border-radius:12px;padding:13px;margin:10px 0;background:var(--panel)}
+#standaloneGuide .guideStepTitle{display:flex;gap:10px;align-items:center;font-size:15px}
+#standaloneGuide .guideNum{background:var(--accent);color:#fff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;width:29px;height:29px;flex:none;font-weight:750}
+#standaloneGuide .guideStep p{font-size:13px;line-height:1.5;color:var(--muted);margin:10px 0}
+#standaloneGuide .guideMath{white-space:pre-line;overflow-wrap:anywhere;background:var(--bg);padding:12px;border-radius:9px;font:500 13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--fg)}
+#standaloneGuide .guideResult{font-weight:750;color:var(--fg);margin-top:9px;font-size:13px}
+#standaloneGuide .guideFinal{border-color:var(--accent)}

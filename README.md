@@ -1,50 +1,22 @@
-# Production Calculator v2.3 — Consolidated Test Build
+# Prod Calc v2.5 — Stand-Alone Operator Guide (TEST ONLY)
 
-TEST BUILD ONLY. Upload these seven files (index.html, app.js, styles.css, brain.js, brain.css, sw.js, README.md) to the *Production-Calculator-Test* GitHub Pages repository root, not the production repo.
+Based on the user-provided v2.4 Refresh ZIP. This is a **focused test build** of the first v2.5 feature, not the complete planned v2.5 release.
 
-Based on the approved two-row iPhone header preview. Production formulas and saved-calculation storage keys retained.
+## Changes
+- New expandable **How Was This Calculated?** section, only on Stand-Alone results.
+- Seven explanations: pack-size conversion, overpack, chemical adjustment, net weight, gross weight, samples/order total, and rounding.
+- Uses the **actual current calculation values**, including configured rates, seed condition, pack unit, sample values, and bag tare.
+- English/Spanish guide follows language preference.
+- No changes to the calculation formulas, saved history, Quick Calculator, or other lines.
+- Updated CSS and cache identifier to facilitate testing.
 
-Changes:
-- Quick Calculator full-width, non-scrolling iPhone view; last completed calculation, persistent history (up to 200), confirmation before clear, reuse history values.
-- Unit Converter: length, weight, volume, temperature, pressure. Existing 8 Quick Calculator conversions retained inside Unit Converter > Original Quick Calculator Conversions; they still display a conversion below the main number when enabled.
-- Brain Break: tap the "PRODUCTION CALCULATOR" eyebrow on the Home screen five times in quick succession. Six games: Hangman, Wordle-style, Tic-Tac-Toe, Word Search, Crossword, Trivia. Records stored on the device. Easy/Medium/Hard/Progressive difficulty. Brain Break follows the language in Settings.
-- PC keeps existing compact Quick Calculator width. Other production calculator screens and formulas unchanged.
+## Test checklist
+1. Upload contents (not ZIP) to **Production-Calculator-Test**. Do not update the official repo.
+2. Open Stand-Alone and enter a complete order; open **How Was This Calculated?** below the result.
+3. Test Normal Corn / Shrunken Corn / Peas; Treated and Untreated; Commercial and Parent/Basic.
+4. Test KS, MS, LB and KG pack sizes; bag tare in KG and LB; custom samples.
+5. Compare the guide totals with the existing result boxes; test Settings percentage overrides and Spanish.
+6. Verify Quick Calculator and other lines still work.
 
-TEST BEFORE PUBLISHING TO MAIN:
-1. On iPhone, Quick Calculator keypad fits on screen with no vertical scrolling. Test live preview, '=' and History.
-2. Close/reopen browser and check history. Reuse history result and clear with confirmation.
-3. Test each Unit Converter category, reverse arrows, original conversions.
-4. Home title 5 taps opens Brain Break. Test all six games and return to Home.
-5. Confirm Line 3/4, Leg, Stand Alone, Pack All, Saved Calculations and Settings still work.
-6. Test both iPhone Safari and desktop browsers.
-
-Known limitations: Records/history use localStorage (per device/browser, not synced); the included service worker caches the app after the first successful online visit, but offline operation should still be tested on the actual iPhone. Wordle-style mode accepts any five-letter guess, not dictionary-validated. Word Search uses tap-start/tap-end rather than drag. Crossword currently has one introductory puzzle per language; trivia has a starter set of 15 questions. These are deliberately small, basic starter games.
-
-## Small UI adjustment (test build 2)
-The existing Converter ON/OFF button now appears directly in Quick Calculator between History and Unit Converter. It continues to control the original live conversion beneath the calculator result. The original conversion unit selection remains inside Unit Converter > Original Quick Calculator Conversions. No production formulas were changed.
-
-## v2.3.1 Quick Calculator performance hotfix
-- Prevents iOS Safari double-tap zoom on keypad buttons using touch-action manipulation and immediate touchstart handling.
-- Avoids rebuilding the complete saved History list on every key press; History is rendered only while open.
-- Retains mouse and keyboard click behavior and all existing production math.
-- Refreshes offline service-worker cache and CSS/JS cache-busting for rollout.
-- Test on the separate GitHub Pages test repository before releasing to the main repository.
-
-
-## v2.4 HTML integration fix
-The index.html now includes JS Studio branding, v2.4 version labels, the What's New modal and Settings button, iPhone home-screen icon metadata, and refreshed asset version tags.
-
-
-## v2.4 install guide addition
-- Bilingual installation instructions in Settings for iPhone/iPad Safari and Android Chrome.
-- Optional dismissible browser banner (not shown when installed to Home Screen).
-- QR code points to **official** Production Calculator URL, not Test.
-- Copy link and What's New access in general Settings.
-- Preserve Quick Calculator v2.3.1 touch handling.
-
-## v2.4 manual Refresh App addition (TEST)
-- Adds bilingual Refresh App control in general Settings.
-- Checks the online HTML endpoint (no-store), asks the service worker to update, and reloads the app.
-- Does not delete localStorage, saved calculations, history, or preferences.
-- This is a manual reload, NOT a version comparison or a guarantee that a new version exists.
-- Test on iPhone Home Screen and Safari before releasing to production.
+## Note
+The guide describes the exact calculations in this app. It is not a replacement for approved production SOPs.
