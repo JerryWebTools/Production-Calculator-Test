@@ -349,3 +349,27 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
     width:124px;min-height:46px;font-size:12px;padding:7px 8px;
   }
 }
+
+/* v2.5 TEST iPhone button-size fix: fixed, identical boxes and no iOS text autosizing. */
+.compactHeader:not(.insideView) .compactHeaderLine > .headerActions {display:contents;}
+.compactHeader:not(.insideView) #homeRefreshBtn,
+.compactHeader:not(.insideView) #settingsBtn {
+  -webkit-appearance:none;appearance:none;
+  box-sizing:border-box !important;
+  width:148px !important; min-width:148px !important; max-width:148px !important;
+  height:52px !important; min-height:52px !important; max-height:52px !important;
+  margin:0 !important; padding:0 8px !important;
+  flex:none !important; line-height:1.2 !important;
+  font-size:14px !important; -webkit-text-size-adjust:100%;
+  display:flex !important; align-items:center !important; justify-content:center !important;
+  border:2px solid var(--accent) !important; border-radius:10px !important;
+  white-space:nowrap !important;
+}
+@media(max-width:520px){
+ .compactHeader:not(.insideView) #homeRefreshBtn,
+ .compactHeader:not(.insideView) #settingsBtn {
+  width:124px !important;min-width:124px !important;max-width:124px !important;
+  height:46px !important;min-height:46px !important;max-height:46px !important;
+  font-size:12px !important;
+ }
+}
