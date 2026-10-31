@@ -3,6 +3,7 @@
 Based on the user-provided v2.4 Refresh ZIP. This is a **focused test build** of the first v2.5 feature, not the complete planned v2.5 release.
 
 ## Changes
+- Step 7 now explains rounding in plain English/Spanish, without programming terms such as `ceil()`.
 - New expandable **How Was This Calculated?** section, only on Stand-Alone results.
 - Seven explanations: pack-size conversion, overpack, chemical adjustment, net weight, gross weight, samples/order total, and rounding.
 - Uses the **actual current calculation values**, including configured rates, seed condition, pack unit, sample values, and bag tare.
