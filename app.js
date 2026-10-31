@@ -239,10 +239,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-1';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-2';
 const releaseNotes={
-  en:{title:"What's New · TEST Build 1",items:["Added the step-by-step 'How Was This Calculated?' guide for Stand-Alone and Line 1.","Kept Calculation Breakdown for quick reference.","Improved the iPhone home screen layout and matched Refresh and Settings button sizes.","Moved the hidden Brain Break access to five taps on the footer version label.","Updated Line 1's guide footer and added build-specific release notes."],note:"TEST VERSION — NOT FOR PRODUCTION. Formula calculations remain unchanged. Each future TEST build will show its own update notes once.",close:'Continue'},
-  es:{title:'Novedades · TEST Build 1',items:['Agregamos la guía paso a paso «How Was This Calculated?» a Stand-Alone y Line 1.','Conservamos Calculation Breakdown para consultas rápidas.','Mejoramos la pantalla principal en iPhone y ajustamos los botones Refresh y Settings al mismo tamaño.','Movimos el acceso secreto a Brain Break: cinco toques en la versión del pie de página.','Ampliamos el mensaje final de Line 1 y agregamos novedades por versión de prueba.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Las fórmulas no cambiaron. Cada nueva actualización de TEST mostrará sus novedades una sola vez.',close:'Continuar'}
+  en:{title:"What's New · TEST Build 2",items:["Added automatic checks for new TEST builds when the app opens and when you return to it online.","Added an Update Available notice and Update Now button to load a new published build.","Improved update handling for iPhone and offline use; the update notice only appears after a newer build is detected on the server.","Kept the approved Line 1 and Stand-Alone calculation guides and the iPhone home screen design."],note:"TEST VERSION — NOT FOR PRODUCTION. This build does not change production formulas. Internet is required to check for updates.",close:'Continue'},
+  es:{title:'Novedades · TEST Build 2',items:['Agregamos una revisión automática de nuevas versiones de TEST al abrir la app y al regresar a ella con internet.','Agregamos el aviso «Update Available» y el botón «Update Now» para cargar una versión publicada.','Mejoramos el proceso de actualización en iPhone y sin conexión; el aviso solo aparece cuando el servidor confirma una versión más reciente.','Conservamos las guías aprobadas de Line 1 y Stand-Alone y el diseño de inicio en iPhone.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Esta actualización no modifica las fórmulas. Se requiere internet para buscar actualizaciones.',close:'Continuar'}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -312,5 +312,60 @@ $('whatsNewModal').addEventListener('click',e=>{if(e.target===$('whatsNewModal')
 document.addEventListener('keydown',e=>{if(!$('whatsNewModal').hidden){if(e.key==='Escape')closeWhatsNew();if(e.key==='Tab'){e.preventDefault();$('whatsNewClose').focus()}}});
 try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhatsNew()}
 
-if('serviceWorker' in navigator && location.protocol==='https:') navigator.serviceWorker.register('./sw.js').catch(()=>{});
+// TEST build update discovery: version.json is fetched from the network, not local storage.
+// A build is advertised only after the hosting server returns a different build id.
+const LOCAL_TEST_BUILD='v2.5-test-build-2';
+const updateCopy={
+ en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
+ es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
+};
+let remoteTestBuild=null,updateInProgress=false,lastUpdateCheck=0;
+function renderUpdateBanner(){
+ const t=updateCopy[prefs.language==='es'?'es':'en'];
+ $('updateBannerTitle').textContent=t.title;$('updateBannerDescription').textContent=t.description;
+ if(!updateInProgress)$('updateNowBtn').textContent=t.button;
+ $('updateBanner').hidden=!(remoteTestBuild&&remoteTestBuild!==LOCAL_TEST_BUILD);
+}
+async function fetchRemoteTestBuild(){
+ const abort=new AbortController(),timeout=setTimeout(()=>abort.abort(),9000);
+ try{
+  const response=await fetch('./version.json?update_check='+Date.now(),{cache:'no-store',signal:abort.signal});
+  if(!response.ok||response.type==='opaque')throw Error('network');
+  const data=await response.json();
+  if(!data||typeof data.build!=='string'||!/^v2\.5-test-build-\d+$/.test(data.build))throw Error('invalid version');
+  return data.build;
+ }finally{clearTimeout(timeout)}
+}
+async function checkForTestUpdates(force=false){
+ if(updateInProgress||(!force&&Date.now()-lastUpdateCheck<60000))return;
+ lastUpdateCheck=Date.now();
+ try{remoteTestBuild=await fetchRemoteTestBuild();renderUpdateBanner();}catch{/* Offline or server unavailable: do not announce a speculative update. */}
+}
+$('updateNowBtn').addEventListener('click',async()=>{
+ if(updateInProgress)return;
+ const t=updateCopy[prefs.language==='es'?'es':'en'];
+ updateInProgress=true;$('updateNowBtn').disabled=true;$('updateNowBtn').textContent=t.working;
+ $('updateBannerStatus').textContent='';
+ try{
+  // Reconfirm online, so we never claim success from an offline cache.
+  const published=await fetchRemoteTestBuild();
+  if(published===LOCAL_TEST_BUILD){remoteTestBuild=null;renderUpdateBanner();return;}
+  if('serviceWorker' in navigator){
+   const reg=await navigator.serviceWorker.getRegistration();
+   if(reg){await reg.update();if(reg.waiting)reg.waiting.postMessage({type:'SKIP_WAITING'});}
+  }
+  // A cache-busted navigation fetches the new HTML; SW uses network-first.
+  const next=new URL(location.href);next.searchParams.set('updated',Date.now().toString());
+  location.replace(next.toString());
+ }catch(e){$('updateBannerStatus').textContent=t.retry;}
+ finally{updateInProgress=false;$('updateNowBtn').disabled=false;renderUpdateBanner();}
+});
+$('prefLanguage').addEventListener('change',renderUpdateBanner);
+renderUpdateBanner();
+window.addEventListener('pageshow',()=>checkForTestUpdates(true));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkForTestUpdates(true)});
+window.addEventListener('online',()=>checkForTestUpdates(true));
+setInterval(()=>{if(!document.hidden)checkForTestUpdates()},5*60*1000);
+if('serviceWorker' in navigator && location.protocol==='https:') navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(reg=>reg.update()).catch(()=>{});
+checkForTestUpdates(true);
 })();

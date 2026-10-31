@@ -373,3 +373,11 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
   font-size:12px !important;
  }
 }
+
+/* v2.5 TEST Build 2: visible only when a newer published build is confirmed. */
+.updateBanner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#14253a;border:2px solid #f3bb39;border-radius:12px;padding:12px 16px;margin:12px 0;color:#fff}
+.updateBanner[hidden]{display:none!important}
+.updateBanner strong{font-size:1rem;color:#ffce56}
+.updateBanner p{margin:4px 0 0}
+.updateBanner #updateNowBtn{white-space:nowrap;min-height:42px}
+.updateBanner #updateBannerStatus{flex-basis:100%;margin:0}
