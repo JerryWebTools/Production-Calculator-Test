@@ -1,8 +1,10 @@
-Prod Calc v2.5 TEST — Build 1
+# Production Calculator v2.5 TEST — Build 4
 
-- Expanded Line 1 guide footer in English and Spanish.
-- Updated What’s New for v2.5 TEST Build 1, shown once per build, accessible in Settings.
-- Preserved existing calculations, guides, home screen, Brain Break, and TEST branding.
-- Do not deploy to production.
+TEST ONLY — NOT FOR PRODUCTION.
 
-TEST Build 3: Line 3 operator guide (both modes), bilingual release notes. No production formula changes.
+- Line 4: How Was This Calculated? for Treat Only (6 steps) and Treat & Pack (8 steps).
+- Line 3 Treat Only: final explanation now specific to that mode.
+- No modifications to calculation formulas, Extra EA input behavior, or Calculation Breakdown.
+- Whats New Build 4 in English and Spanish; new build identifier for update detection.
+
+Upload all ZIP contents into the root of the TEST repository. Do not upload to production.
