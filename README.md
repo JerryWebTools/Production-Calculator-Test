@@ -1,4 +1,6 @@
-Prod Calc v2.5 TEST — Line 1 Treat Only calculation guide.
-Includes all previously approved TEST branding, home screen, Stand-Alone guide, Calculation Breakdown, and Brain Break.
-Line 1 guide explains base pack weight, order quantity, overpack, samples, and final rounding. No production formulas changed.
-Upload ONLY to Production-Calculator-Test, not production.
+Prod Calc v2.5 TEST — Build 1
+
+- Expanded Line 1 guide footer in English and Spanish.
+- Updated What’s New for v2.5 TEST Build 1, shown once per build, accessible in Settings.
+- Preserved existing calculations, guides, home screen, Brain Break, and TEST branding.
+- Do not deploy to production.
