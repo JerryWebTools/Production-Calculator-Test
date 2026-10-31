@@ -260,3 +260,6 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #standaloneGuide .guideMath{white-space:pre-line;overflow-wrap:anywhere;background:var(--bg);padding:12px;border-radius:9px;font:500 13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--fg)}
 #standaloneGuide .guideResult{font-weight:750;color:var(--fg);margin-top:9px;font-size:13px}
 #standaloneGuide .guideFinal{border-color:var(--accent)}
+
+/* TEST-only appearance: never include in production builds */
+.testEnvironmentBanner{background:#f6b82e;color:#191508;text-align:center;font-size:clamp(12px,2.5vw,17px);font-weight:900;letter-spacing:.06em;padding:10px 8px;border-radius:12px;margin-bottom:12px;border:2px solid #ffdf75;box-shadow:0 2px 12px #0003}
