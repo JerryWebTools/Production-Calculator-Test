@@ -327,3 +327,25 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
     grid-column:2;grid-row:2;justify-self:end;
   }
 }
+
+/* v2.5 TEST: matching Home Refresh / Settings button dimensions. */
+.compactHeader:not(.insideView) #homeRefreshBtn,
+.compactHeader:not(.insideView) #settingsBtn {
+  box-sizing:border-box;
+  width:148px;
+  min-height:52px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:14px;
+  font-weight:750;
+  padding:9px 10px;
+  white-space:nowrap;
+}
+@media(max-width:520px){
+  .compactHeader:not(.insideView) #homeRefreshBtn,
+  .compactHeader:not(.insideView) #settingsBtn {
+    width:124px;min-height:46px;font-size:12px;padding:7px 8px;
+  }
+}

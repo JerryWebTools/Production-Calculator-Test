@@ -1,3 +1,5 @@
-Prod Calc v2.5 TEST — Refresh Left / Centered Title
+Prod Calc v2.5 TEST — equal Home button sizes.
 
-Home screen: Refresh left, Production Calculator centered, Settings right on desktop. On mobile, title centered above two buttons. All other screens and formulas unchanged. TEST ONLY.
+Refresh (left) and Settings (right) have equal width and height. The centered title, responsive layout, TEST branding, and calculation logic are unchanged.
+
+Upload all extracted files to Production-Calculator-Test, replacing the existing ones. Do not upload this TEST build to production.
