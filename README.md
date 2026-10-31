@@ -1,10 +1,11 @@
-# Production Calculator v2.5 TEST — Build 4
+# Production Calculator v2.5 TEST — Build 5
 
 TEST ONLY — NOT FOR PRODUCTION.
 
-- Line 4: How Was This Calculated? for Treat Only (6 steps) and Treat & Pack (8 steps).
-- Line 3 Treat Only: final explanation now specific to that mode.
-- No modifications to calculation formulas, Extra EA input behavior, or Calculation Breakdown.
-- Whats New Build 4 in English and Spanish; new build identifier for update detection.
+- Fix: Build 4 app.js incorrectly identified itself as Build 3, leaving Update Available visible after update.
+- Update banner now appears only for a higher build number.
+- Includes Line 4 Treat Only and Treat & Pack guides and the corrected Line 3 Treat Only footer from Build 4.
+- New What’s New Build 5 (English and Spanish).
+- No changes to production formulas or operator-selected Extra EA.
 
-Upload all ZIP contents into the root of the TEST repository. Do not upload to production.
+Upload all contents to the root of the TEST repository.

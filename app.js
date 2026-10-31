@@ -367,10 +367,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-4';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-5';
 const releaseNotes={
-  en:{title:"What's New · TEST Build 4",items:["Added How Was This Calculated? to Line 4 for Treat Only and Treat & Pack.","Line 4 guide shows seed weight, operator-selected Extra EA, overpack, samples, rounding, and bag targets when applicable.","Corrected the final guide message for Line 3 Treat Only (English and Spanish).","Kept Calculation Breakdown, existing formulas, and automatic update checks unchanged."],note:"TEST VERSION — NOT FOR PRODUCTION. Check Line 4 results against approved production procedures.",close:'Continue'},
-  es:{title:'Novedades · TEST Build 4',items:['Agregamos ¿Cómo se calculó? a Line 4 en Solo tratamiento y Tratar y empacar.','La guía explica el peso de semilla, EA adicionales elegidos por el operador, overpack, muestras, redondeo y pesos por bolsa cuando corresponda.','Corregimos el mensaje final de Line 3 Solo tratamiento en inglés y español.','Conservamos Calculation Breakdown, las fórmulas y las actualizaciones automáticas sin cambios.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Comprueba los resultados de Line 4 con los procedimientos aprobados.',close:'Continuar'}
+  en:{title:"What's New · TEST Build 5",items:["Added How Was This Calculated? to Line 4 for Treat Only and Treat & Pack.","Line 4 guide shows seed weight, operator-selected Extra EA, overpack, samples, rounding, and bag targets when applicable.","Corrected the final guide message for Line 3 Treat Only (English and Spanish).","Fixed Update Available staying visible after an update because Build 4 identified itself as Build 3.","Kept Calculation Breakdown, existing formulas, and operator-selected Extra EA unchanged."],note:"TEST VERSION — NOT FOR PRODUCTION. Check Line 4 results against approved production procedures.",close:'Continue'},
+  es:{title:'Novedades · TEST Build 5',items:['Agregamos ¿Cómo se calculó? a Line 4 en Solo tratamiento y Tratar y empacar.','La guía explica el peso de semilla, EA adicionales elegidos por el operador, overpack, muestras, redondeo y pesos por bolsa cuando corresponda.','Corregimos el mensaje final de Line 3 Solo tratamiento en inglés y español.','Corregimos el aviso Update Available que seguía apareciendo después de actualizar porque Build 4 se identificaba como Build 3.','Conservamos Calculation Breakdown, las fórmulas y los EA adicionales elegidos por el operador.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Comprueba los resultados de Line 4 con los procedimientos aprobados.',close:'Continuar'}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -442,7 +442,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-3';
+const LOCAL_TEST_BUILD='v2.5-test-build-5';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
@@ -452,7 +452,7 @@ function renderUpdateBanner(){
  const t=updateCopy[prefs.language==='es'?'es':'en'];
  $('updateBannerTitle').textContent=t.title;$('updateBannerDescription').textContent=t.description;
  if(!updateInProgress)$('updateNowBtn').textContent=t.button;
- $('updateBanner').hidden=!(remoteTestBuild&&remoteTestBuild!==LOCAL_TEST_BUILD);
+ $('updateBanner').hidden=!(remoteTestBuild&&Number(remoteTestBuild.split('-').pop())>Number(LOCAL_TEST_BUILD.split('-').pop()));
 }
 async function fetchRemoteTestBuild(){
  const abort=new AbortController(),timeout=setTimeout(()=>abort.abort(),9000);
@@ -477,7 +477,7 @@ $('updateNowBtn').addEventListener('click',async()=>{
  try{
   // Reconfirm online, so we never claim success from an offline cache.
   const published=await fetchRemoteTestBuild();
-  if(published===LOCAL_TEST_BUILD){remoteTestBuild=null;renderUpdateBanner();return;}
+  if(Number(published.split('-').pop())<=Number(LOCAL_TEST_BUILD.split('-').pop())){remoteTestBuild=null;renderUpdateBanner();return;}
   if('serviceWorker' in navigator){
    const reg=await navigator.serviceWorker.getRegistration();
    if(reg){await reg.update();if(reg.waiting)reg.waiting.postMessage({type:'SKIP_WAITING'});}
