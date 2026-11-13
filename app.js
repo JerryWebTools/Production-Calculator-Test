@@ -642,10 +642,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-10';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-11';
 const releaseNotes={
- en:{title:"What's New · TEST Build 10",items:["Selected panel has a high-contrast outline with Black or Gray accents.","Calculator digits now start large and shrink automatically to fit both converter modes.","No calculation formulas were changed." ],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
- es:{title:'Novedades · TEST Build 10',items:['El panel activo tiene un marco de alto contraste con Black o Gray.','Los números comienzan grandes y se reducen para caber en ambos modos del conversor.','No cambiamos las fórmulas de cálculo.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
+ en:{title:"What's New · TEST Build 11",items:["New Quick Seed Calculator with editable inputs, Calculation Breakdown, and How Was This Calculated?.","Chemical Weight changes Fill Weight only; Bag Tare changes Gross Bag Weight only.","Production line explanations show KG to 3 decimals and LB to 2 decimals."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
+ es:{title:'Novedades · TEST Build 11',items:['Nueva Quick Seed Calculator con entradas editables, desglose y explicación paso a paso.','Chemical Weight solo cambia Fill Weight; Bag Tare solo cambia Gross Bag Weight.','Las explicaciones muestran KG con 3 decimales y LB con 2.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -717,7 +717,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-10';
+const LOCAL_TEST_BUILD='v2.5-test-build-11';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
