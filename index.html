@@ -91,18 +91,20 @@
  </div>
  <div class="qsPanel qsPackAllPanel">
   <h2>Pack All Calculator</h2>
-  <p class="qsPackAllIntro">How many full bags can you pack with the available seed? Uses the pack size, seed count, overpack, chemical %, and samples above.</p>
   <label class="qsField qsAvailableField">Available Seed (KG) — Before Chemical
-   <input id="qsAvailable" type="text" inputmode="decimal" placeholder="1838" autocomplete="off">
-   <span class="qsExamples">Example: 1838 KG of seed available to treat or pack</span>
+   <input id="qsAvailable" type="text" inputmode="decimal" placeholder="e.g. 1838" autocomplete="off">
   </label>
-  <p class="qsPackAllIntro">Samples (KG) are reserved first. Chemical weight changes the finished fill weight, not the available seed needed per bag.</p>
-  <p id="qsPackAllError" class="qsError" hidden role="alert"></p>
-  <div class="qsPackAllOutputs">
-   <div class="qsPackAllHero"><span>FULL BAGS POSSIBLE</span><div id="qsPackAllEa" class="qsPackAllEa">—</div><span id="qsPackAllStatus" class="qsPackAllStatus">—</span></div>
-   <div class="qsPackAllMini"><span>Remaining Seed</span><strong id="qsPackAllRemaining">—</strong><small>After samples and full bags</small></div>
-   <div class="qsPackAllMini"><span>Seed Used for Bags</span><strong id="qsPackAllUsed">—</strong><small>Excludes reserved samples and chemical</small></div>
-   <div class="qsPackAllMini"><span>Total Fill Weight</span><strong id="qsPackAllFillTotal">—</strong><small>Includes chemical when Chemical (%) is above 0</small></div>
+  <div id="qsPackAllExpanded" hidden>
+   <p class="qsPackAllIntro">Samples (KG) are reserved first. Chemical changes finished fill weight, not available seed required.</p>
+   <p id="qsPackAllError" class="qsError" hidden role="alert"></p>
+   <div class="qsPackAllOutputs">
+    <div class="qsPackAllHero"><span>FULL BAGS POSSIBLE</span><div id="qsPackAllEa" class="qsPackAllEa">—</div><span id="qsPackAllStatus" class="qsPackAllStatus">—</span></div>
+    <div class="qsPackAllMini"><span>PO Estimated EA</span><strong id="qsPackAllPoEa">—</strong></div>
+    <div class="qsPackAllMini"><span>Actual EA Difference</span><strong id="qsPackAllDifference">—</strong><small id="qsPackAllDifferenceMessage"></small></div>
+    <div class="qsPackAllMini"><span>Remaining Seed</span><strong id="qsPackAllRemaining">—</strong><small>After samples and full bags</small></div>
+    <div class="qsPackAllMini"><span>Seed Used for Bags</span><strong id="qsPackAllUsed">—</strong><small>Excludes reserved samples and chemical</small></div>
+    <div class="qsPackAllMini"><span>Total Fill Weight</span><strong id="qsPackAllFillTotal">—</strong><small>Includes chemical when Chemical (%) is above 0</small></div>
+   </div>
   </div>
  </div>
  <details id="qsBreakdownDetails" class="qsDisclosure"><summary>Calculation Breakdown</summary><div id="qsBreakdown"></div></details>
