@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1220"><title>Prod Calc TEST · v2.5</title><link rel="stylesheet" href="styles.css?v=25-test-build-14-breakdown-v1"><link rel="stylesheet" href="brain.css?v=25-test-build-14-breakdown-v1"><link rel="manifest" href="manifest.webmanifest?v=25-test-build-14-breakdown-v1"><link rel="apple-touch-icon" sizes="180x180" href="assets/prod-calc-test-180.png"><meta name="apple-mobile-web-app-title" content="Prod Calc TEST"></head><body><main class="app">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1220"><title>Prod Calc TEST · v2.5</title><link rel="stylesheet" href="styles.css?v=25-test-build-15-pack-all-v1"><link rel="stylesheet" href="brain.css?v=25-test-build-15-pack-all-v1"><link rel="manifest" href="manifest.webmanifest?v=25-test-build-15-pack-all-v1"><link rel="apple-touch-icon" sizes="180x180" href="assets/prod-calc-test-180.png"><meta name="apple-mobile-web-app-title" content="Prod Calc TEST"></head><body><main class="app">
 <div class="testEnvironmentBanner" role="status">🧪 TEST VERSION — NOT FOR PRODUCTION</div>
 <header class="compactHeader">
   <div class="brandFooter"><img src="assets/js-studio.png" alt="JS Studio logo"><span>JS Studio</span></div>
@@ -34,7 +34,7 @@
   <h2>Enter Order Details</h2>
   <div class="qsPackRow">
    <label class="qsField qsPackSize">Pack Size
-    <input id="qsSize" type="text" inputmode="decimal" placeholder="80" autocomplete="off">
+    <input id="qsSize" type="text" inputmode="decimal" value="100" placeholder="100" autocomplete="off">
    </label>
    <div class="qsUnitField">
     <div class="qsUnitTitle">Select Unit</div>
@@ -50,11 +50,11 @@
   <p class="qsExamples qsPackExamples">Examples: 100KS, 80KS, 50KS, 25KS, 20KS, 10KS, 500KS - 1MS, 5MS - 25KG, 20KG, 10KG, 1KG - 50LB</p>
   <div class="qsFields">
    <label id="qsPcField" class="qsField">Seed Count (PC)
-    <input id="qsPc" type="text" inputmode="decimal" placeholder="3000" autocomplete="off">
+    <input id="qsPc" type="text" inputmode="decimal" value="2500" placeholder="2500" autocomplete="off">
     <span class="qsExamples">Examples: 2500 seeds/lb</span>
    </label>
    <label class="qsField">Quantity (EA)
-    <input id="qsEa" type="text" inputmode="numeric" placeholder="120" autocomplete="off">
+    <input id="qsEa" type="text" inputmode="numeric" value="100" placeholder="100" autocomplete="off">
     <span class="qsExamples">Examples: 100 bags</span>
    </label>
    <label class="qsField">Overpack (%)
@@ -62,7 +62,7 @@
     <span class="qsExamples">Examples: 1% Commercial · 0.5% Parent</span>
    </label>
    <label class="qsField">Chemical (%)
-    <input id="qsChem" type="text" inputmode="decimal" value="1.2">
+    <input id="qsChem" type="text" inputmode="decimal" value="1">
     <span class="qsExamples">Examples: 1% Normal · 1.2% Shrunken · 0% Untreated</span>
    </label>
    <label class="qsField">Samples (KG)
@@ -87,6 +87,22 @@
    <div class="qsSmallCard"><span>Net Seed / EA</span><div class="qsSmallNumber" id="qsNetKg">—</div><div class="qsLb" id="qsNetLb">—</div><p class="qsMeaning">Actual seed weight per bag, before overpack and chemical weight.</p></div>
    <div class="qsSmallCard"><span>Fill Weight / EA</span><div class="qsSmallNumber" id="qsFillKg">—</div><div class="qsLb" id="qsFillLb">—</div><p class="qsMeaning">Target fill weight per bag, including overpack and chemical weight. Excludes bag tare.</p></div>
    <div id="qsGrossCard" class="qsSmallCard qsGrossCard" hidden><span>Gross Bag Weight / EA (with tare)</span><div class="qsSmallNumber" id="qsGrossKg">—</div><div class="qsLb" id="qsGrossLb">—</div><p class="qsMeaning">Fill weight plus bag tare. Shown only when tare is entered.</p></div>
+  </div>
+ </div>
+ <div class="qsPanel qsPackAllPanel">
+  <h2>Pack All Calculator</h2>
+  <p class="qsPackAllIntro">How many full bags can you pack with the available seed? Uses the pack size, seed count, overpack, chemical %, and samples above.</p>
+  <label class="qsField qsAvailableField">Available Seed (KG) — Before Chemical
+   <input id="qsAvailable" type="text" inputmode="decimal" placeholder="1838" autocomplete="off">
+   <span class="qsExamples">Example: 1838 KG of seed available to treat or pack</span>
+  </label>
+  <p class="qsPackAllIntro">Samples (KG) are reserved first. Chemical weight changes the finished fill weight, not the available seed needed per bag.</p>
+  <p id="qsPackAllError" class="qsError" hidden role="alert"></p>
+  <div class="qsPackAllOutputs">
+   <div class="qsPackAllHero"><span>FULL BAGS POSSIBLE</span><div id="qsPackAllEa" class="qsPackAllEa">—</div><span id="qsPackAllStatus" class="qsPackAllStatus">—</span></div>
+   <div class="qsPackAllMini"><span>Remaining Seed</span><strong id="qsPackAllRemaining">—</strong><small>After samples and full bags</small></div>
+   <div class="qsPackAllMini"><span>Seed Used for Bags</span><strong id="qsPackAllUsed">—</strong><small>Excludes reserved samples and chemical</small></div>
+   <div class="qsPackAllMini"><span>Total Fill Weight</span><strong id="qsPackAllFillTotal">—</strong><small>Includes chemical when Chemical (%) is above 0</small></div>
   </div>
  </div>
  <details id="qsBreakdownDetails" class="qsDisclosure"><summary>Calculation Breakdown</summary><div id="qsBreakdown"></div></details>
@@ -175,4 +191,4 @@
     <button id="whatsNewClose" type="button" class="primary">Continue</button>
   </div>
 </div>
-<script src="app.js?v=25-test-build-14-breakdown-v1"></script><script src="brain.js?v=25-test-build-14-breakdown-v1"></script></body></html>
+<script src="app.js?v=25-test-build-15-pack-all-v1"></script><script src="brain.js?v=25-test-build-15-pack-all-v1"></script></body></html>
