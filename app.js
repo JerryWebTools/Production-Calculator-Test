@@ -588,36 +588,93 @@ function renderQuickSeed(){
  const setWeight=(prefix,value,round=false)=>{$(prefix+'Kg').textContent=fmt(value,round?0:3)+' KG';$(prefix+'Lb').textContent=lb(value)+' LB';};
  setWeight('qsNet',base);setWeight('qsFill',fill);setWeight('qsGross',gross);setWeight('qsTotal',total,true);
  $('qsGrossCard').hidden=$('qsTare').value===''||tare<=0;
- const addRow=(name,value)=>{const div=document.createElement('div');div.className='detailrow';const label=document.createElement('span');label.textContent=name;const strong=document.createElement('strong');strong.textContent=value;div.append(label,strong);$('qsBreakdown').append(div);};
- $('qsBreakdown').replaceChildren();
+
+ // Show a complete per-bag section first, then the matching totals for the entire order.
+ // All displayed values are rounded; calculations below retain full precision.
+ const totalNet=base*ea,totalOver=overKg*ea,totalChemical=chemicalKg*ea;
+ const totalFill=fill*ea,totalTare=tare*ea,totalGross=gross*ea;
+ const weight=x=>kg(x)+' KG / '+lb(x)+' LB';
+ const breakdown=$('qsBreakdown');breakdown.replaceChildren();
+ const addHeading=label=>{const h=document.createElement('h3');h.className='qsBreakHeading';h.textContent=label;breakdown.append(h);};
+ const addRow=(name,value)=>{const div=document.createElement('div');div.className='detailrow';const label=document.createElement('span');label.textContent=name;const strong=document.createElement('strong');strong.textContent=value;div.append(label,strong);breakdown.append(div);};
+ addHeading(t('Order Details','Detalles de la orden'));
+ addRow(t('Pack Size','Tamaño de bolsa'),pct(size)+' '+unit);
+ if(needsPc)addRow(t('Seed Count (PC)','Conteo de semillas (PC)'),pct(pc)+' '+t('seeds/LB','semillas/LB'));
+ addRow(t('Quantity','Cantidad'),ea+' EA');
+ addHeading(t('Per Bag (1 EA)','Por bolsa (1 EA)'));
  [
- [t('Pack size','Tamaño de bolsa'),pct(size)+' '+unit],
- ...(needsPc?[[t('Seed Count (PC)','Conteo de semillas (PC)'),pct(pc)+' seeds/LB']]:[]),
- [t('Quantity','Cantidad'),ea+' EA'],
- [t('Base Seed / EA (Net Seed)','Semilla base / EA (Net Seed)'),kg(base)+' KG / '+lb(base)+' LB'],
- [t('Overpack / EA','Overpack / EA'),pct(over)+'% = '+kg(overKg)+' KG'],
- [t('Seed with Overpack / EA','Semilla con Overpack / EA'),kg(seedWithOverpack)+' KG'],
- [t('Chemical Weight / EA','Peso químico / EA'),pct(chem)+'% = '+kg(chemicalKg)+' KG'],
- [t('Fill Weight / EA','Peso de llenado / EA'),kg(fill)+' KG / '+lb(fill)+' LB'],
- ...(tare>0?[[t('Bag Tare / EA','Tara de bolsa / EA'),kg(tare)+' KG'],[t('Gross Bag Weight / EA','Peso bruto / EA'),kg(gross)+' KG / '+lb(gross)+' LB']]:[]),
- [t('Seed with Overpack × EA','Semilla con Overpack × EA'),kg(orderSeed)+' KG'],
- [t('Samples','Muestras'),kg(samples)+' KG'],
- [t('Seed to Treat before rounding','Semilla para tratar antes de redondear'),kg(raw)+' KG'],
- [t('TOTAL SEED TO TREAT','SEMILLA TOTAL PARA TRATAR'),fmt(total,0)+' KG / '+lb(total)+' LB']
+ [t('Net Seed / EA (before overpack)','Net Seed / EA (antes de overpack)'),weight(base)],
+ [t('Overpack / EA','Overpack / EA'),pct(over)+'% = '+weight(overKg)],
+ [t('Seed + Overpack / EA','Semilla + Overpack / EA'),weight(seedWithOverpack)],
+ [t('Chemical Weight / EA','Peso químico / EA'),pct(chem)+'% = '+weight(chemicalKg)],
+ [t('Fill Weight / EA','Peso de llenado / EA'),weight(fill)],
+ ...(tare>0?[[t('Bag Tare / EA','Tara de bolsa / EA'),weight(tare)],[t('Gross Bag Weight / EA','Peso bruto / EA'),weight(gross)]]:[])
  ].forEach(([name,value])=>addRow(name,value));
+ addHeading(t('Order Totals ('+ea+' EA)','Totales de la orden ('+ea+' EA)'));
+ [
+ [t('Total Net Seed (before overpack)','Semilla neta total (antes de overpack)'),weight(totalNet)],
+ [t('Total Overpack','Overpack total'),weight(totalOver)],
+ [t('Total Seed + Overpack','Semilla total + Overpack'),weight(orderSeed)],
+ [t('Total Chemical Weight','Peso químico total'),weight(totalChemical)],
+ [t('Total Fill Weight','Peso de llenado total'),weight(totalFill)],
+ ...(tare>0?[[t('Total Bag Tare','Tara total de bolsas'),weight(totalTare)],[t('Total Gross Bag Weight','Peso bruto total de bolsas'),weight(totalGross)]]:[])
+ ].forEach(([name,value])=>addRow(name,value));
+ addHeading(t('Seed to Treat','Semilla para tratar'));
+ addRow(t('Samples','Muestras'),weight(samples));
+ addRow(t('Seed + Overpack + Samples','Semilla + Overpack + Muestras'),weight(raw));
+ addRow(t('TOTAL SEED TO TREAT (rounded up)','SEMILLA TOTAL PARA TRATAR (redondeada)'),weight(total));
+
  const conversion=needsPc
    ?pct(size)+' '+unit+' × '+(unit==='KS'?'1,000':'1,000,000')+' = '+fmt(size*(unit==='KS'?1000:1000000),0)+' '+t('seeds','semillas')+'\n'+fmt(size*(unit==='KS'?1000:1000000),0)+' ÷ '+pct(pc)+' PC = '+lb(base)+' LB\n'+lb(base)+' LB ÷ '+exactLbPerKg+' = '+kg(base)+' KG'
    :unit==='LB'?pct(size)+' LB ÷ '+exactLbPerKg+' = '+kg(base)+' KG':pct(size)+' KG = '+kg(base)+' KG';
  const steps=[
- [t('1. Calculate Net Seed / EA','1. Calcular Net Seed / EA'),conversion],
- [t('2. Add Overpack','2. Agregar Overpack'),kg(base)+' KG × '+pct(over)+'% = '+kg(overKg)+' KG\n'+kg(base)+' + '+kg(overKg)+' = '+kg(seedWithOverpack)+' KG'],
- [t('3. Calculate Fill Weight / EA','3. Calcular Fill Weight / EA'),kg(seedWithOverpack)+' KG × '+pct(chem)+'% = '+kg(chemicalKg)+' KG\n'+kg(seedWithOverpack)+' + '+kg(chemicalKg)+' = '+kg(fill)+' KG'],
- ...(tare>0?[[t('4. Calculate Gross Bag Weight','4. Calcular peso bruto'),kg(fill)+' KG + '+kg(tare)+' KG = '+kg(gross)+' KG']]:[]),
- [t('5. Calculate Seed to Treat','5. Calcular semilla para tratar'),kg(seedWithOverpack)+' KG × '+ea+' EA = '+kg(orderSeed)+' KG\n'+kg(orderSeed)+' KG + '+kg(samples)+' KG = '+kg(raw)+' KG\n'+t('Round up','Redondear hacia arriba')+': '+fmt(total,0)+' KG / '+lb(total)+' LB']
+ {
+  title:t('Calculate Net Seed per Bag','Calcular Net Seed por bolsa'),
+  explanation:t('This is the actual untreated seed weight needed for one bag based on its pack size. For KS/MS, seed count (PC) converts the number of seeds into pounds, then kilograms. No overpack or chemical is included.','Es el peso real de semilla sin tratar necesario para una bolsa según su tamaño. Para KS/MS, el conteo PC convierte las semillas a libras y después a kilogramos. No incluye overpack ni químico.'),
+  math:conversion
+ },
+ {
+  title:t('Add Overpack per Bag','Agregar Overpack por bolsa'),
+  explanation:t('Overpack is extra seed added to each bag. Multiply the base seed weight by the selected overpack percentage, then add it to the base seed weight.','Overpack es semilla adicional por bolsa. Multiplica el peso base por el porcentaje de overpack y súmalo al peso base.'),
+  math:kg(base)+' KG × '+pct(over)+'% = '+kg(overKg)+' KG\n'+kg(base)+' + '+kg(overKg)+' = '+kg(seedWithOverpack)+' KG'
+ },
+ {
+  title:t('Calculate Total Net Seed and Overpack','Calcular semilla neta total y Overpack'),
+  explanation:t('Multiply the seed weight for one bag by the quantity of bags (EA). This shows the total base seed, total overpack, and combined seed needed for the order before samples.','Multiplica el peso de semilla de una bolsa por la cantidad de bolsas (EA). Así obtienes la semilla base total, el overpack total y la semilla combinada para la orden antes de muestras.'),
+  math:kg(base)+' KG × '+ea+' EA = '+kg(totalNet)+' KG '+t('net seed','semilla neta')+'\n'+kg(overKg)+' KG × '+ea+' EA = '+kg(totalOver)+' KG overpack\n'+kg(totalNet)+' + '+kg(totalOver)+' = '+kg(orderSeed)+' KG'
+ },
+ {
+  title:t('Calculate Chemical Weight','Calcular peso químico'),
+  explanation:t('Chemical weight is calculated from seed plus overpack. It changes the treated fill weight, but does not increase the seed quantity that must be treated. The total is for all EA.','El peso químico se calcula sobre la semilla con overpack. Aumenta el peso de llenado tratado, pero no la cantidad de semilla que se debe tratar. El total corresponde a todas las EA.'),
+  math:kg(seedWithOverpack)+' KG × '+pct(chem)+'% = '+kg(chemicalKg)+' KG / EA\n'+kg(chemicalKg)+' KG × '+ea+' EA = '+kg(totalChemical)+' KG '+t('total chemical','químico total')
+ },
+ {
+  title:t('Calculate Fill Weight','Calcular Fill Weight'),
+  explanation:t('Fill Weight is the target weight of treated seed inside each bag: seed plus overpack plus chemical. Multiplying by EA gives the total treated fill weight for the order. Bag tare is excluded.','Fill Weight es el peso objetivo de semilla tratada dentro de cada bolsa: semilla más overpack más químico. Multiplicarlo por EA da el peso total de llenado tratado. No incluye tara.'),
+  math:kg(seedWithOverpack)+' + '+kg(chemicalKg)+' = '+kg(fill)+' KG / EA\n'+kg(fill)+' KG × '+ea+' EA = '+kg(totalFill)+' KG '+t('total fill','llenado total')
+ },
+ ...(tare>0?[{
+  title:t('Add Bag Tare for Gross Weight','Agregar tara para peso bruto'),
+  explanation:t('Bag tare is the empty bag weight. Add it to Fill Weight to get the gross weight per bag; multiply by EA for the order total. Tare does not affect Seed to Treat.','La tara es el peso de la bolsa vacía. Súmala a Fill Weight para obtener el peso bruto por bolsa; multiplica por EA para el total. La tara no afecta Seed to Treat.'),
+  math:kg(fill)+' + '+kg(tare)+' = '+kg(gross)+' KG / EA\n'+kg(tare)+' KG × '+ea+' EA = '+kg(totalTare)+' KG '+t('total tare','tara total')+'\n'+kg(gross)+' KG × '+ea+' EA = '+kg(totalGross)+' KG '+t('total gross','bruto total')
+ }]:[]),
+ {
+  title:t('Calculate Total Seed to Treat','Calcular semilla total para tratar'),
+  explanation:t('Start with total seed plus overpack for all bags, then add the sample weight in KG. Round the result UP to the next whole KG. Chemical weight and bag tare are never included.','Comienza con la semilla total más overpack para todas las bolsas y agrega el peso de muestras en KG. Redondea HACIA ARRIBA al siguiente KG entero. Nunca incluyas químico ni tara.'),
+  math:kg(orderSeed)+' KG + '+kg(samples)+' KG '+t('samples','muestras')+' = '+kg(raw)+' KG\n'+t('Round up','Redondear hacia arriba')+': '+fmt(total,0)+' KG / '+lb(total)+' LB'
+ }
  ];
  const guide=$('qsGuide');guide.replaceChildren();
- const intro=document.createElement('p');intro.className='muted tiny';intro.textContent=t('Displayed values are rounded; all calculations use full internal precision. Chemical Weight and Bag Tare are excluded from Seed to Treat.','Los valores mostrados están redondeados; los cálculos utilizan precisión completa. Chemical Weight y Bag Tare no se incluyen en Seed to Treat.');guide.append(intro);
- steps.forEach(([heading,math])=>{const section=document.createElement('section');section.className='guideStep';const h=document.createElement('strong');h.textContent=heading;const p=document.createElement('div');p.className='guideMath';p.textContent=math;section.append(h,p);guide.append(section);});
+ const intro=document.createElement('p');intro.className='muted tiny';
+ intro.textContent=t('Steps display rounded numbers, but calculations use full internal precision. KG: 3 decimals; LB: 2 decimals.','Los pasos muestran números redondeados, pero los cálculos usan precisión interna completa. KG: 3 decimales; LB: 2 decimales.');
+ guide.append(intro);
+ steps.forEach((step,i)=>{
+  const section=document.createElement('section');section.className='guideStep';
+  const h=document.createElement('strong');h.textContent=(i+1)+'. '+step.title;
+  const desc=document.createElement('p');desc.className='qsStepMeaning';desc.textContent=step.explanation;
+  const math=document.createElement('div');math.className='guideMath';math.textContent=step.math;
+  section.append(h,desc,math);guide.append(section);
+ });
 }
 $('quickSeedHome').onclick=openQuickSeed;
 $('qsReset').onclick=()=>{$('qsSize').value='';$('qsEa').value='';$('qsPc').value='';$('qsOver').value='1';$('qsChem').value='1.2';$('qsSamples').value='5';$('qsTare').value='';$('qsUnit').value='KS';renderQuickSeed();};
@@ -640,10 +697,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-13';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-14';
 const releaseNotes={
- en:{title:"What's New · TEST Build 13",items:["Quick Seed inputs now use consistent Examples text, put the cursor at the end, and explain each result.","Chemical Weight changes Fill Weight only; Bag Tare changes Gross Bag Weight only.","Production line explanations show KG to 3 decimals and LB to 2 decimals."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
- es:{title:'Novedades · TEST Build 13',items:['Quick Seed ahora muestra Examples en cada campo, coloca el cursor al final y explica cada resultado.','Chemical Weight solo cambia Fill Weight; Bag Tare solo cambia Gross Bag Weight.','Las explicaciones muestran KG con 3 decimales y LB con 2.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
+ en:{title:"What's New · TEST Build 14",items:["Quick Seed Breakdown now shows per-bag and order totals, and every How Was This Calculated? step explains its purpose.","Chemical Weight changes Fill Weight only; Bag Tare changes Gross Bag Weight only.","Production line explanations show KG to 3 decimals and LB to 2 decimals."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
+ es:{title:'Novedades · TEST Build 14',items:['Quick Seed ahora muestra pesos por bolsa y totales de orden en Breakdown, y explica cada paso del cálculo.','Chemical Weight solo cambia Fill Weight; Bag Tare solo cambia Gross Bag Weight.','Las explicaciones muestran KG con 3 decimales y LB con 2.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -715,7 +772,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-13';
+const LOCAL_TEST_BUILD='v2.5-test-build-14';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
