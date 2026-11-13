@@ -48,7 +48,7 @@ function renderPackOnlyGuide(expectedLine){
  const es=prefs.language==='es';
  const text=(en,sp)=>es?sp:en;
  const n=x=>Number(x).toLocaleString('en-US',{maximumFractionDigits:5});
- const w=x=>fmt(x,5);
+ const w=x=>fmt(x,3), lb=x=>fmt(x,2);
  const pct=x=>n(x);
  const overAdded=r.base*r.over/100;
  const perBagOver=r.base+overAdded;
@@ -62,7 +62,7 @@ function renderPackOnlyGuide(expectedLine){
  let firstFormula,firstExplain;
  if(unit==='KS'||unit==='MS'){
    const seeds=size*(unit==='KS'?1000:1000000);
-   firstFormula=`${n(size)} ${unit} × ${unit==='KS'?'1,000':'1,000,000'} = ${fmt(seeds,0)} ${text('seeds','semillas')}\n${fmt(seeds,0)} ÷ ${n(r.pc)} = ${n(r.base*F)} LB\n${n(r.base*F)} LB ÷ ${F} = ${w(r.base)} KG`;
+   firstFormula=`${n(size)} ${unit} × ${unit==='KS'?'1,000':'1,000,000'} = ${fmt(seeds,0)} ${text('seeds','semillas')}\n${fmt(seeds,0)} ÷ ${n(r.pc)} = ${lb(r.base*F)} LB\n${lb(r.base*F)} LB ÷ ${F} = ${w(r.base)} KG`;
    firstExplain=text(`Each bag needs ${fmt(seeds,0)} seeds. With ${n(r.pc)} seeds in one pound, we find the pounds needed, then change pounds to kilograms (KG).`, `Cada bolsa necesita ${fmt(seeds,0)} semillas. Como hay ${n(r.pc)} semillas en una libra, calculamos las libras y luego las convertimos a kilogramos (KG).`);
  }else if(unit==='LB'){
    firstFormula=`${n(size)} LB ÷ ${F} = ${w(r.base)} KG`;
@@ -82,7 +82,7 @@ function renderPackOnlyGuide(expectedLine){
    return `${n(qty)} ${text('samples','muestras')} × ${n(amount)} ${s.unit}${converted}${s.unit==='KG'?` = ${w(totalKg)} KG`:''}`;
  }).join('\n');
  const customSampleMath=customSampleDetails?`${customSampleDetails}\n`:'';
- const sampleSummaryMath=`${w(seedOrder)} + ${n(r.regular)} KG ${text('(regular samples)','(muestras regulares)')} + ${n(r.customSampleKg)} KG ${text('(custom samples)','(muestras adicionales)')} = ${w(raw)} KG`;
+ const sampleSummaryMath=`${w(seedOrder)} + ${w(r.regular)} KG ${text('(regular samples)','(muestras regulares)')} + ${w(r.customSampleKg)} KG ${text('(custom samples)','(muestras adicionales)')} = ${w(raw)} KG`;
  const chemExplain=r.chem===0
    ?text('No chemical weight is added for this order.','No se agrega peso de tratamiento químico a esta orden.')
    :text(`The treatment adds ${pct(r.chem)}% to the weight. We calculate that extra weight and add it to the seed weight from Step 2.`,`El tratamiento agrega ${pct(r.chem)}% al peso. Calculamos ese peso adicional y lo sumamos al peso del paso 2.`);
@@ -118,14 +118,14 @@ function renderLine1Guide(){
  if(!r||r.line!=='1'){el.replaceChildren();return;}
  const es=prefs.language==='es',t=(en,sp)=>es?sp:en;
  const n=x=>Number(x).toLocaleString('en-US',{maximumFractionDigits:5});
- const w=x=>fmt(x,5);
+ const w=x=>fmt(x,3), lb=x=>fmt(x,2);
  const row=(a,b)=>`<div class="guideRow"><span>${esc(a)}</span><strong>${esc(b)}</strong></div>`;
  const block=(num,title,explain,formula,result)=>`<section class="guideStep"><div class="guideStepTitle"><span class="guideNum">${num}</span><strong>${esc(title)}</strong></div><p>${esc(explain)}</p><div class="guideMath">${esc(formula)}</div><div class="guideResult">${esc(result)}</div></section>`;
  const size=r.packSize,unit=r.packUnit;
  let baseFormula,baseExplain;
  if(unit==='KS'||unit==='MS'){
   const factor=unit==='KS'?1000:1000000,seeds=size*factor;
-  baseFormula=`${n(size)} ${unit} × ${fmt(factor,0)} = ${fmt(seeds,0)} ${t('seeds','semillas')}\n${fmt(seeds,0)} ÷ ${n(r.pc)} = ${n(r.base*F)} LB\n${n(r.base*F)} LB ÷ ${F} = ${w(r.base)} KG`;
+  baseFormula=`${n(size)} ${unit} × ${fmt(factor,0)} = ${fmt(seeds,0)} ${t('seeds','semillas')}\n${fmt(seeds,0)} ÷ ${n(r.pc)} = ${lb(r.base*F)} LB\n${lb(r.base*F)} LB ÷ ${F} = ${w(r.base)} KG`;
   baseExplain=t(`Each pack contains ${fmt(seeds,0)} seeds. Use the seed count (PC) to find the pounds, then convert pounds to KG.`,`Cada paquete contiene ${fmt(seeds,0)} semillas. Usamos el conteo de semillas (PC) para obtener libras y luego las convertimos a KG.`);
  }else if(unit==='LB'){
   baseFormula=`${n(size)} LB ÷ ${F} = ${w(r.base)} KG`;
@@ -170,13 +170,13 @@ function renderLine3Guide(){
  const r=lastResult, el=$('guideContent');
  if(!r||r.line!=='3'){el.replaceChildren();return;}
  const es=prefs.language==='es', t=(en,sp)=>es?sp:en;
- const w=x=>fmt(x,5), n=x=>Number(x).toLocaleString('en-US',{maximumFractionDigits:5});
+ const w=x=>fmt(x,3), lb=x=>fmt(x,2), n=x=>Number(x).toLocaleString('en-US',{maximumFractionDigits:5});
  const row=(a,b)=>`<div class="guideRow"><span>${esc(a)}</span><strong>${esc(b)}</strong></div>`;
  const block=(num,name,explain,math,result)=>`<section class="guideStep"><div class="guideStepTitle"><span class="guideNum">${num}</span><strong>${esc(name)}</strong></div><p>${esc(explain)}</p><div class="guideMath">${esc(math)}</div><div class="guideResult">${esc(result)}</div></section>`;
  const seeds=r.packSize*(r.packUnit==='KS'?1000:1000000);
  let firstMath,firstExplain;
  if(['KS','MS'].includes(r.packUnit)){
-   firstMath=`${n(r.packSize)} ${r.packUnit} × ${r.packUnit==='KS'?'1,000':'1,000,000'} = ${fmt(seeds,0)} ${t('seeds','semillas')}\n${fmt(seeds,0)} ÷ ${n(r.pc)} = ${w(r.base*F)} LB\n${w(r.base*F)} LB ÷ ${F} = ${w(r.base)} KG`;
+   firstMath=`${n(r.packSize)} ${r.packUnit} × ${r.packUnit==='KS'?'1,000':'1,000,000'} = ${fmt(seeds,0)} ${t('seeds','semillas')}\n${fmt(seeds,0)} ÷ ${n(r.pc)} = ${lb(r.base*F)} LB\n${lb(r.base*F)} LB ÷ ${F} = ${w(r.base)} KG`;
    firstExplain=t('Convert the seeds in one pack to pounds using the seed count (PC), then convert pounds to kilograms.','Convierte las semillas de un paquete a libras usando el conteo de semillas (PC) y después a kilogramos.');
  }else if(r.packUnit==='LB'){
    firstMath=`${n(r.packSize)} LB ÷ ${F} = ${w(r.base)} KG`;
@@ -233,13 +233,13 @@ function renderLine4Guide(){
  const r=lastResult, el=$('guideContent');
  if(!r||r.line!=='4'){el.replaceChildren();return;}
  const es=prefs.language==='es', t=(en,sp)=>es?sp:en;
- const w=x=>fmt(x,5), n=x=>Number(x).toLocaleString('en-US',{maximumFractionDigits:5});
+ const w=x=>fmt(x,3), lb=x=>fmt(x,2), n=x=>Number(x).toLocaleString('en-US',{maximumFractionDigits:5});
  const row=(a,b)=>`<div class="guideRow"><span>${esc(a)}</span><strong>${esc(b)}</strong></div>`;
  const block=(num,name,explain,math,result)=>`<section class="guideStep"><div class="guideStepTitle"><span class="guideNum">${num}</span><strong>${esc(name)}</strong></div><p>${esc(explain)}</p><div class="guideMath">${esc(math)}</div><div class="guideResult">${esc(result)}</div></section>`;
  const seeds=r.packSize*(r.packUnit==='KS'?1000:1000000);
  let firstMath,firstExplain;
  if(['KS','MS'].includes(r.packUnit)){
-   firstMath=`${n(r.packSize)} ${r.packUnit} × ${r.packUnit==='KS'?'1,000':'1,000,000'} = ${fmt(seeds,0)} ${t('seeds','semillas')}\n${fmt(seeds,0)} ÷ ${n(r.pc)} = ${w(r.base*F)} LB\n${w(r.base*F)} LB ÷ ${F} = ${w(r.base)} KG`;
+   firstMath=`${n(r.packSize)} ${r.packUnit} × ${r.packUnit==='KS'?'1,000':'1,000,000'} = ${fmt(seeds,0)} ${t('seeds','semillas')}\n${fmt(seeds,0)} ÷ ${n(r.pc)} = ${lb(r.base*F)} LB\n${lb(r.base*F)} LB ÷ ${F} = ${w(r.base)} KG`;
    firstExplain=t('Convert the seeds in one pack to pounds using the seed count (PC), then convert pounds to kilograms.','Convierte las semillas de un paquete a libras usando el conteo de semillas (PC) y después a kilogramos.');
  }else if(r.packUnit==='LB'){
    firstMath=`${n(r.packSize)} LB ÷ ${F} = ${w(r.base)} KG`;
