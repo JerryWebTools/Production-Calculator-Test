@@ -310,7 +310,7 @@ if(!Array.isArray(qHistory))qHistory=[];
 const colorCodes={blue:'#2563eb',red:'#dc2626',green:'#15803d',yellow:'#b88a00',pink:'#be185d',gray:'#64748b',black:'#3f3f46'};
 function applyPrefs(){if($('quickSeed')&&!$('quickSeed').hidden)renderQuickSeed();if($('standaloneGuide')?.open&&['standalone','1','3','4'].includes(lastResult?.line))renderCalculationGuide();document.documentElement.dataset.theme=prefs.theme;document.documentElement.dataset.quickAccent=prefs.color;document.documentElement.style.setProperty('--accent',colorCodes[prefs.color]||colorCodes.blue);document.documentElement.lang=prefs.language;['Language','Theme','Color'].forEach(k=>{const e=$('pref'+k);if(e)e.value=prefs[k.toLowerCase()]});translateUI();}
 const translations={
-'Production Calculator':'Production Calculator','Choose a production line.':'Selecciona una línea de producción.','Select a Production Line':'Seleccionar línea de producción','Line 1':'Line 1','Line 3':'Line 3','Line 4':'Line 4','Treat Only':'Solo tratamiento','Treat / Treat & Pack':'Tratar / Tratar y empacar','Leg':'Leg','Stand-Alone':'Stand-Alone','Pack Only':'Solo empaque','Bulk Line':'Bulk Line','Coming Soon 🚧':'Próximamente 🚧','Choose a mode':'Selecciona un modo','Treat & Pack':'Tratar y empacar','Seed to Treat':'Semilla por tratar','Seed to Treat + Bag Target':'Semilla por tratar + peso por bolsa','Crop Type':'Tipo de cultivo','Seed Type':'Tipo de semilla','Seed Condition':'Condición de semilla','Commercial':'Comercial','Parent / Basic':'Padre / Básica','Treated':'Tratada','Untreated':'Sin tratar','Pack Size':'Tamaño de empaque','Order EA':'EA de orden','Bag Tare Weight':'Tara de bolsa','Samples':'Muestras','Regular Sample':'Muestra regular','Edit ▾':'Editar ▾','Hide ▴':'Ocultar ▴','+ Add Custom Sample':'+ Agregar muestra personalizada','Extra EA':'EA adicionales','Net Seed Weight / EA':'Peso neto de semilla / EA','Gross Bag Weight / EA':'Peso bruto de bolsa / EA','Enter Bag Tare to calculate':'Ingresa la tara de la bolsa para calcular','Finished Bag Target':'Peso final por bolsa','Calculated EA':'EA calculados','Total Seed Required':'Semilla total requerida','Calculation Breakdown':'Desglose del cálculo','KILOGRAMS':'KILOGRAMOS','POUNDS':'LIBRAS','Save':'Guardar','Reset Inputs':'Restablecer datos','Saved Calculations':'Cálculos guardados','Settings':'Configuración','Formula Settings':'Configuración de fórmulas','Quick Calculator':'Calculadora rápida','Quick Seed Calculator':'Calculadora rápida de semillas','Manual seed and bag weight calculation':'Cálculo manual de semilla y peso por bolsa','Pack Size / Unit':'Tamaño / Unidad','Seed Count (PC)':'Conteo de semillas (PC)','Quantity (EA)':'Cantidad (EA)','Overpack %':'Overpack %','Chemical Weight %':'Peso químico %','Samples (KG)':'Muestras (KG)','Bag Tare':'Tara de bolsa','Normal Corn':'Maíz normal','Shrunken Corn':'Maíz shrunken','Other / Untreated':'Otro / Sin tratar','Net Seed Weight':'Peso neto de semilla','Fill Weight':'Peso de llenado','Gross Bag Weight':'Peso bruto de bolsa','Seed to Treat (rounded KG)':'Semilla para tratar (KG redondeados)','Calculator + Unit Converter':'Calculadora + conversor de unidades','Converter ON':'Conversor activado','Converter OFF':'Conversor desactivado','Recent History':'Historial reciente','Clear':'Borrar','Close':'Cerrar','Apply Changes':'Aplicar cambios','Restore Defaults':'Restaurar valores','Pack All — Actual Available Seed':'Empacar todo — Semilla disponible real','Actual Available Seed (KG)':'Semilla disponible real (KG)','Calculation Summary':'Resumen del cálculo','Back to Home':'Volver al inicio','No recent calculations.':'Sin cálculos recientes.','Complete Bags':'Bolsas completas','Remaining Seed':'Semilla restante','PO Estimated EA':'EA estimados en PO','Actual EA Difference':'Diferencia de EA reales','Formula Settings':'Configuración de fórmulas',"✦ What's New · v2.5 TEST · Build 1":'✦ Novedades · v2.5 TEST · Build 1'};
+'Production Calculator':'Production Calculator','Choose a production line.':'Selecciona una línea de producción.','Select a Production Line':'Seleccionar línea de producción','Line 1':'Line 1','Line 3':'Line 3','Line 4':'Line 4','Treat Only':'Solo tratamiento','Treat / Treat & Pack':'Tratar / Tratar y empacar','Leg':'Leg','Stand-Alone':'Stand-Alone','Pack Only':'Solo empaque','Bulk Line':'Bulk Line','Coming Soon 🚧':'Próximamente 🚧','Choose a mode':'Selecciona un modo','Treat & Pack':'Tratar y empacar','Seed to Treat':'Semilla por tratar','Seed to Treat + Bag Target':'Semilla por tratar + peso por bolsa','Crop Type':'Tipo de cultivo','Seed Type':'Tipo de semilla','Seed Condition':'Condición de semilla','Commercial':'Comercial','Parent / Basic':'Padre / Básica','Treated':'Tratada','Untreated':'Sin tratar','Pack Size':'Tamaño de empaque','Order EA':'EA de orden','Bag Tare Weight':'Tara de bolsa','Samples':'Muestras','Regular Sample':'Muestra regular','Edit ▾':'Editar ▾','Hide ▴':'Ocultar ▴','+ Add Custom Sample':'+ Agregar muestra personalizada','Extra EA':'EA adicionales','Net Seed Weight / EA':'Peso neto de semilla / EA','Gross Bag Weight / EA':'Peso bruto de bolsa / EA','Enter Bag Tare to calculate':'Ingresa la tara de la bolsa para calcular','Finished Bag Target':'Peso final por bolsa','Calculated EA':'EA calculados','Total Seed Required':'Semilla total requerida','Calculation Breakdown':'Desglose del cálculo','KILOGRAMS':'KILOGRAMOS','POUNDS':'LIBRAS','Save':'Guardar','Reset Inputs':'Restablecer datos','Saved Calculations':'Cálculos guardados','Settings':'Configuración','Formula Settings':'Configuración de fórmulas','Quick Calculator':'Calculadora rápida','Quick Seed Calculator':'Calculadora rápida de semillas','Manual seed and bag weight calculation':'Cálculo manual de semilla y peso por bolsa','Pack Size / Unit':'Tamaño / Unidad','Seed Count (PC)':'Conteo de semillas (PC)','Quantity (EA)':'Cantidad (EA)','Overpack %':'Overpack %','Chemical Weight %':'Peso químico %','Samples (KG)':'Muestras (KG)','Enter Order Details':'Ingresar detalles de orden','Select Unit':'Seleccionar unidad','Results':'Resultados','TOTAL SEED TO TREAT':'SEMILLA TOTAL PARA TRATAR','Chemical (%)':'Químico (%)','Bag Tare':'Tara de bolsa','Normal Corn':'Maíz normal','Shrunken Corn':'Maíz shrunken','Other / Untreated':'Otro / Sin tratar','Net Seed Weight':'Peso neto de semilla','Fill Weight':'Peso de llenado','Gross Bag Weight':'Peso bruto de bolsa','Seed to Treat (rounded KG)':'Semilla para tratar (KG redondeados)','Calculator + Unit Converter':'Calculadora + conversor de unidades','Converter ON':'Conversor activado','Converter OFF':'Conversor desactivado','Recent History':'Historial reciente','Clear':'Borrar','Close':'Cerrar','Apply Changes':'Aplicar cambios','Restore Defaults':'Restaurar valores','Pack All — Actual Available Seed':'Empacar todo — Semilla disponible real','Actual Available Seed (KG)':'Semilla disponible real (KG)','Calculation Summary':'Resumen del cálculo','Back to Home':'Volver al inicio','No recent calculations.':'Sin cálculos recientes.','Complete Bags':'Bolsas completas','Remaining Seed':'Semilla restante','PO Estimated EA':'EA estimados en PO','Actual EA Difference':'Diferencia de EA reales','Formula Settings':'Configuración de fórmulas',"✦ What's New · v2.5 TEST · Build 1":'✦ Novedades · v2.5 TEST · Build 1'};
 const originalText=new WeakMap();
 function translateUI(){const spanish=prefs.language==='es';document.querySelectorAll('button, label, h1, h2, strong, summary, .eyebrow, .pill, small').forEach(el=>{if(el.closest('#quickHistory,#packAllOutput,#savedList,#breakdown'))return;for(const node of el.childNodes){if(node.nodeType!==3)continue;if(!originalText.has(node))originalText.set(node,node.nodeValue);const base=originalText.get(node);const trimmed=base.trim();if(!trimmed)continue;const clean=trimmed.replace(/^[←▦⚙️💾]+\s*/u,'');const t=translations[clean];if(t)node.nodeValue=spanish?base.replace(clean,t):base;}});document.querySelectorAll('option').forEach(el=>{if(!el.dataset.originalLabel)el.dataset.originalLabel=el.textContent;const t=translations[el.dataset.originalLabel];el.textContent=spanish&&t?t:el.dataset.originalLabel;});}
 function openPrefs(){prefReturn=document.querySelector('#quick:not([hidden])')?'quick':document.querySelector('#quickSeed:not([hidden])')?'quickSeed':document.querySelector('#calc:not([hidden])')?'calc':document.querySelector('#settings:not([hidden])')?'settings':'home';show('preferences');title('Settings','Language, theme and button color');applyPrefs();}
@@ -550,91 +550,75 @@ $('brainSecretTrigger').addEventListener('click',secretTap);
 $('brainSecretTrigger').addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();secretTap();}});
 window.returnBrainHome=home;
 
-// Build 11 — independent Quick Seed Calculator. No production-line formulas or saved data are modified.
-// Seed to Treat is calculated from seed + overpack + samples ONLY.
-// Chemical weight changes Fill Weight; bag tare changes Gross Bag Weight only.
+// Quick Seed Calculator — approved demo layout and calculation rules.
+// Net Seed / EA = base seed only. Fill = (base + overpack) × (1 + chemical %).
+// Seed to Treat = ceil((base + overpack) × EA + sample KG).
+// Chemical and bag tare NEVER increase Seed to Treat.
 function openQuickSeed(){
  show('quickSeed');title('Quick Seed Calculator','Manual seed and bag weight calculation');
  renderQuickSeed();translateUI();window.scrollTo({top:0,behavior:'smooth'});
 }
 function renderQuickSeed(){
- const en=prefs.language!=='es',t=(a,b)=>en?a:b;
- const ids=['qsSize','qsEa','qsPc','qsOver','qsChem','qsSampleQty','qsSampleWeight','qsTare'];
- const size=Number($('qsSize').value),ea=Number($('qsEa').value),pc=Number($('qsPc').value);
- const over=Number($('qsOver').value),chem=Number($('qsChem').value);
- const sampleQty=Number($('qsSampleQty').value),sampleWeight=Number($('qsSampleWeight').value),tare=Number($('qsTare').value);
+ const es=prefs.language==='es',t=(en,sp)=>es?sp:en;
  const unit=$('qsUnit').value,needsPc=unit==='KS'||unit==='MS';
- const samples=sampleQty*unitKg(sampleWeight,$('qsSampleUnit').value,pc);
  $('qsPcField').hidden=!needsPc;
- const outputIds=['qsNetKg','qsNetLb','qsFillKg','qsFillLb','qsGrossKg','qsGrossLb','qsTotalKg','qsTotalLb'];
- const clear=()=>{outputIds.forEach(id=>$(id).textContent='—');$('qsBreakdown').replaceChildren();$('qsGuide').replaceChildren();};
+ document.querySelectorAll('[data-qs-unit]').forEach(b=>{const active=b.dataset.qsUnit===unit;b.classList.toggle('qsUnitActive',active);b.setAttribute('aria-pressed',String(active));});
+ const ids=['qsSize','qsEa','qsOver','qsChem','qsSamples'];
+ const fieldsComplete=ids.every(id=>$(id).value!=='')&&(!needsPc||$('qsPc').value!=='');
+ const size=Number($('qsSize').value),ea=Number($('qsEa').value),pc=Number($('qsPc').value);
+ const over=Number($('qsOver').value),chem=Number($('qsChem').value),samples=Number($('qsSamples').value);
+ const tare=$('qsTare').value===''?0:Number($('qsTare').value);
+ const clear=()=>{['qsNetKg','qsNetLb','qsFillKg','qsFillLb','qsGrossKg','qsGrossLb','qsTotalKg','qsTotalLb'].forEach(id=>$(id).textContent='—');$('qsBreakdown').replaceChildren();$('qsGuide').replaceChildren();$('qsGrossCard').hidden=true;};
  $('qsError').hidden=true;
- if(!$('qsSize').value||!$('qsEa').value){clear();return;}
- const valid=ids.every(id=>$(id).value!==''||id==='qsPc'&&!needsPc)&&
-   Number.isFinite(size)&&size>0&&Number.isSafeInteger(ea)&&ea>0&&
-   (!needsPc||Number.isFinite(pc)&&pc>0)&&
-   [over,chem].every(n=>Number.isFinite(n)&&n>=0&&n<=100)&&
-   Number.isSafeInteger(sampleQty)&&sampleQty>=0&&Number.isFinite(sampleWeight)&&sampleWeight>=0&&[samples,tare].every(n=>Number.isFinite(n)&&n>=0);
- if(!valid){clear();$('qsError').textContent=t('Enter a valid positive pack size, whole EA, PC for KS/MS, percentages from 0–100, and nonnegative sample quantities, sample weights, and tare.','Ingresa tamaño positivo, EA entero, PC para KS/MS, porcentajes de 0–100 y muestras/tara no negativas.');$('qsError').hidden=false;return;}
- const base=unitKg(size,unit,pc),overKg=base*over/100,net=base+overKg;
- const chemicalKg=net*chem/100,fill=net+chemicalKg;
- const tareKg=$('qsTareUnit').value==='LB'?tare/F:tare,gross=fill+tareKg;
- const orderNet=net*ea,raw=orderNet+samples,total=Math.ceil(raw);
- if(![base,overKg,net,chemicalKg,fill,tareKg,gross,orderNet,raw,total].every(Number.isFinite)||!Number.isSafeInteger(total)){
-  clear();$('qsError').textContent=t('The entered values are too large to calculate safely.','Los valores son demasiado grandes para calcular con seguridad.');$('qsError').hidden=false;return;
+ if(!fieldsComplete){clear();return;}
+ const valid=Number.isFinite(size)&&size>0&&Number.isSafeInteger(ea)&&ea>0&&(!needsPc||Number.isFinite(pc)&&pc>0)&&
+   [over,chem].every(x=>Number.isFinite(x)&&x>=0&&x<=100)&&[samples,tare].every(x=>Number.isFinite(x)&&x>=0);
+ if(!valid){clear();$('qsError').textContent=t('Enter a positive pack size, whole-number EA, valid PC for KS/MS, percentages from 0 to 100, and nonnegative samples/tare.','Ingresa tamaño positivo, EA entero, PC válido para KS/MS, porcentajes de 0 a 100 y muestras/tara no negativas.');$('qsError').hidden=false;return;}
+ const base=unitKg(size,unit,pc),overKg=base*over/100,seedWithOverpack=base+overKg;
+ const chemicalKg=seedWithOverpack*chem/100,fill=seedWithOverpack+chemicalKg,gross=fill+tare;
+ const orderSeed=seedWithOverpack*ea,raw=orderSeed+samples,total=Math.ceil(raw);
+ if(![base,overKg,seedWithOverpack,chemicalKg,fill,gross,orderSeed,raw,total].every(Number.isFinite)||!Number.isSafeInteger(total)){
+   clear();$('qsError').textContent=t('The values are too large to calculate safely.','Los valores son demasiado grandes para calcular con seguridad.');$('qsError').hidden=false;return;
  }
- const kg=n=>fmt(n,3),lb=n=>fmt(n*F,2),pct=n=>Number(n).toLocaleString('en-US',{maximumFractionDigits:5});
- const put=(prefix,value,rounded=false)=>{
-   $(prefix+'Kg').textContent=fmt(value,rounded?0:3)+' KG';
-   $(prefix+'Lb').textContent=lb(value)+' LB';
- };
- put('qsNet',net);put('qsFill',fill);put('qsGross',gross);put('qsTotal',total,true);
- const line=(name,value)=>{const div=document.createElement('div');div.className='detailrow';const a=document.createElement('span');a.textContent=name;const b=document.createElement('strong');b.textContent=value;div.append(a,b);$('qsBreakdown').append(div);};
+ const kg=x=>fmt(x,3),lb=x=>fmt(x*F,2),pct=x=>Number(x).toLocaleString('en-US',{maximumFractionDigits:5});
+ const setWeight=(prefix,value,round=false)=>{$(prefix+'Kg').textContent=fmt(value,round?0:3)+' KG';$(prefix+'Lb').textContent=lb(value)+' LB';};
+ setWeight('qsNet',base);setWeight('qsFill',fill);setWeight('qsGross',gross);setWeight('qsTotal',total,true);
+ $('qsGrossCard').hidden=$('qsTare').value===''||tare<=0;
+ const addRow=(name,value)=>{const div=document.createElement('div');div.className='detailrow';const label=document.createElement('span');label.textContent=name;const strong=document.createElement('strong');strong.textContent=value;div.append(label,strong);$('qsBreakdown').append(div);};
  $('qsBreakdown').replaceChildren();
  [
- [t('Base Seed / EA','Semilla base / EA'),kg(base)+' KG / '+lb(base)+' LB'],
- [t('Overpack / EA','Overpack / EA'),kg(overKg)+' KG ('+pct(over)+'%)'],
- [t('Net Seed / EA','Semilla neta / EA'),kg(net)+' KG / '+lb(net)+' LB'],
- [t('Chemical Weight / EA','Peso químico / EA'),kg(chemicalKg)+' KG ('+pct(chem)+'%)'],
+ [t('Pack size','Tamaño de bolsa'),pct(size)+' '+unit],
+ ...(needsPc?[[t('Seed Count (PC)','Conteo de semillas (PC)'),pct(pc)+' seeds/LB']]:[]),
+ [t('Quantity','Cantidad'),ea+' EA'],
+ [t('Base Seed / EA (Net Seed)','Semilla base / EA (Net Seed)'),kg(base)+' KG / '+lb(base)+' LB'],
+ [t('Overpack / EA','Overpack / EA'),pct(over)+'% = '+kg(overKg)+' KG'],
+ [t('Seed with Overpack / EA','Semilla con Overpack / EA'),kg(seedWithOverpack)+' KG'],
+ [t('Chemical Weight / EA','Peso químico / EA'),pct(chem)+'% = '+kg(chemicalKg)+' KG'],
  [t('Fill Weight / EA','Peso de llenado / EA'),kg(fill)+' KG / '+lb(fill)+' LB'],
- [t('Bag Tare / EA','Tara de bolsa / EA'),kg(tareKg)+' KG'],
- [t('Gross Bag / EA','Peso bruto / EA'),kg(gross)+' KG / '+lb(gross)+' LB'],
- [t('Quantity','Cantidad'),String(ea)+' EA'],
- [t('Net Seed × EA','Semilla neta × EA'),kg(orderNet)+' KG'],
- [t('Samples','Muestras'),sampleQty+' × '+kg(unitKg(sampleWeight,$('qsSampleUnit').value,pc))+' KG = '+kg(samples)+' KG'],
+ ...(tare>0?[[t('Bag Tare / EA','Tara de bolsa / EA'),kg(tare)+' KG'],[t('Gross Bag Weight / EA','Peso bruto / EA'),kg(gross)+' KG / '+lb(gross)+' LB']]:[]),
+ [t('Seed with Overpack × EA','Semilla con Overpack × EA'),kg(orderSeed)+' KG'],
+ [t('Samples','Muestras'),kg(samples)+' KG'],
  [t('Seed to Treat before rounding','Semilla para tratar antes de redondear'),kg(raw)+' KG'],
- [t('Seed to Treat (rounded up)','Semilla para tratar (redondeada)'),fmt(total,0)+' KG / '+lb(total)+' LB']
- ].forEach(([a,b])=>line(a,b));
+ [t('TOTAL SEED TO TREAT','SEMILLA TOTAL PARA TRATAR'),fmt(total,0)+' KG / '+lb(total)+' LB']
+ ].forEach(([name,value])=>addRow(name,value));
  const conversion=needsPc
-   ?pct(size)+' '+unit+' × '+(unit==='KS'?'1,000':'1,000,000')+' = '+fmt(size*(unit==='KS'?1000:1000000),0)+' '+t('seeds','semillas')+'\n'+fmt(size*(unit==='KS'?1000:1000000),0)+' ÷ '+pct(pc)+' PC = '+fmt(base*F,2)+' LB\n'+fmt(base*F,2)+' LB ÷ '+F+' = '+kg(base)+' KG'
+   ?pct(size)+' '+unit+' × '+(unit==='KS'?'1,000':'1,000,000')+' = '+fmt(size*(unit==='KS'?1000:1000000),0)+' '+t('seeds','semillas')+'\n'+fmt(size*(unit==='KS'?1000:1000000),0)+' ÷ '+pct(pc)+' PC = '+lb(base)+' LB\n'+lb(base)+' LB ÷ '+F+' = '+kg(base)+' KG'
    :unit==='LB'?pct(size)+' LB ÷ '+F+' = '+kg(base)+' KG':pct(size)+' KG = '+kg(base)+' KG';
  const steps=[
- [t('1. Convert pack size to KG','1. Convertir tamaño a KG'),conversion],
- [t('2. Add Overpack to seed','2. Agregar Overpack a semilla'),kg(base)+' KG × '+pct(over)+'% = '+kg(overKg)+' KG\n'+kg(base)+' + '+kg(overKg)+' = '+kg(net)+' KG'],
- [t('3. Calculate Fill Weight','3. Calcular peso de llenado'),kg(net)+' KG × '+pct(chem)+'% = '+kg(chemicalKg)+' KG '+t('chemical','químico')+'\n'+kg(net)+' + '+kg(chemicalKg)+' = '+kg(fill)+' KG'],
- [t('4. Add Bag Tare for Gross Weight','4. Agregar tara para peso bruto'),kg(fill)+' KG + '+kg(tareKg)+' KG = '+kg(gross)+' KG'],
- [t('5. Calculate Seed to Treat','5. Calcular semilla para tratar'),kg(net)+' KG × '+ea+' EA = '+kg(orderNet)+' KG\n'+kg(orderNet)+' KG + '+kg(samples)+' KG '+t('samples','muestras')+' = '+kg(raw)+' KG\n'+t('Round up','Redondear hacia arriba')+': '+fmt(total,0)+' KG / '+lb(total)+' LB']
+ [t('1. Calculate Net Seed / EA','1. Calcular Net Seed / EA'),conversion],
+ [t('2. Add Overpack','2. Agregar Overpack'),kg(base)+' KG × '+pct(over)+'% = '+kg(overKg)+' KG\n'+kg(base)+' + '+kg(overKg)+' = '+kg(seedWithOverpack)+' KG'],
+ [t('3. Calculate Fill Weight / EA','3. Calcular Fill Weight / EA'),kg(seedWithOverpack)+' KG × '+pct(chem)+'% = '+kg(chemicalKg)+' KG\n'+kg(seedWithOverpack)+' + '+kg(chemicalKg)+' = '+kg(fill)+' KG'],
+ ...(tare>0?[[t('4. Calculate Gross Bag Weight','4. Calcular peso bruto'),kg(fill)+' KG + '+kg(tare)+' KG = '+kg(gross)+' KG']]:[]),
+ [t('5. Calculate Seed to Treat','5. Calcular semilla para tratar'),kg(seedWithOverpack)+' KG × '+ea+' EA = '+kg(orderSeed)+' KG\n'+kg(orderSeed)+' KG + '+kg(samples)+' KG = '+kg(raw)+' KG\n'+t('Round up','Redondear hacia arriba')+': '+fmt(total,0)+' KG / '+lb(total)+' LB']
  ];
  const guide=$('qsGuide');guide.replaceChildren();
- const intro=document.createElement('p');intro.className='muted tiny';
- intro.textContent=t('Steps display rounded values; the calculator uses full precision internally. Chemical weight and bag tare are excluded from Seed to Treat.','Los pasos muestran valores redondeados; la calculadora usa precisión completa. El peso químico y la tara no se incluyen en Seed to Treat.');
- guide.append(intro);
+ const intro=document.createElement('p');intro.className='muted tiny';intro.textContent=t('Displayed values are rounded; all calculations use full internal precision. Chemical Weight and Bag Tare are excluded from Seed to Treat.','Los valores mostrados están redondeados; los cálculos utilizan precisión completa. Chemical Weight y Bag Tare no se incluyen en Seed to Treat.');guide.append(intro);
  steps.forEach(([heading,math])=>{const section=document.createElement('section');section.className='guideStep';const h=document.createElement('strong');h.textContent=heading;const p=document.createElement('div');p.className='guideMath';p.textContent=math;section.append(h,p);guide.append(section);});
- const note=document.createElement('p');note.className='muted tiny';note.textContent=t('Seed to Treat = (Base Seed + Overpack) × EA + Samples, rounded up to whole KG. Chemical Weight affects Fill Weight only; Bag Tare affects Gross Bag Weight only. Follow approved SOPs.','Seed to Treat = (Semilla base + Overpack) × EA + Muestras, redondeado hacia arriba a KG entero. El peso químico solo afecta Fill Weight; la tara solo afecta Gross Bag Weight. Sigue los SOP aprobados.');
- guide.append(note);
 }
 $('quickSeedHome').onclick=openQuickSeed;
-$('qsBack').onclick=home;
-$('qsReset').onclick=()=>{
- $('qsType').value='normal';$('qsSize').value='';$('qsUnit').value='KS';$('qsEa').value='';$('qsPc').value='';
- $('qsOver').value='1';$('qsChem').value='1';$('qsSampleQty').value='0';$('qsSampleWeight').value='1';$('qsSampleUnit').value='KG';$('qsTare').value='0';$('qsTareUnit').value='KG';
- renderQuickSeed();
-};
-$('qsType').addEventListener('change',()=>{
- $('qsChem').value=({normal:'1',shrunken:'1.2',other:'0'})[$('qsType').value];
- renderQuickSeed();
-});
-['qsSize','qsUnit','qsEa','qsPc','qsOver','qsChem','qsSampleQty','qsSampleWeight','qsSampleUnit','qsTare','qsTareUnit'].forEach(id=>$(id).addEventListener('input',renderQuickSeed));
+$('qsReset').onclick=()=>{$('qsSize').value='';$('qsEa').value='';$('qsPc').value='';$('qsOver').value='1';$('qsChem').value='1.2';$('qsSamples').value='5';$('qsTare').value='';$('qsUnit').value='KS';renderQuickSeed();};
+document.querySelectorAll('[data-qs-unit]').forEach(b=>b.addEventListener('click',()=>{$('qsUnit').value=b.dataset.qsUnit;renderQuickSeed();}));
+['qsSize','qsEa','qsPc','qsOver','qsChem','qsSamples','qsTare'].forEach(id=>$(id).addEventListener('input',renderQuickSeed));
 
 // Navigation
  $('homeShortcut').onclick=home;
