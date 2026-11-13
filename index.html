@@ -40,7 +40,7 @@
    <label id="qsPcField">Seed Count (PC)<input id="qsPc" type="number" min="0" step="any" inputmode="decimal" placeholder="e.g. 3500"></label>
    <label>Overpack %<input id="qsOver" type="number" min="0" max="100" step="any" inputmode="decimal" value="1"></label>
    <label>Chemical Weight %<input id="qsChem" type="number" min="0" max="100" step="any" inputmode="decimal" value="1"></label>
-   <label>Samples (KG)<input id="qsSamples" type="number" min="0" step="any" inputmode="decimal" value="0"></label>
+   <label>Samples (Quantity)<input id="qsSampleQty" type="number" min="0" step="1" inputmode="numeric" value="0"></label><label>Sample Weight Each<div class="inline"><input id="qsSampleWeight" type="number" min="0" step="any" inputmode="decimal" value="1"><select id="qsSampleUnit" aria-label="Sample weight unit"><option>KG</option><option>LB</option></select></div></label>
    <label>Bag Tare<div class="inline"><input id="qsTare" type="number" min="0" step="any" inputmode="decimal" value="0"><select id="qsTareUnit" aria-label="Tare unit"><option>KG</option><option>LB</option></select></div></label>
   </div>
   <p class="muted tiny">Examples: Overpack 1% · Normal Corn chemical 1% · Shrunken Corn chemical 1.2%. All percentages are editable.</p>
@@ -49,9 +49,9 @@
  </div>
  <div class="card result">
   <div class="quickSeedResults">
-   <div><strong>Net Seed Weight</strong><div class="number" id="qsNetKg">—</div><div class="muted" id="qsNetLb">—</div></div>
-   <div><strong>Fill Weight</strong><div class="number" id="qsFillKg">—</div><div class="muted" id="qsFillLb">—</div></div>
-   <div><strong>Gross Bag Weight</strong><div class="number" id="qsGrossKg">—</div><div class="muted" id="qsGrossLb">—</div></div>
+   <div><strong>Net Seed Weight / EA</strong><div class="number" id="qsNetKg">—</div><div class="muted" id="qsNetLb">—</div></div>
+   <div><strong>Fill Weight / EA</strong><div class="number" id="qsFillKg">—</div><div class="muted" id="qsFillLb">—</div></div>
+   <div><strong>Gross Bag Weight / EA</strong><div class="number" id="qsGrossKg">—</div><div class="muted" id="qsGrossLb">—</div></div>
    <div class="quickSeedTotal"><strong>Seed to Treat (rounded KG)</strong><div class="number" id="qsTotalKg">—</div><div class="muted" id="qsTotalLb">—</div></div>
   </div>
   <details id="qsBreakdownDetails"><summary>Calculation Breakdown</summary><div id="qsBreakdown"></div></details>
