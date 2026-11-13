@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1220"><title>Prod Calc TEST · v2.5</title><link rel="stylesheet" href="styles.css?v=25-test-build-8-quick-v1"><link rel="stylesheet" href="brain.css?v=25-test-build-8-quick-v1"><link rel="manifest" href="manifest.webmanifest?v=25-test-build-8-quick-v1"><link rel="apple-touch-icon" sizes="180x180" href="assets/prod-calc-test-180.png"><meta name="apple-mobile-web-app-title" content="Prod Calc TEST"></head><body><main class="app">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1220"><title>Prod Calc TEST · v2.5</title><link rel="stylesheet" href="styles.css?v=25-test-build-9-percent-v1"><link rel="stylesheet" href="brain.css?v=25-test-build-9-percent-v1"><link rel="manifest" href="manifest.webmanifest?v=25-test-build-9-percent-v1"><link rel="apple-touch-icon" sizes="180x180" href="assets/prod-calc-test-180.png"><meta name="apple-mobile-web-app-title" content="Prod Calc TEST"></head><body><main class="app">
 <div class="testEnvironmentBanner" role="status">🧪 TEST VERSION — NOT FOR PRODUCTION</div>
 <header class="compactHeader">
   <div class="brandFooter"><img src="assets/js-studio.png" alt="JS Studio logo"><span>JS Studio</span></div>
@@ -31,11 +31,16 @@
 <section id="quick" hidden>
   <div class="card quickMain">
     <div class="quickToolbar"><button id="quickExit" class="secondary" type="button">← Back</button><h2>Quick Calculator</h2><button id="quickHomeButton" class="secondary" type="button">⌂ Home</button></div>
-    <div class="quickTools"><button id="quickHistoryOpen" class="secondary" type="button">◷ History</button><button id="converterToggle" class="secondary" type="button" aria-pressed="true">Converter ON</button><button id="unitOpen" class="secondary" type="button">⇄ Unit Converter</button><button id="seedOpen" class="secondary" type="button">🌱 Seed Converter</button></div>
+    <div class="quickTools">
+      <button id="quickHistoryOpen" class="secondary" type="button"><span class="toolIcon" aria-hidden="true">◷</span><span class="toolLabel">History</span></button>
+      <button id="converterToggle" class="secondary" type="button" aria-pressed="true"><span class="toolIcon" aria-hidden="true">⇄</span><span class="toolLabel">Converter ON</span></button>
+      <button id="unitOpen" class="secondary" type="button"><span class="toolIcon" aria-hidden="true">⚖</span><span class="toolLabel">Unit Converter</span></button>
+      <button id="percentOpen" class="secondary" type="button"><span class="toolIcon" aria-hidden="true">%</span><span class="toolLabel">Percent Calculator</span></button>
+    </div>
     <div class="quickLast"><div class="quickLastHeader"><span class="muted tiny" id="lastCalculationLabel">Last Calculation</span><button id="quickUndo" class="secondary" type="button" disabled>↶ Undo</button></div><div id="quickLastCalculation" class="quickLastValue">No calculations yet.</div></div>
     <div id="quickDisplays" class="quickDisplays">
       <div id="quickMini" class="quickMini" role="button" tabindex="0" aria-label="Select Quick Converter">
-        <div class="quickPanelTitle">QUICK CONVERTER</div><div class="quickMiniDivider"></div>
+        <div class="quickPanelTitle">QUICK CONVERTER <span class="quickActiveMark" aria-hidden="true">✓ ACTIVE</span></div><div class="quickMiniDivider"></div>
         <div class="quickFieldLabel">INPUT</div>
         <div class="quickMiniValue"><span id="quickMiniInput">0</span><span id="quickMiniInputUnit">LB</span></div>
         <button id="quickMiniSwap" class="secondary quickMiniSwap" type="button" aria-label="Reverse Quick Converter units">⇄</button>
@@ -44,7 +49,7 @@
         <button id="quickMiniUse" class="secondary quickMiniUse" type="button">Use →</button>
       </div>
       <div id="quickCalcPanel" class="calcDisplay quickCalcPanel quickSelected" role="button" tabindex="0" aria-label="Select main calculator">
-        <div class="quickPanelTitle">CALCULATOR</div>
+        <div class="quickPanelTitle">CALCULATOR <span class="quickActiveMark" aria-hidden="true">✓ ACTIVE</span></div>
         <div class="quickCalcBottom"><div id="quickExpression" class="muted"></div><div id="quickNumber">0</div><div id="quickLiveResult" aria-live="polite" hidden></div>
           <div id="quickSecondary"><button id="quickMainSwap" class="quickMainSwap" type="button">KG → LB ⇄</button><div id="quickConverted"></div></div>
         </div>
@@ -64,7 +69,22 @@
     <p class="muted tiny" id="seedNote">1 KS = 1,000 seeds. Enter a valid PC to calculate KS.</p>
     <button id="seedCopy" class="secondary" type="button">Copy Results</button>
   </div>
-  <div id="unitPanel" class="quickOverlay" hidden><div class="quickOverlayHead"><button id="unitClose" class="secondary">← Back</button><h2>Unit Converter</h2></div><label>Category<select id="unitCategory"><option value="length">Length</option><option value="weight">Weight</option><option value="volume">Volume</option><option value="temperature">Temperature</option><option value="pressure">Pressure</option></select></label><label>Value<input id="unitAmount" type="number" inputmode="decimal" step="any" value="6"></label><div class="unitPair"><label>From<select id="unitFrom"></select></label><button id="unitSwap" class="secondary" type="button" aria-label="Swap units">⇄</button><label>To<select id="unitTo"></select></label></div><div class="unitAnswer"><span class="muted tiny">RESULT</span><strong id="unitResult">—</strong></div><button id="unitCopy" class="secondary" type="button">Copy Result</button><details class="legacyConversions"><summary>Original Quick Calculator Conversions</summary><p class="muted tiny">Keep the original conversion options available with the main calculator.</p><label id="converterLabel">Conversion<select id="converterPair"><option value="kg-lb">KG → LB</option><option value="lb-kg">LB → KG</option><option value="g-oz">g → oz</option><option value="oz-g">oz → g</option><option value="ml-foz">mL → fl oz (US)</option><option value="foz-ml">fl oz (US) → mL</option><option value="l-gal">L → gal (US)</option><option value="gal-l">gal (US) → L</option></select></label></details></div>
+  <div id="percentPanel" class="quickOverlay" hidden>
+    <div class="quickOverlayHead"><button id="percentClose" class="secondary" type="button">← Back</button><h2>Percent Calculator</h2></div>
+    <label>Calculation Type<select id="percentMode">
+      <option value="add">Add %</option><option value="subtract">Subtract %</option><option value="of">Find % of Amount</option>
+      <option value="ratio">What %?</option><option value="change">% Change</option><option value="reverse">Reverse %</option>
+    </select></label>
+    <p id="percentHelp" class="muted tiny">Add a percentage to an amount.</p>
+    <div class="percentInputs"><label><span id="percentAmountLabel">Amount</span><input id="percentAmount" type="number" inputmode="decimal" step="any" value="1400"></label>
+      <label><span id="percentRateLabel">Percentage (%)</span><input id="percentRate" type="number" inputmode="decimal" step="any" value="1"></label></div>
+    <div class="unitAnswer percentAnswer" role="status" aria-live="polite"><span class="muted tiny">RESULT</span><strong id="percentResult">1,414.00</strong><span class="muted tiny" id="percentExplanation"></span></div>
+    <button id="percentUse" class="primary percentUse" type="button">Use Result →</button>
+    <p class="muted tiny">Amount results use the same unit as your input. Percent results are numeric percentages.</p>
+  </div>
+  <div id="unitPanel" class="quickOverlay" hidden><div class="quickOverlayHead"><button id="unitClose" class="secondary">← Back</button><h2>Unit Converter</h2></div>
+    <div class="unitToolTabs"><button id="unitStandard" class="secondary active" type="button" aria-pressed="true">⚖ Standard Units</button><button id="seedOpen" class="secondary" type="button">🌱 Seed Converter</button></div>
+    <label>Category<select id="unitCategory"><option value="length">Length</option><option value="weight">Weight</option><option value="volume">Volume</option><option value="temperature">Temperature</option><option value="pressure">Pressure</option></select></label><label>Value<input id="unitAmount" type="number" inputmode="decimal" step="any" value="6"></label><div class="unitPair"><label>From<select id="unitFrom"></select></label><button id="unitSwap" class="secondary" type="button" aria-label="Swap units">⇄</button><label>To<select id="unitTo"></select></label></div><div class="unitAnswer"><span class="muted tiny">RESULT</span><strong id="unitResult">—</strong></div><button id="unitCopy" class="secondary" type="button">Copy Result</button><details class="legacyConversions"><summary>Original Quick Calculator Conversions</summary><p class="muted tiny">Keep the original conversion options available with the main calculator.</p><label id="converterLabel">Conversion<select id="converterPair"><option value="kg-lb">KG → LB</option><option value="lb-kg">LB → KG</option><option value="g-oz">g → oz</option><option value="oz-g">oz → g</option><option value="ml-foz">mL → fl oz (US)</option><option value="foz-ml">fl oz (US) → mL</option><option value="l-gal">L → gal (US)</option><option value="gal-l">gal (US) → L</option></select></label></details></div>
 </section>
 <section id="brain" hidden><div class="brainTop"><button id="brainExit" class="secondary">← Production Calculator</button><span class="brainTag">SECRET ARCADE</span></div><div id="brainContent"></div></section>
 <section id="preferences" class="card" hidden><div class="sectionhead"><h2>Settings</h2><button id="prefsBack" class="secondary small">Close</button></div><label>Language / Idioma<select id="prefLanguage"><option value="en">English</option><option value="es">Español</option></select></label><label>Theme / Tema<select id="prefTheme"><option value="dark">Dark</option><option value="light">Light</option></select></label><label>Button Color / Color de botones<select id="prefColor"><option value="blue">Blue</option><option value="red">Red</option><option value="green">Green</option><option value="yellow">Yellow</option><option value="pink">Pink</option><option value="gray">Gray</option><option value="black">Black</option></select></label><p class="muted tiny">Preferences are saved on this device.</p><button id="formulaSettings" class="secondary">Formula Settings</button>
@@ -91,4 +111,4 @@
     <button id="whatsNewClose" type="button" class="primary">Continue</button>
   </div>
 </div>
-<script src="app.js?v=25-test-build-8-quick-v1"></script><script src="brain.js?v=25-test-build-8-quick-v1"></script></body></html>
+<script src="app.js?v=25-test-build-9-percent-v1"></script><script src="brain.js?v=25-test-build-9-percent-v1"></script></body></html>
