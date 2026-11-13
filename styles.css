@@ -473,3 +473,16 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #quick #quickNumber{display:block;width:100%;max-width:100%;white-space:nowrap;overflow:hidden;text-align:right;letter-spacing:0;font-variant-numeric:tabular-nums}
 #quick #quickMiniInput,#quick #quickMiniOutput{display:inline-block;max-width:100%;white-space:nowrap;overflow:hidden;vertical-align:bottom}
 #quick .quickMiniValue{width:100%;overflow:hidden}
+
+/* Build 11: mobile-friendly standalone Quick Seed Calculator */
+#quickSeed .quickSeedResults{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#quickSeed .quickSeedResults>div{min-width:0;border:1px solid var(--edge);background:var(--bg);border-radius:12px;padding:12px}
+#quickSeed .quickSeedResults strong{display:block;font-size:13px;line-height:1.4}
+#quickSeed .quickSeedResults .number{font-size:clamp(19px,4.5vw,28px);overflow-wrap:anywhere}
+#quickSeed .quickSeedTotal{border-color:var(--accent)!important}
+#quickSeed .quickSeedResults .muted{font-size:13px;overflow-wrap:anywhere}
+#quickSeed details{margin-top:16px;padding-top:14px}
+#quickSeed #qsGuide .guideStep{padding:13px 0;border-bottom:1px solid var(--edge)}
+#quickSeed #qsGuide .guideMath{white-space:pre-line;overflow-wrap:anywhere;background:var(--bg);padding:12px;border-radius:9px;font:500 13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--fg);margin-top:8px}
+#quickSeed .inline select{width:75px}
+@media(max-width:370px){#quickSeed .quickSeedResults{grid-template-columns:1fr}}
