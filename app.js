@@ -562,15 +562,18 @@ function openQuickSeed(){
 // Samples are reserved first; only full EA can be packed. The remainder is seed,
 // not chemical or empty-bag tare. All math uses unrounded per-bag weights.
 function renderPackAll(order){
- const error=$('qsPackAllError'),field=$('qsAvailable');
- const outputs=['qsPackAllEa','qsPackAllStatus','qsPackAllRemaining','qsPackAllUsed','qsPackAllFillTotal'];
+ const error=$('qsPackAllError'),field=$('qsAvailable'),expanded=$('qsPackAllExpanded');
+ const outputs=['qsPackAllEa','qsPackAllStatus','qsPackAllPoEa','qsPackAllDifference','qsPackAllDifferenceMessage','qsPackAllRemaining','qsPackAllUsed','qsPackAllFillTotal'];
  const clear=()=>outputs.forEach(id=>$(id).textContent='—');
  error.hidden=true;
- if(!order||!field.value.trim()){clear();return;}
  const value=field.value.trim();
+ // Keep the section compact until available seed is entered.
+ expanded.hidden=!value;
+ if(!value){clear();return;}
  if(!/^(?:\d+(?:\.\d*)?|\.\d+)$/.test(value)){
   clear();error.textContent='Enter a valid nonnegative available seed weight in KG.';error.hidden=false;return;
  }
+ if(!order){clear();error.textContent='Complete the order details above to calculate Pack All.';error.hidden=false;return;}
  const available=Number(value),usable=available-order.samples;
  if(!Number.isFinite(available)||available<0||!Number.isFinite(usable)||!Number.isFinite(order.seedPerBag)||order.seedPerBag<=0){
   clear();error.textContent='Available Seed is too large or invalid.';error.hidden=false;return;
@@ -579,11 +582,15 @@ function renderPackAll(order){
  const used=count*order.seedPerBag;
  const remaining=Math.max(0,usable-used);
  const fillTotal=count*order.fillPerBag;
- if(!Number.isSafeInteger(count)||![used,remaining,fillTotal].every(Number.isFinite)){
+ const difference=count-order.ea;
+ if(!Number.isSafeInteger(count)||!Number.isSafeInteger(difference)||![used,remaining,fillTotal].every(Number.isFinite)){
   clear();error.textContent='Values are too large to calculate safely.';error.hidden=false;return;
  }
  $('qsPackAllEa').textContent=fmt(count,0)+' EA';
  $('qsPackAllStatus').textContent=order.chemicalPct===0?'Untreated Seed':'Treated Seed (chemical added to fill weight)';
+ $('qsPackAllPoEa').textContent=fmt(order.ea,0)+' EA';
+ $('qsPackAllDifference').textContent=(difference>0?'+':'')+fmt(difference,0)+' EA';
+ $('qsPackAllDifferenceMessage').textContent=difference>0?'Extra bags possible':difference<0?'Bags short of order':'Exact order quantity';
  $('qsPackAllRemaining').textContent=fmt(remaining,3)+' KG';
  $('qsPackAllUsed').textContent=fmt(used,3)+' KG';
  $('qsPackAllFillTotal').textContent=fmt(fillTotal,3)+' KG';
