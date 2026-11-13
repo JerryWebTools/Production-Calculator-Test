@@ -574,13 +574,15 @@ function renderQuickSeed(){
  const valid=Number.isFinite(size)&&size>0&&Number.isSafeInteger(ea)&&ea>0&&(!needsPc||Number.isFinite(pc)&&pc>0)&&
    [over,chem].every(x=>Number.isFinite(x)&&x>=0&&x<=100)&&[samples,tare].every(x=>Number.isFinite(x)&&x>=0);
  if(!valid){clear();$('qsError').textContent=t('Enter a positive pack size, whole-number EA, valid PC for KS/MS, percentages from 0 to 100, and nonnegative samples/tare.','Ingresa tamaño positivo, EA entero, PC válido para KS/MS, porcentajes de 0 a 100 y muestras/tara no negativas.');$('qsError').hidden=false;return;}
- const base=unitKg(size,unit,pc),overKg=base*over/100,seedWithOverpack=base+overKg;
+ const exactLbPerKg=2.2046226218487757;
+ const base=unit==='KS'?size*1000/pc/exactLbPerKg:unit==='MS'?size*1000000/pc/exactLbPerKg:unit==='LB'?size/exactLbPerKg:size;
+ const overKg=base*over/100,seedWithOverpack=base+overKg;
  const chemicalKg=seedWithOverpack*chem/100,fill=seedWithOverpack+chemicalKg,gross=fill+tare;
  const orderSeed=seedWithOverpack*ea,raw=orderSeed+samples,total=Math.ceil(raw);
  if(![base,overKg,seedWithOverpack,chemicalKg,fill,gross,orderSeed,raw,total].every(Number.isFinite)||!Number.isSafeInteger(total)){
    clear();$('qsError').textContent=t('The values are too large to calculate safely.','Los valores son demasiado grandes para calcular con seguridad.');$('qsError').hidden=false;return;
  }
- const kg=x=>fmt(x,3),lb=x=>fmt(x*F,2),pct=x=>Number(x).toLocaleString('en-US',{maximumFractionDigits:5});
+ const kg=x=>fmt(x,3),lb=x=>fmt(x*exactLbPerKg,2),pct=x=>Number(x).toLocaleString('en-US',{maximumFractionDigits:5});
  const setWeight=(prefix,value,round=false)=>{$(prefix+'Kg').textContent=fmt(value,round?0:3)+' KG';$(prefix+'Lb').textContent=lb(value)+' LB';};
  setWeight('qsNet',base);setWeight('qsFill',fill);setWeight('qsGross',gross);setWeight('qsTotal',total,true);
  $('qsGrossCard').hidden=$('qsTare').value===''||tare<=0;
@@ -602,8 +604,8 @@ function renderQuickSeed(){
  [t('TOTAL SEED TO TREAT','SEMILLA TOTAL PARA TRATAR'),fmt(total,0)+' KG / '+lb(total)+' LB']
  ].forEach(([name,value])=>addRow(name,value));
  const conversion=needsPc
-   ?pct(size)+' '+unit+' × '+(unit==='KS'?'1,000':'1,000,000')+' = '+fmt(size*(unit==='KS'?1000:1000000),0)+' '+t('seeds','semillas')+'\n'+fmt(size*(unit==='KS'?1000:1000000),0)+' ÷ '+pct(pc)+' PC = '+lb(base)+' LB\n'+lb(base)+' LB ÷ '+F+' = '+kg(base)+' KG'
-   :unit==='LB'?pct(size)+' LB ÷ '+F+' = '+kg(base)+' KG':pct(size)+' KG = '+kg(base)+' KG';
+   ?pct(size)+' '+unit+' × '+(unit==='KS'?'1,000':'1,000,000')+' = '+fmt(size*(unit==='KS'?1000:1000000),0)+' '+t('seeds','semillas')+'\n'+fmt(size*(unit==='KS'?1000:1000000),0)+' ÷ '+pct(pc)+' PC = '+lb(base)+' LB\n'+lb(base)+' LB ÷ '+exactLbPerKg+' = '+kg(base)+' KG'
+   :unit==='LB'?pct(size)+' LB ÷ '+exactLbPerKg+' = '+kg(base)+' KG':pct(size)+' KG = '+kg(base)+' KG';
  const steps=[
  [t('1. Calculate Net Seed / EA','1. Calcular Net Seed / EA'),conversion],
  [t('2. Add Overpack','2. Agregar Overpack'),kg(base)+' KG × '+pct(over)+'% = '+kg(overKg)+' KG\n'+kg(base)+' + '+kg(overKg)+' = '+kg(seedWithOverpack)+' KG'],
