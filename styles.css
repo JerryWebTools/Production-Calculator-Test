@@ -536,3 +536,8 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
  #quickSeed .qsSmallCards{gap:8px}
  #quickSeed .qsTotalCard,#quickSeed .qsSmallCard{padding:12px}
 }
+
+/* Build 13: short, readable result explanations */
+#quickSeed .qsMeaning{font-size:12px;line-height:1.45;color:#e1eaff;margin:10px 0 0;font-weight:400}
+#quickSeed .qsTotalCard .qsMeaning{max-width:650px}
+#quickSeed .qsField input{caret-color:#fff}
