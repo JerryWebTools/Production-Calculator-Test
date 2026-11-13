@@ -305,7 +305,7 @@ function updateRegular(){if($('regular').value==='auto')return;calculate();}
 // v2.3 preferences, translation, quick calculator and Pack All
 const PREF_KEY='production-calculator-v23-preferences', HISTORY_KEY='production-calculator-v23-history';
 const prefDefaults={language:'en',theme:'dark',color:'blue'};
-let prefs={...prefDefaults,...read(PREF_KEY,{})},prefReturn='home',quickReturn='home',qValue='0',qFirst=null,qOp=null,qFresh=true,qExpression='',qConverter=true,qHistory=read(HISTORY_KEY,[]);
+let prefs={...prefDefaults,...read(PREF_KEY,{})},prefReturn='home',quickReturn='home',qValue='0',qFirst=null,qOp=null,qFresh=true,qExpression='',qConverter=true,qHistory=read(HISTORY_KEY,[]),qMiniValue='0',qMiniUnit='LB',qActive='right',qUndo=[];
 if(!Array.isArray(qHistory))qHistory=[];
 const colorCodes={blue:'#2563eb',red:'#dc2626',green:'#15803d',yellow:'#b88a00',pink:'#be185d',gray:'#64748b',black:'#3f3f46'};
 function applyPrefs(){if($('standaloneGuide')?.open&&['standalone','1','3','4'].includes(lastResult?.line))renderCalculationGuide();document.documentElement.dataset.theme=prefs.theme;document.documentElement.style.setProperty('--accent',colorCodes[prefs.color]||colorCodes.blue);document.documentElement.lang=prefs.language;['Language','Theme','Color'].forEach(k=>{const e=$('pref'+k);if(e)e.value=prefs[k.toLowerCase()]});translateUI();}
@@ -315,19 +315,120 @@ const originalText=new WeakMap();
 function translateUI(){const spanish=prefs.language==='es';document.querySelectorAll('button, label, h1, h2, strong, summary, .eyebrow, .pill, small').forEach(el=>{if(el.closest('#quickHistory,#packAllOutput,#savedList,#breakdown'))return;for(const node of el.childNodes){if(node.nodeType!==3)continue;if(!originalText.has(node))originalText.set(node,node.nodeValue);const base=originalText.get(node);const trimmed=base.trim();if(!trimmed)continue;const clean=trimmed.replace(/^[←▦⚙️💾]+\s*/u,'');const t=translations[clean];if(t)node.nodeValue=spanish?base.replace(clean,t):base;}});document.querySelectorAll('option').forEach(el=>{if(!el.dataset.originalLabel)el.dataset.originalLabel=el.textContent;const t=translations[el.dataset.originalLabel];el.textContent=spanish&&t?t:el.dataset.originalLabel;});}
 function openPrefs(){prefReturn=document.querySelector('#quick:not([hidden])')?'quick':document.querySelector('#calc:not([hidden])')?'calc':document.querySelector('#settings:not([hidden])')?'settings':'home';show('preferences');title('Settings','Language, theme and button color');applyPrefs();}
 function closePrefs(){show(prefReturn==='settings'?'calc':prefReturn);if(prefReturn==='home')home();else if(prefReturn==='quick')title('Quick Calculator','Calculator + Unit Converter');else title(lineName(line),'Calculator');}
-function openQuick(from){quickReturn=from;show('quick');$('quickHistoryPanel').hidden=true;$('unitPanel').hidden=true;title('Quick Calculator','Calculator + Unit Converter');$('quickBack').textContent=from==='home'?'← Back to Home':`← Back to ${lineName(line)} Summary`;renderQuick();translateUI();}
+function openQuick(from){qActive='right';quickReturn=from;show('quick');$('quickHistoryPanel').hidden=true;$('unitPanel').hidden=true;$('seedPanel').hidden=true;title('Quick Calculator','Calculator + Unit Converter');$('quickBack').textContent=from==='home'?'← Back to Home':`← Back to ${lineName(line)} Summary`;renderQuick();translateUI();}
 function backQuick(){if(quickReturn==='home')home();else{show('calc');title(lineName(line),'Calculator');calculate();}}
-const convPairs={'kg-lb':['KG','LB',F],'lb-kg':['LB','KG',1/F],'g-oz':['g','oz',1/28.349523125],'oz-g':['oz','g',28.349523125],'ml-foz':['mL','fl oz',1/29.5735295625],'foz-ml':['fl oz','mL',29.5735295625],'l-gal':['L','gal',1/3.785411784],'gal-l':['gal','L',3.785411784]};
-function quickFmt(x){return Number.isFinite(x)?Number(x.toPrecision(12)).toLocaleString('en-US',{maximumFractionDigits:5}):'Error';}
-function renderQuick(){const pair=convPairs[$('converterPair').value];$('quickNumber').textContent=qValue==='Error'?'Error':qValue.endsWith('.')?qValue:quickFmt(Number(qValue));$('quickExpression').textContent=qExpression;const live=$('quickLiveResult');const b=Number(qValue);const liveValue=qOp&&qFirst!==null&&!qFresh&&qValue!=='Error'?(qOp==='+'?qFirst+b:qOp==='−'?qFirst-b:qOp==='×'?qFirst*b:b===0?NaN:qFirst/b):null;live.hidden=liveValue===null||!Number.isFinite(liveValue);live.textContent=live.hidden?'':`= ${quickFmt(liveValue)}`;$('converterLabel').hidden=!qConverter;$('converterToggle').textContent=qConverter?'Converter ON':'Converter OFF';$('converterToggle').setAttribute('aria-pressed',String(qConverter));$('quickConverted').textContent=qConverter&&qValue!=='Error'?`${quickFmt(Number(qValue)*pair[2])} ${pair[1]}`:'';
-const last=qHistory[0];$('quickLastCalculation').textContent=last?`${last.expression} ${quickFmt(last.value)}`:'No calculations yet.';
-if (!$('quickHistoryPanel').hidden) {
-$('quickHistory').innerHTML=qHistory.length?qHistory.map((x,i)=>`<button type="button" class="historyItem" data-history="${i}"><small>${esc(x.expression)}</small><strong>${esc(quickFmt(x.value))}</strong></button>`).join(''):'No recent calculations.';
-$('quickHistory').querySelectorAll('[data-history]').forEach(b=>b.onclick=()=>{const x=qHistory[Number(b.dataset.history)];qValue=String(x.value);qExpression='';qOp=null;qFirst=null;qFresh=true;$('quickHistoryPanel').hidden=true;renderQuick()});
-}}
-function quickKey(k){if(k==='AC'){qValue='0';qFirst=null;qOp=null;qFresh=true;qExpression='';}else if(k==='⌫'){qValue=qValue.length<2||qValue==='Error'?'0':qValue.slice(0,-1);}else if(k==='±'){qValue=String(-Number(qValue));}else if(k==='%'){qValue=String(Number(qValue)/100);}else if(['+','−','×','÷'].includes(k)){qFirst=Number(qValue);qOp=k;qFresh=true;qExpression=`${quickFmt(qFirst)} ${k}`;}else if(k==='='){if(qOp&&qFirst!==null){const b=Number(qValue),r=qOp==='+'?qFirst+b:qOp==='−'?qFirst-b:qOp==='×'?qFirst*b:b===0?NaN:qFirst/b;qExpression=`${quickFmt(qFirst)} ${qOp} ${quickFmt(b)} =`;qValue=Number.isFinite(r)?String(Number(r.toPrecision(12))):'Error';if(Number.isFinite(r)){qHistory.unshift({expression:qExpression,value:Number(qValue)});qHistory=qHistory.slice(0,200);persist(HISTORY_KEY,qHistory);}qOp=null;qFirst=null;qFresh=true;}}else if(k==='.'){if(qFresh){qValue='0.';qFresh=false;}else if(!qValue.includes('.'))qValue+='.';}else if(/^\d$/.test(k)){qValue=qFresh||qValue==='0'||qValue==='Error'?k:qValue.replace(/\D/g,'').length<12?qValue+k:qValue;qFresh=false;}renderQuick();}
+const KG_TO_LB=2.2046226218487757;
+const convPairs={'kg-lb':['KG','LB',KG_TO_LB],'lb-kg':['LB','KG',1/KG_TO_LB],'g-oz':['g','oz',1/28.349523125],'oz-g':['oz','g',28.349523125],'ml-foz':['mL','fl oz',1/29.5735295625],'foz-ml':['fl oz','mL',29.5735295625],'l-gal':['L','gal',1/3.785411784],'gal-l':['gal','L',3.785411784]};
+function quickFmt(x){return Number.isFinite(x)?Number(x.toPrecision(14)).toLocaleString('en-US',{maximumFractionDigits:8}):'Error';}
+function quickTwo(x){return Number.isFinite(x)?x.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'Error';}
+function quickInputFmt(s){if(s==='Error')return 'Error';const parts=String(s).split('.');const a=Number(parts[0]||0).toLocaleString('en-US',{maximumFractionDigits:0});return parts.length>1?a+'.'+parts[1]:a;}
+function quickMiniConverted(){return Number(qMiniValue)*(qMiniUnit==='LB'?1/KG_TO_LB:KG_TO_LB);}
+function quickSnapshot(){return {qValue,qFirst,qOp,qFresh,qExpression,qConverter,qMiniValue,qMiniUnit,qActive,pair:$('converterPair').value,history:JSON.parse(JSON.stringify(qHistory))};}
+function quickSaveUndo(){qUndo.push(quickSnapshot());if(qUndo.length>80)qUndo.shift();}
+function quickUndoAction(){if(!qUndo.length)return;const s=qUndo.pop();({qValue,qFirst,qOp,qFresh,qExpression,qConverter,qMiniValue,qMiniUnit,qActive}=s);$('converterPair').value=s.pair;qHistory=s.history;persist(HISTORY_KEY,qHistory);renderQuick();}
+function quickHistoryAdd(type,expression,value){qHistory.unshift({type,expression,value});qHistory=qHistory.slice(0,200);persist(HISTORY_KEY,qHistory);}
+function quickResizeNumbers(){
+  const adjust=(id,boxId,max,min)=>{const el=$(id),box=$(boxId);if(!el||!box||!box.getClientRects().length)return;const w=(id==='quickMiniInput'||id==='quickMiniOutput')?Math.max(20,$('quickMini').clientWidth-box.clientWidth-28):box.clientWidth-3;if(w<=0)return;const text=el.textContent||'0';const canvas=quickResizeNumbers.canvas||(quickResizeNumbers.canvas=document.createElement('canvas'));const ctx=canvas.getContext('2d');let size=max;while(size>min){ctx.font=`600 ${size}px Arial`;if(ctx.measureText(text).width<=w)break;size-=1;}el.style.fontSize=size+'px';};
+  const wide=!qConverter;
+  adjust('quickNumber','quickCalcBottom',wide?78:62,23);
+  adjust('quickMiniInput','quickMiniInputUnit',22,12);
+  adjust('quickMiniOutput','quickMiniOutputUnit',22,12);
+}
+function renderQuick(){
+  const pair=convPairs[$('converterPair').value],on=qConverter;
+  if(!on)qActive='right';
+  $('quickDisplays').classList.toggle('converterOff',!on);
+  $('quickMini').hidden=!on;
+  $('quickSecondary').hidden=!on;
+  $('quickMini').classList.toggle('quickSelected',on&&qActive==='left');
+  $('quickCalcPanel').classList.toggle('quickSelected',qActive==='right');
+  $('quickMiniInput').textContent=quickInputFmt(qMiniValue);
+  $('quickMiniInputUnit').textContent=qMiniUnit;
+  $('quickMiniOutput').textContent=quickTwo(quickMiniConverted());
+  $('quickMiniOutputUnit').textContent=qMiniUnit==='LB'?'KG':'LB';
+  $('quickNumber').textContent=qExpression.endsWith('=')&&qOp===null&&qFresh&&qValue!=='Error'?quickTwo(Number(qValue)):quickInputFmt(qValue);
+  $('quickExpression').textContent=qExpression;
+  const live=$('quickLiveResult'),b=Number(qValue);
+  const liveValue=qOp&&qFirst!==null&&!qFresh&&qValue!=='Error'?(qOp==='+'?qFirst+b:qOp==='−'?qFirst-b:qOp==='×'?qFirst*b:b===0?NaN:qFirst/b):null;
+  live.hidden=liveValue===null||!Number.isFinite(liveValue);live.textContent=live.hidden?'':`= ${quickTwo(liveValue)}`;
+  $('converterToggle').textContent=on?'Converter ON':'Converter OFF';
+  $('converterToggle').setAttribute('aria-pressed',String(on));
+  $('quickMainSwap').textContent=`${pair[0]} → ${pair[1]} ⇄`;
+  $('quickConverted').textContent=on&&qValue!=='Error'?`${quickTwo(Number(qValue)*pair[2])} ${pair[1]}`:'';
+  $('quickUndo').disabled=!qUndo.length;
+  const last=qHistory.find(x=>x.type!=='conversion');
+  $('quickLastCalculation').textContent=last?`${last.expression} ${quickTwo(Number(last.value))}`:'No calculations yet.';
+  if(!$('quickHistoryPanel').hidden){
+    $('quickHistory').innerHTML=qHistory.length?qHistory.map((x,i)=>`<button type="button" class="historyItem" data-history="${i}"><small>${x.type==='conversion'?'CONVERSION':'CALCULATION'} · ${esc(x.expression)}</small><strong>${esc(x.type==='conversion'?quickTwo(Number(x.value))+' '+(x.target||''):quickTwo(Number(x.value)))}</strong></button>`).join(''):'No recent calculations.';
+    $('quickHistory').querySelectorAll('[data-history]').forEach(btn=>btn.onclick=()=>{const x=qHistory[Number(btn.dataset.history)];quickSaveUndo();qValue=String(x.value);qExpression='';qOp=null;qFirst=null;qFresh=true;qActive='right';if(x.type==='conversion'&&x.target){$('converterPair').value=x.target==='KG'?'kg-lb':'lb-kg'}$('quickHistoryPanel').hidden=true;renderQuick();});
+  }
+  requestAnimationFrame(quickResizeNumbers);
+}
+function quickSelect(side){if(side==='left'&&!qConverter)return;qActive=side;renderQuick();}
+function quickKey(k){
+  const mini=qActive==='left'&&qConverter;
+  if(mini){
+    if(['+','−','×','÷','='].includes(k))return;
+    quickSaveUndo();
+    if(k==='AC')qMiniValue='0';
+    else if(k==='⌫')qMiniValue=qMiniValue.length<2?'0':qMiniValue.slice(0,-1);
+    else if(k==='±')qMiniValue=String(-Number(qMiniValue));
+    else if(k==='%')qMiniValue=String(Number(qMiniValue)/100);
+    else if(k==='.'){if(!qMiniValue.includes('.'))qMiniValue+='.';}
+    else if(/^\d$/.test(k)){qMiniValue=qMiniValue==='0'?k:qMiniValue.replace(/\D/g,'').length<14?qMiniValue+k:qMiniValue;}
+    renderQuick();return;
+  }
+  if(k==='='){if(qOp===null||qFirst===null||qFresh)return;}
+  quickSaveUndo();
+  if(k==='AC'){qValue='0';qFirst=null;qOp=null;qFresh=true;qExpression='';}
+  else if(k==='⌫'){qValue=qValue.length<2||qValue==='Error'?'0':qValue.slice(0,-1);qFresh=false;}
+  else if(k==='±'){qValue=String(-Number(qValue));qFresh=false;}
+  else if(k==='%'){qValue=String(Number(qValue)/100);qFresh=false;}
+  else if(['+','−','×','÷'].includes(k)){
+    if(qOp!==null&&qFirst!==null&&!qFresh){quickCalculate(false);}
+    qFirst=Number(qValue);qOp=k;qFresh=true;qExpression=`${quickFmt(qFirst)} ${k}`;
+  }
+  else if(k==='=')quickCalculate(true);
+  else if(k==='.'){if(qFresh){qValue='0.';qFresh=false;}else if(!qValue.includes('.'))qValue+='.';}
+  else if(/^\d$/.test(k)){qValue=qFresh||qValue==='0'||qValue==='Error'?k:qValue.replace(/\D/g,'').length<14?qValue+k:qValue;qFresh=false;}
+  renderQuick();
+}
+function quickCalculate(record){
+  if(qOp===null||qFirst===null||qFresh)return;
+  const a=qFirst,b=Number(qValue),op=qOp;
+  const r=op==='+'?a+b:op==='−'?a-b:op==='×'?a*b:b===0?NaN:a/b;
+  qExpression=`${quickFmt(a)} ${op} ${quickFmt(b)} =`;
+  qValue=Number.isFinite(r)?String(Number(r.toPrecision(15))):'Error';
+  if(record&&Number.isFinite(r))quickHistoryAdd('calculation',qExpression,Number(qValue));
+  qOp=null;qFirst=null;qFresh=true;
+}
+function quickUseMini(){
+  if(!qConverter)return;
+  const converted=quickMiniConverted();if(!Number.isFinite(converted))return;
+  quickSaveUndo();
+  const target=qMiniUnit==='LB'?'KG':'LB';
+  quickHistoryAdd('conversion',`${quickInputFmt(qMiniValue)} ${qMiniUnit} →`,converted);
+  qHistory[0].target=target;persist(HISTORY_KEY,qHistory);
+  qValue=String(Number(converted.toPrecision(15)));
+  if(qOp===null)qExpression='';
+  qFresh=false;qActive='right';
+  $('converterPair').value=target==='KG'?'kg-lb':'lb-kg';
+  renderQuick();
+}
 function renderPackAll(){const supported=(line==='3'||line==='4')&&mode==='pack'||isPackOnly();$('packAll').hidden=!supported;if(!supported||!lastResult)return;const raw=$('availableKg').value,out=$('packAllOutput');if(raw===''){out.textContent='Enter available KG to calculate complete bags.';return;}const available=Number(raw),r=lastResult;if(!Number.isFinite(available)||available<0){out.textContent='Enter a valid KG amount.';return;}const reserve=r.samples;const usable=Math.max(0,available-reserve);const perBag=(r.line==='standalone'||r.line==='leg')?r.netBag:r.base*(1+r.over/100);if(!(perBag>0)){out.textContent='Complete the order inputs first.';return;}const ea=Math.max(0,Math.floor((usable+1e-9)/perBag));const remaining=Math.max(0,usable-ea*perBag);const difference=ea-r.orderEa;out.innerHTML=`<div class="detailrow"><span>PO Estimated EA</span><strong>${r.orderEa}</strong></div><div class="detailrow"><span>Samples Reserved</span><strong>${fmt(reserve,3)} KG</strong></div><div class="detailrow"><span>Complete Bags</span><strong>${ea} EA</strong></div><div class="detailrow"><span>Remaining Seed</span><strong>${fmt(remaining,3)} KG</strong></div><div class="detailrow"><span>Actual EA Difference</span><strong>${difference>0?'+':''}${difference} EA</strong></div>`;}
-$('quickHome').onclick=()=>openQuick('home');$('quickSummary').onclick=()=>openQuick('calc');$('quickBack').onclick=backQuick;$('converterToggle').onclick=()=>{qConverter=!qConverter;renderQuick()};$('converterPair').onchange=renderQuick;// Handle touch on contact, avoiding Safari double-tap zoom and delayed synthesized clicks.
+$('quickHome').onclick=()=>openQuick('home');$('quickSummary').onclick=()=>openQuick('calc');$('quickBack').onclick=backQuick;
+$('converterToggle').onclick=()=>{quickSaveUndo();qConverter=!qConverter;if(!qConverter)qActive='right';renderQuick()};
+$('converterPair').onchange=renderQuick;
+$('quickUndo').onclick=quickUndoAction;
+$('quickMiniUse').onclick=quickUseMini;
+$('quickMiniSwap').onclick=()=>{quickSaveUndo();qMiniUnit=qMiniUnit==='LB'?'KG':'LB';qActive='left';renderQuick()};
+$('quickMainSwap').onclick=()=>{quickSaveUndo();$('converterPair').value=$('converterPair').value==='kg-lb'?'lb-kg':'kg-lb';qActive='right';renderQuick()};
+for(const [id,side] of [['quickMini','left'],['quickCalcPanel','right']]){
+  $(id).addEventListener('click',event=>{if(!event.target.closest('button'))quickSelect(side)});
+  $(id).addEventListener('keydown',event=>{if((event.key==='Enter'||event.key===' ')&&event.target===$(id)){event.preventDefault();quickSelect(side)}});
+}
+window.addEventListener('resize',()=>requestAnimationFrame(quickResizeNumbers));
+// Handle touch on contact, avoiding Safari double-tap zoom and delayed synthesized clicks.
 // Keep normal click for mouse, trackpad, and keyboard accessibility.
 document.querySelectorAll('#quick .quickKeys [data-key]').forEach(b=>{
   let lastTouch=0;
@@ -341,7 +442,7 @@ document.querySelectorAll('#quick .quickKeys [data-key]').forEach(b=>{
     if(Date.now()-lastTouch<750){event.preventDefault();return;}
     quickKey(b.dataset.key);
   });
-});$('clearHistory').onclick=()=>{if(!confirm(prefs.language==='es'?'¿Borrar todo el historial de la calculadora?':'Clear all calculator history?'))return;qHistory=[];persist(HISTORY_KEY,qHistory);renderQuick()};$('availableKg').addEventListener('input',renderPackAll);$('settingsBtn').onclick=openPrefs;$('prefsBack').onclick=closePrefs;$('formulaSettings').onclick=()=>{if(!line){alert(prefs.language==='es'?'Abre una línea para editar sus fórmulas.':'Open a line to edit its formulas.');return;}openSettings();};['Language','Theme','Color'].forEach(k=>$('pref'+k).addEventListener('change',()=>{prefs[k.toLowerCase()]=$('pref'+k).value;persist(PREF_KEY,prefs);applyPrefs()}));applyPrefs();
+});$('clearHistory').onclick=()=>{if(!confirm(prefs.language==='es'?'¿Borrar todo el historial de la calculadora?':'Clear all calculator history?'))return;quickSaveUndo();qHistory=[];persist(HISTORY_KEY,qHistory);renderQuick()};$('availableKg').addEventListener('input',renderPackAll);$('settingsBtn').onclick=openPrefs;$('prefsBack').onclick=closePrefs;$('formulaSettings').onclick=()=>{if(!line){alert(prefs.language==='es'?'Abre una línea para editar sus fórmulas.':'Open a line to edit its formulas.');return;}openSettings();};['Language','Theme','Color'].forEach(k=>$('pref'+k).addEventListener('change',()=>{prefs[k.toLowerCase()]=$('pref'+k).value;persist(PREF_KEY,prefs);applyPrefs()}));applyPrefs();
 
 // Full-screen calculator tools, persistent history, and additional unit conversions.
 const unitGroups={
@@ -353,11 +454,35 @@ const unitGroups={
 function unitSetup(){const group=unitGroups[$('unitCategory').value];for(const id of ['unitFrom','unitTo'])$(id).innerHTML=group.units.map(u=>`<option value="${esc(u)}">${esc(u)}</option>`).join('');$('unitTo').selectedIndex=1;unitCalculate();}
 function unitCalculate(){const g=unitGroups[$('unitCategory').value],raw=$('unitAmount').value,from=$('unitFrom').value,to=$('unitTo').value,n=Number(raw);let v=NaN;if(raw!==''&&Number.isFinite(n)){if(g===unitGroups.temperature){v=from===to?n:from==='°F'?(n-32)*5/9:n*9/5+32;}else v=n*g.factors[from]/g.factors[to];}const output=Number.isFinite(v)?`${Number(v.toPrecision(12)).toLocaleString('en-US',{maximumFractionDigits:7})} ${to}`:'—';$('unitResult').textContent=output;return output;}
 $('quickExit').onclick=backQuick;$('quickHomeButton').onclick=home;
-$('quickHistoryOpen').onclick=()=>{$('quickHistoryPanel').hidden=false;renderQuick()};$('quickHistoryClose').onclick=()=>$('quickHistoryPanel').hidden=true;
-$('unitOpen').onclick=()=>{$('unitPanel').hidden=false;unitCalculate()};$('unitClose').onclick=()=>$('unitPanel').hidden=true;
+$('quickHistoryOpen').onclick=()=>{$('quickHistoryPanel').hidden=false;$('seedPanel').hidden=true;renderQuick()};$('quickHistoryClose').onclick=()=>$('quickHistoryPanel').hidden=true;
+$('unitOpen').onclick=()=>{$('unitPanel').hidden=false;$('seedPanel').hidden=true;unitCalculate()};$('unitClose').onclick=()=>$('unitPanel').hidden=true;
 $('unitCategory').onchange=unitSetup;['unitFrom','unitTo','unitAmount'].forEach(id=>$(id).addEventListener('input',unitCalculate));$('unitSwap').onclick=()=>{const f=$('unitFrom').value;$('unitFrom').value=$('unitTo').value;$('unitTo').value=f;unitCalculate()};
 $('unitCopy').onclick=async()=>{const result=unitCalculate();if(result==='—')return;const txt=`${$('unitAmount').value} ${$('unitFrom').value} = ${result}`;try{await navigator.clipboard.writeText(txt)}catch{window.prompt('Copy result:',txt)}};
 unitSetup();
+// Seed Converter: KG / LB / KS, based on seeds per pound (PC).
+const seedCopyText={
+ en:{title:'Seed Converter',intro:'Convert seed quantities between kilograms, pounds and thousands of seeds (KS).',from:'Enter unit',amount:'Amount',pc:'PC — Seeds per pound',note:'1 KS = 1,000 seeds. PC is required to calculate KS.',copy:'Copy Results',invalid:'Enter a nonnegative amount and a PC greater than zero.',back:'← Back'},
+ es:{title:'Conversor de semillas',intro:'Convierte cantidades de semillas entre kilogramos, libras y miles de semillas (KS).',from:'Unidad de entrada',amount:'Cantidad',pc:'PC — Semillas por libra',note:'1 KS = 1,000 semillas. Necesitas PC para calcular KS.',copy:'Copiar resultados',invalid:'Ingresa una cantidad no negativa y un PC mayor que cero.',back:'← Volver'}
+};
+function renderSeedConverter(){
+ const t=seedCopyText[prefs.language==='es'?'es':'en'];
+ $('seedTitle').textContent=t.title;$('seedIntro').textContent=t.intro;$('seedFromLabel').textContent=t.from;$('seedAmountLabel').textContent=t.amount;$('seedPcLabel').textContent=t.pc;$('seedNote').textContent=t.note;$('seedCopy').textContent=t.copy;$('seedClose').textContent=t.back;
+ $('seedOpen').textContent=prefs.language==='es'?'🌱 Conversor de semillas':'🌱 Seed Converter';
+ const raw=$('seedAmount').value,rawPc=$('seedPc').value,amount=Number(raw),pc=Number(rawPc),unit=$('seedFrom').value;
+ const valid=raw.trim()!==''&&rawPc.trim()!==''&&Number.isFinite(amount)&&amount>=0&&Number.isFinite(pc)&&pc>0;
+ const lb=unit==='KG'?amount*2.2046226218487757:unit==='LB'?amount:amount*1000/pc;
+ const kg=lb/2.2046226218487757,ks=lb*pc/1000;
+ const format=v=>v.toLocaleString('en-US',{maximumFractionDigits:4});
+ $('seedKg').textContent=valid?format(kg):'—';$('seedLb').textContent=valid?format(lb):'—';$('seedKs').textContent=valid?format(ks):'—';
+ $('seedError').textContent=valid?'':t.invalid;$('seedCopy').disabled=!valid;
+ return valid?`KG: ${format(kg)}\nLB: ${format(lb)}\nKS: ${format(ks)}\nPC: ${format(pc)}`:null;
+}
+$('seedOpen').addEventListener('click',()=>{$('seedPanel').hidden=false;$('unitPanel').hidden=true;$('quickHistoryPanel').hidden=true;renderSeedConverter()});
+$('seedClose').addEventListener('click',()=>{$('seedPanel').hidden=true});
+['seedFrom','seedAmount','seedPc'].forEach(id=>$(id).addEventListener('input',renderSeedConverter));
+$('seedCopy').addEventListener('click',async()=>{const output=renderSeedConverter();if(!output)return;try{await navigator.clipboard.writeText(output)}catch{const input=document.createElement('textarea');input.value=output;document.body.appendChild(input);input.select();document.execCommand('copy');input.remove()}});
+$('prefLanguage').addEventListener('change',renderSeedConverter);
+renderSeedConverter();
 // Five taps on the footer version label unlock the secret arcade (Home only).
 let secretTaps=0,secretLast=0;
 function secretTap(){if($('home').hidden)return;const now=Date.now();secretTaps=now-secretLast<1100?secretTaps+1:1;secretLast=now;if(secretTaps>=5){secretTaps=0;show('brain');if(typeof window.startBrainBreak==='function')window.startBrainBreak();}}
@@ -371,10 +496,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-6';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-8';
 const releaseNotes={
-  en:{title:"What's New · TEST Build 6",items:["Added How Was This Calculated? to Leg — Concetti Pack Only (English and Spanish).","Seven steps explain pack seed weight, overpack, chemical weight when treated, net and gross bag weight, samples, and rounding.","Kept Calculation Breakdown, production formulas, existing saved calculations, and the update system unchanged."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify Leg results against approved production procedures.",close:'Continue'},
-  es:{title:'Novedades · TEST Build 6',items:['Agregamos ¿Cómo se calculó? a Leg — Concetti Solo empaque (inglés y español).','Siete pasos explican el peso de semilla por bolsa, overpack, peso químico cuando está tratada, pesos neto y bruto, muestras y redondeo.','Conservamos Calculation Breakdown, las fórmulas, los cálculos guardados y el sistema de actualizaciones.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los resultados de Leg con los procedimientos aprobados.',close:'Continuar'}
+ en:{title:"What's New · TEST Build 8",items:["Quick Calculator now has a compact Quick Converter and a larger main calculator.","Added Undo and a combined history of calculations and conversions.","Converter OFF hides conversion tools and expands the main display; numbers resize to fit."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
+ es:{title:'Novedades · TEST Build 8',items:['Quick Calculator ahora incluye un mini conversor y una calculadora principal más grande.','Agregamos Undo e historial de cálculos y conversiones.','Converter OFF oculta los conversores y expande la pantalla principal; los números se ajustan al espacio.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -446,7 +571,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-6';
+const LOCAL_TEST_BUILD='v2.5-test-build-8';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
