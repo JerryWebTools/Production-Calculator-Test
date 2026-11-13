@@ -416,3 +416,38 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #quick .quickHistoryList .historyItem strong{text-align:right}
 @media(max-width:599px){body.quick-active #quick .quickDisplays{min-height:155px}body.quick-active #quick .quickMini,body.quick-active #quick .quickCalcPanel{min-height:155px}}
 @media(max-width:350px){#quick .quickMini,#quick .quickCalcPanel{padding-left:5px;padding-right:5px}#quick .quickMiniValue{gap:2px}}
+
+
+/* v2.5 TEST Build 9 — clear selection, compact tools, accessible transfers */
+#quick .quickTools{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+#quick .quickTools button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:59px;padding:6px 2px;white-space:normal;line-height:1.1}
+#quick .quickTools .toolIcon{font-size:20px;line-height:1.1;font-weight:700}
+#quick .quickTools .toolLabel{font-size:clamp(9px,2.5vw,11px);line-height:1.12;text-align:center;overflow-wrap:normal}
+#quick .quickDisplays .quickSelected{border:3px solid var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--bg));box-shadow:inset 0 0 0 1px var(--accent)}
+#quick .quickPanelTitle{display:flex;align-items:center;justify-content:space-between;gap:2px}
+#quick .quickMini .quickPanelTitle{font-size:9px;flex-wrap:wrap;justify-content:center}
+#quick .quickActiveMark{display:none;color:var(--accent);font-size:9px;letter-spacing:0;white-space:nowrap;font-weight:800}
+#quick .quickSelected .quickActiveMark{display:inline}
+#quick .quickMiniDivider{margin:6px 0}
+#quick .quickFieldLabel{margin-bottom:3px}
+#quick #quickMiniSwap{margin:5px 0;min-height:30px}
+#quick #quickMiniUse{min-height:38px;flex-shrink:0;position:relative;z-index:1;margin-top:auto}
+#quick #quickNumber{max-width:100%;line-height:1.05}
+#quick .unitToolTabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0 0 16px}
+#quick .unitToolTabs button{min-height:46px;padding:8px 5px;font-size:13px}
+#quick .unitToolTabs .active{border:2px solid var(--accent);box-shadow:inset 0 -2px var(--accent)}
+#quick .percentInputs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#quick .percentInputs label{min-width:0}
+#quick .percentAnswer strong{font-size:clamp(28px,8vw,40px);font-variant-numeric:tabular-nums}
+#quick .percentUse{width:100%;min-height:48px}
+@media(max-width:599px){
+  body.quick-active #quick .quickMain{min-height:0}
+  body.quick-active #quick .quickDisplays{min-height:205px;flex:1 1 auto}
+  body.quick-active #quick .quickMini,body.quick-active #quick .quickCalcPanel{min-height:205px}
+  body.quick-active #quick .quickKeys button{height:clamp(40px,calc((100dvh - 410px - env(safe-area-inset-bottom))/5),72px)}
+  body.quick-active #quick .quickMini{padding-top:7px;padding-bottom:7px}
+}
+@media(max-width:370px){
+  #quick .quickTools .toolLabel{font-size:9px}
+  #quick .quickTools button{padding-left:1px;padding-right:1px}
+}
