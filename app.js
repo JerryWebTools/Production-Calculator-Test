@@ -713,7 +713,7 @@ function renderQuickSeed(){
 }
 $('qsAvailable').addEventListener('input',renderQuickSeed);
 $('quickSeedHome').onclick=openQuickSeed;
-$('qsReset').onclick=()=>{$('qsSize').value='';$('qsEa').value='';$('qsPc').value='';$('qsOver').value='1';$('qsChem').value='1.2';$('qsSamples').value='5';$('qsTare').value='';$('qsAvailable').value='';$('qsUnit').value='KS';renderQuickSeed();};
+$('qsReset').onclick=()=>{['qsSize','qsEa','qsPc','qsOver','qsChem','qsSamples','qsTare','qsAvailable'].forEach(id=>$(id).value='');$('qsUnit').value='KS';renderQuickSeed();};
 document.querySelectorAll('[data-qs-unit]').forEach(b=>b.addEventListener('click',()=>{$('qsUnit').value=b.dataset.qsUnit;renderQuickSeed();}));
 ['qsSize','qsEa','qsPc','qsOver','qsChem','qsSamples','qsTare'].forEach(id=>{
  const el=$(id);
@@ -733,10 +733,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-15';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-16';
 const releaseNotes={
- en:{title:"What's New · TEST Build 15",items:["New Pack All Calculator estimates full bags from available seed, reserves samples, and shows remaining seed. TEST defaults: 100 KS, PC 2500, 100 EA, 1% overpack and chemical.","Chemical Weight changes Fill Weight only; Bag Tare changes Gross Bag Weight only.","Production line explanations show KG to 3 decimals and LB to 2 decimals."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
- es:{title:'Novedades · TEST Build 15',items:['Nuevo Pack All calcula bolsas completas según la semilla disponible, reserva muestras y muestra el sobrante. Valores TEST: 100 KS, PC 2500, 100 EA, 1% overpack y químico.','Chemical Weight solo cambia Fill Weight; Bag Tare solo cambia Gross Bag Weight.','Las explicaciones muestran KG con 3 decimales y LB con 2.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
+ en:{title:"What's New · TEST Build 16",items:["Quick Seed now shows 100 KS, PC 2500, 100 EA, 1% overpack, 1% chemical, and 5 KG samples as gray placeholders, not prefilled values. Reset clears all fields.","Chemical Weight changes Fill Weight only; Bag Tare changes Gross Bag Weight only.","Production line explanations show KG to 3 decimals and LB to 2 decimals."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
+ es:{title:'Novedades · TEST Build 16',items:['Quick Seed muestra 100 KS, PC 2500, 100 EA, 1% overpack, 1% químico y 5 KG de muestras como ejemplos grises, sin llenar los campos. Reset limpia todo.','Chemical Weight solo cambia Fill Weight; Bag Tare solo cambia Gross Bag Weight.','Las explicaciones muestran KG con 3 decimales y LB con 2.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -808,7 +808,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-15';
+const LOCAL_TEST_BUILD='v2.5-test-build-16';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
