@@ -486,3 +486,53 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #quickSeed #qsGuide .guideMath{white-space:pre-line;overflow-wrap:anywhere;background:var(--bg);padding:12px;border-radius:9px;font:500 13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--fg);margin-top:8px}
 #quickSeed .inline select{width:75px}
 @media(max-width:370px){#quickSeed .quickSeedResults{grid-template-columns:1fr}}
+
+/* Quick Seed Calculator — approved screenshot demo styling, scoped to this tool only */
+#quickSeed{max-width:850px;margin:0 auto;padding:2px 0 14px}
+#quickSeed .qsPanel{background:var(--accent);border:1px solid color-mix(in srgb,var(--accent),white 16%);border-radius:15px;padding:18px;margin:12px 0;color:#fff}
+#quickSeed .qsPanel h2{font-size:18px;font-weight:500;margin:2px 0 24px;color:#fff}
+#quickSeed .qsField{display:block;color:#fff;font-weight:700;font-size:14px;min-width:0}
+#quickSeed .qsField input{display:block;width:100%;margin:9px 0 4px;border:1px solid #243b63;background:#0b172a;color:#fff;border-radius:10px;padding:12px 13px;font-size:18px;min-height:52px}
+#quickSeed .qsField input::placeholder{color:#91a8c9}
+#quickSeed .qsExamples{display:block;color:#d7e3ff;font-size:12px;font-weight:400;line-height:1.5;margin:5px 0 0}
+#quickSeed .qsPackRow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);align-items:end;gap:12px}
+#quickSeed .qsUnitTitle{text-align:center;font-size:19px;font-weight:800;margin-bottom:9px}
+#quickSeed .qsUnitButtons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+#quickSeed .qsUnitButton{min-height:52px;padding:8px 3px;border-radius:10px;border:1px solid #a4bcf8;background:color-mix(in srgb,var(--accent),black 22%);color:#fff;font-size:14px;font-weight:800}
+#quickSeed .qsUnitButton.qsUnitActive{background:#fff;color:#06142a;border-color:#fff}
+#quickSeed .qsPackExamples{margin:12px 0 22px}
+#quickSeed .qsFields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:14px;row-gap:18px}
+#quickSeed .qsOptional{font-size:12px;font-weight:400;color:#d7e3ff}
+#quickSeed .qsResultHeading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+#quickSeed .qsResultHeading h2{margin:0}
+#quickSeed .qsReset{padding:10px 12px;border:1px solid #d5e1ff;border-radius:9px;background:transparent;color:#fff;font-size:12px}
+#quickSeed .qsTotalCard,#quickSeed .qsSmallCard{border:1px solid #9db8f8;border-radius:12px;background:color-mix(in srgb,var(--accent),black 12%);padding:16px;color:#fff}
+#quickSeed .qsTotalCard>strong{font-size:13px}
+#quickSeed .qsTotalNumber{font-size:clamp(32px,6vw,44px);font-weight:900;line-height:1.2;margin:18px 0 7px;overflow-wrap:anywhere}
+#quickSeed .qsLb{font-size:13px;color:#e0eaff}
+#quickSeed .qsSmallCards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+#quickSeed .qsSmallCard>span{font-size:13px}
+#quickSeed .qsSmallNumber{font-size:clamp(20px,4vw,26px);font-weight:800;margin:10px 0 3px;overflow-wrap:anywhere}
+#quickSeed .qsGrossCard{grid-column:1/-1}
+#quickSeed .qsDisclosure{background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:0;margin:12px 0;overflow:hidden}
+#quickSeed .qsDisclosure>summary{padding:17px 15px;font-weight:700;font-size:13px;list-style:none;display:flex;justify-content:space-between;align-items:center;color:var(--fg)}
+#quickSeed .qsDisclosure>summary::-webkit-details-marker{display:none}
+#quickSeed .qsDisclosure>summary::after{content:"⌄";font-size:16px}
+#quickSeed .qsDisclosure[open]>summary::after{content:"⌃"}
+#quickSeed #qsBreakdown,#quickSeed #qsGuide{padding:4px 14px 16px}
+#quickSeed #qsGuide .guideStep{padding:13px 0;border-bottom:1px solid var(--edge)}
+#quickSeed #qsGuide .guideMath{white-space:pre-line;overflow-wrap:anywhere;background:var(--bg);padding:12px;border-radius:9px;font:500 13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--fg);margin-top:8px}
+#quickSeed .qsError{color:#fff;background:#8b1e2b;border-radius:8px;padding:10px;margin-top:12px}
+#quickSeed [hidden]{display:none!important}
+@media(max-width:540px){
+ #quickSeed .qsPanel{padding:13px}
+ #quickSeed .qsPackRow{grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:7px}
+ #quickSeed .qsUnitTitle{font-size:14px}
+ #quickSeed .qsUnitButton{font-size:12px;padding:5px 1px;min-height:50px}
+ #quickSeed .qsFields{gap:14px 9px}
+ #quickSeed .qsField{font-size:12px}
+ #quickSeed .qsField input{font-size:16px;padding:10px;min-height:50px}
+ #quickSeed .qsExamples{font-size:10px}
+ #quickSeed .qsSmallCards{gap:8px}
+ #quickSeed .qsTotalCard,#quickSeed .qsSmallCard{padding:12px}
+}
