@@ -571,7 +571,9 @@ function renderQuickSeed(){
  const clear=()=>{['qsNetKg','qsNetLb','qsFillKg','qsFillLb','qsGrossKg','qsGrossLb','qsTotalKg','qsTotalLb'].forEach(id=>$(id).textContent='—');$('qsBreakdown').replaceChildren();$('qsGuide').replaceChildren();$('qsGrossCard').hidden=true;};
  $('qsError').hidden=true;
  if(!fieldsComplete){clear();return;}
- const valid=Number.isFinite(size)&&size>0&&Number.isSafeInteger(ea)&&ea>0&&(!needsPc||Number.isFinite(pc)&&pc>0)&&
+ const numericFields=['qsSize','qsEa','qsPc','qsOver','qsChem','qsSamples','qsTare'];
+ const numericSyntax=numericFields.every(id=>id==='qsPc'&&!needsPc||id==='qsTare'&&$('qsTare').value===''||/^(?:\d+(?:\.\d*)?|\.\d+)$/.test($(id).value.trim()));
+ const valid=numericSyntax&&Number.isFinite(size)&&size>0&&Number.isSafeInteger(ea)&&ea>0&&(!needsPc||Number.isFinite(pc)&&pc>0)&&
    [over,chem].every(x=>Number.isFinite(x)&&x>=0&&x<=100)&&[samples,tare].every(x=>Number.isFinite(x)&&x>=0);
  if(!valid){clear();$('qsError').textContent=t('Enter a positive pack size, whole-number EA, valid PC for KS/MS, percentages from 0 to 100, and nonnegative samples/tare.','Ingresa tamaño positivo, EA entero, PC válido para KS/MS, porcentajes de 0 a 100 y muestras/tara no negativas.');$('qsError').hidden=false;return;}
  const exactLbPerKg=2.2046226218487757;
@@ -620,7 +622,16 @@ function renderQuickSeed(){
 $('quickSeedHome').onclick=openQuickSeed;
 $('qsReset').onclick=()=>{$('qsSize').value='';$('qsEa').value='';$('qsPc').value='';$('qsOver').value='1';$('qsChem').value='1.2';$('qsSamples').value='5';$('qsTare').value='';$('qsUnit').value='KS';renderQuickSeed();};
 document.querySelectorAll('[data-qs-unit]').forEach(b=>b.addEventListener('click',()=>{$('qsUnit').value=b.dataset.qsUnit;renderQuickSeed();}));
-['qsSize','qsEa','qsPc','qsOver','qsChem','qsSamples','qsTare'].forEach(id=>$(id).addEventListener('input',renderQuickSeed));
+['qsSize','qsEa','qsPc','qsOver','qsChem','qsSamples','qsTare'].forEach(id=>{
+ const el=$(id);
+ // Text + decimal inputmode allows consistent selection/caret behavior on mobile and desktop.
+ // Focus, click and touch all place the insertion point after the existing number.
+ const moveCaret=()=>{if(document.activeElement===el&&typeof el.setSelectionRange==='function'){const n=el.value.length;el.setSelectionRange(n,n);}};
+ el.addEventListener('focus',moveCaret);
+ el.addEventListener('click',moveCaret);
+ el.addEventListener('touchend',()=>requestAnimationFrame(moveCaret),{passive:true});
+ el.addEventListener('input',renderQuickSeed);
+});
 
 // Navigation
  $('homeShortcut').onclick=home;
@@ -629,10 +640,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-12';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-13';
 const releaseNotes={
- en:{title:"What's New · TEST Build 12",items:["Quick Seed Calculator now matches the approved demo layout, with large KS/MS/KG/LB buttons and compact order fields.","Chemical Weight changes Fill Weight only; Bag Tare changes Gross Bag Weight only.","Production line explanations show KG to 3 decimals and LB to 2 decimals."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
- es:{title:'Novedades · TEST Build 12',items:['Quick Seed Calculator ahora sigue el diseño aprobado, con botones KS/MS/KG/LB y campos compactos.','Chemical Weight solo cambia Fill Weight; Bag Tare solo cambia Gross Bag Weight.','Las explicaciones muestran KG con 3 decimales y LB con 2.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
+ en:{title:"What's New · TEST Build 13",items:["Quick Seed inputs now use consistent Examples text, put the cursor at the end, and explain each result.","Chemical Weight changes Fill Weight only; Bag Tare changes Gross Bag Weight only.","Production line explanations show KG to 3 decimals and LB to 2 decimals."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
+ es:{title:'Novedades · TEST Build 13',items:['Quick Seed ahora muestra Examples en cada campo, coloca el cursor al final y explica cada resultado.','Chemical Weight solo cambia Fill Weight; Bag Tare solo cambia Gross Bag Weight.','Las explicaciones muestran KG con 3 decimales y LB con 2.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -704,7 +715,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-12';
+const LOCAL_TEST_BUILD='v2.5-test-build-13';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
