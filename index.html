@@ -30,33 +30,67 @@
 <div class="card"><div class="saveRow"><input id="calcId" type="text" maxlength="50" placeholder="Calculation ID (optional)"><button class="primary" id="save">💾 Save</button></div><button class="secondary small" id="reset">Reset Inputs</button></div></section>
 
 <section id="quickSeed" hidden>
- <div class="card">
-  <div class="sectionhead"><h2>🌱 Quick Seed Calculator</h2><button id="qsBack" class="secondary small" type="button">← Home</button></div>
-  <p class="muted tiny">Manual seed calculation · Examples: 100 KS, 1 MS, 25 KG, 50 LB</p>
-  <div class="grid">
-   <label>Seed Type<select id="qsType"><option value="normal">Normal Corn</option><option value="shrunken">Shrunken Corn</option><option value="other">Other / Untreated</option></select></label>
-   <label>Pack Size / Unit<div class="inline"><input id="qsSize" type="number" min="0" step="any" inputmode="decimal" placeholder="e.g. 100"><select id="qsUnit" aria-label="Pack unit"><option>KS</option><option>MS</option><option>KG</option><option>LB</option></select></div></label>
-   <label>Quantity (EA)<input id="qsEa" type="number" min="1" step="1" inputmode="numeric" placeholder="e.g. 100"></label>
-   <label id="qsPcField">Seed Count (PC)<input id="qsPc" type="number" min="0" step="any" inputmode="decimal" placeholder="e.g. 3500"></label>
-   <label>Overpack %<input id="qsOver" type="number" min="0" max="100" step="any" inputmode="decimal" value="1"></label>
-   <label>Chemical Weight %<input id="qsChem" type="number" min="0" max="100" step="any" inputmode="decimal" value="1"></label>
-   <label>Samples (Quantity)<input id="qsSampleQty" type="number" min="0" step="1" inputmode="numeric" value="0"></label><label>Sample Weight Each<div class="inline"><input id="qsSampleWeight" type="number" min="0" step="any" inputmode="decimal" value="1"><select id="qsSampleUnit" aria-label="Sample weight unit"><option>KG</option><option>LB</option></select></div></label>
-   <label>Bag Tare<div class="inline"><input id="qsTare" type="number" min="0" step="any" inputmode="decimal" value="0"><select id="qsTareUnit" aria-label="Tare unit"><option>KG</option><option>LB</option></select></div></label>
+ <div class="qsPanel qsOrderPanel">
+  <h2>Enter Order Details</h2>
+  <div class="qsPackRow">
+   <label class="qsField qsPackSize">Pack Size
+    <input id="qsSize" type="number" min="0" step="any" inputmode="decimal" placeholder="80" autocomplete="off">
+   </label>
+   <div class="qsUnitField">
+    <div class="qsUnitTitle">Select Unit</div>
+    <div class="qsUnitButtons" role="group" aria-label="Select Unit">
+     <button type="button" class="qsUnitButton qsUnitActive" data-qs-unit="KS" aria-pressed="true">KS</button>
+     <button type="button" class="qsUnitButton" data-qs-unit="MS" aria-pressed="false">MS</button>
+     <button type="button" class="qsUnitButton" data-qs-unit="KG" aria-pressed="false">KG</button>
+     <button type="button" class="qsUnitButton" data-qs-unit="LB" aria-pressed="false">LB</button>
+    </div>
+    <input id="qsUnit" type="hidden" value="KS">
+   </div>
   </div>
-  <p class="muted tiny">Examples: Overpack 1% · Normal Corn chemical 1% · Shrunken Corn chemical 1.2%. All percentages are editable.</p>
-  <p id="qsError" class="error" hidden role="alert"></p>
-  <button id="qsReset" class="secondary small" type="button">Reset Inputs</button>
- </div>
- <div class="card result">
-  <div class="quickSeedResults">
-   <div><strong>Net Seed Weight / EA</strong><div class="number" id="qsNetKg">—</div><div class="muted" id="qsNetLb">—</div></div>
-   <div><strong>Fill Weight / EA</strong><div class="number" id="qsFillKg">—</div><div class="muted" id="qsFillLb">—</div></div>
-   <div><strong>Gross Bag Weight / EA</strong><div class="number" id="qsGrossKg">—</div><div class="muted" id="qsGrossLb">—</div></div>
-   <div class="quickSeedTotal"><strong>Seed to Treat (rounded KG)</strong><div class="number" id="qsTotalKg">—</div><div class="muted" id="qsTotalLb">—</div></div>
+  <p class="qsExamples qsPackExamples">Examples: 100KS, 80KS, 50KS, 25KS, 20KS, 10KS, 500KS - 1MS, 5MS - 25KG, 20KG, 10KG, 1KG - 50LB</p>
+  <div class="qsFields">
+   <label id="qsPcField" class="qsField">Seed Count (PC)
+    <input id="qsPc" type="number" min="0" step="any" inputmode="decimal" placeholder="3000" autocomplete="off">
+    <span class="qsExamples">e.g. 2500 seeds/lb</span>
+   </label>
+   <label class="qsField">Quantity (EA)
+    <input id="qsEa" type="number" min="1" step="1" inputmode="numeric" placeholder="120" autocomplete="off">
+    <span class="qsExamples">e.g. 100 bags</span>
+   </label>
+   <label class="qsField">Overpack (%)
+    <input id="qsOver" type="number" min="0" max="100" step="any" inputmode="decimal" value="1">
+    <span class="qsExamples">1% Commercial · 0.5% Parent</span>
+   </label>
+   <label class="qsField">Chemical (%)
+    <input id="qsChem" type="number" min="0" max="100" step="any" inputmode="decimal" value="1.2">
+    <span class="qsExamples">1% Normal · 1.2% Shrunken</span>
+   </label>
+   <label class="qsField">Samples (KG)
+    <input id="qsSamples" type="number" min="0" step="any" inputmode="decimal" value="5">
+    <span class="qsExamples">e.g. 5, 3, or 0</span>
+   </label>
+   <label class="qsField">Bag Tare (KG) <span class="qsOptional">Optional</span>
+    <input id="qsTare" type="number" min="0" step="any" inputmode="decimal" placeholder="0.100">
+    <span class="qsExamples">e.g. 0.100 KG</span>
+   </label>
   </div>
-  <details id="qsBreakdownDetails"><summary>Calculation Breakdown</summary><div id="qsBreakdown"></div></details>
-  <details id="qsGuideDetails"><summary>📖 How Was This Calculated?</summary><div id="qsGuide"></div></details>
+  <p id="qsError" class="qsError" hidden role="alert"></p>
  </div>
+ <div class="qsPanel qsResultPanel">
+  <div class="qsResultHeading"><h2>Results</h2><button id="qsReset" type="button" class="qsReset">↺ Reset</button></div>
+  <div class="qsTotalCard">
+   <strong>TOTAL SEED TO TREAT</strong>
+   <div class="qsTotalNumber" id="qsTotalKg">—</div>
+   <div class="qsLb" id="qsTotalLb">—</div>
+  </div>
+  <div class="qsSmallCards">
+   <div class="qsSmallCard"><span>Net Seed / EA</span><div class="qsSmallNumber" id="qsNetKg">—</div><div class="qsLb" id="qsNetLb">—</div></div>
+   <div class="qsSmallCard"><span>Fill Weight / EA</span><div class="qsSmallNumber" id="qsFillKg">—</div><div class="qsLb" id="qsFillLb">—</div></div>
+   <div id="qsGrossCard" class="qsSmallCard qsGrossCard" hidden><span>Gross Bag Weight / EA (with tare)</span><div class="qsSmallNumber" id="qsGrossKg">—</div><div class="qsLb" id="qsGrossLb">—</div></div>
+  </div>
+ </div>
+ <details id="qsBreakdownDetails" class="qsDisclosure"><summary>Calculation Breakdown</summary><div id="qsBreakdown"></div></details>
+ <details id="qsGuideDetails" class="qsDisclosure"><summary>📖 How Was This Calculated?</summary><div id="qsGuide"></div></details>
 </section>
 <section id="quick" hidden>
   <div class="card quickMain">
