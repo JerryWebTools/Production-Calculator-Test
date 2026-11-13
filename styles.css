@@ -548,3 +548,18 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #quickSeed .qsStepMeaning{font-size:13px;line-height:1.55;color:var(--fg);margin:7px 0 10px;opacity:.85}
 #quickSeed #qsBreakdown .detailrow{gap:10px;align-items:flex-start}
 #quickSeed #qsBreakdown .detailrow strong{text-align:right;overflow-wrap:anywhere}
+
+/* Build 15: Pack All below Results, before Calculation Breakdown */
+#quickSeed .qsPackAllPanel{margin-top:14px}
+#quickSeed .qsPackAllIntro{font-size:13px;line-height:1.5;opacity:.88;margin:7px 0 14px}
+#quickSeed .qsAvailableField{max-width:480px;margin-bottom:10px}
+#quickSeed .qsPackAllOutputs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:15px}
+#quickSeed .qsPackAllHero{grid-column:1/-1;background:rgba(0,0,0,.24);border-radius:12px;padding:17px;text-align:center;display:flex;flex-direction:column;gap:7px}
+#quickSeed .qsPackAllHero>span:first-child{font-size:12px;font-weight:800;letter-spacing:.04em}
+#quickSeed .qsPackAllEa{font-size:clamp(28px,5vw,44px);font-weight:900;line-height:1.2}
+#quickSeed .qsPackAllStatus{font-size:13px;opacity:.9}
+#quickSeed .qsPackAllMini{background:rgba(0,0,0,.18);border-radius:10px;padding:13px;display:flex;flex-direction:column;gap:7px;min-width:0}
+#quickSeed .qsPackAllMini>span{font-size:12px;font-weight:700}
+#quickSeed .qsPackAllMini>strong{font-size:clamp(16px,2.5vw,22px);overflow-wrap:anywhere}
+#quickSeed .qsPackAllMini>small{font-size:11px;opacity:.85;line-height:1.4}
+@media(max-width:540px){#quickSeed .qsPackAllOutputs{grid-template-columns:1fr}#quickSeed .qsPackAllMini{padding:12px}}

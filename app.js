@@ -558,6 +558,40 @@ function openQuickSeed(){
  show('quickSeed');title('Quick Seed Calculator','Manual seed and bag weight calculation');
  renderQuickSeed();translateUI();window.scrollTo({top:0,behavior:'smooth'});
 }
+// Pack All works from available seed BEFORE chemical treatment.
+// Samples are reserved first; only full EA can be packed. The remainder is seed,
+// not chemical or empty-bag tare. All math uses unrounded per-bag weights.
+function renderPackAll(order){
+ const error=$('qsPackAllError'),field=$('qsAvailable');
+ const outputs=['qsPackAllEa','qsPackAllStatus','qsPackAllRemaining','qsPackAllUsed','qsPackAllFillTotal'];
+ const clear=()=>outputs.forEach(id=>$(id).textContent='—');
+ error.hidden=true;
+ if(!order||!field.value.trim()){clear();return;}
+ const value=field.value.trim();
+ if(!/^(?:\d+(?:\.\d*)?|\.\d+)$/.test(value)){
+  clear();error.textContent='Enter a valid nonnegative available seed weight in KG.';error.hidden=false;return;
+ }
+ const available=Number(value),usable=available-order.samples;
+ if(!Number.isFinite(available)||available<0||!Number.isFinite(usable)||!Number.isFinite(order.seedPerBag)||order.seedPerBag<=0){
+  clear();error.textContent='Available Seed is too large or invalid.';error.hidden=false;return;
+ }
+ const count=Math.max(0,Math.floor(usable/order.seedPerBag));
+ const used=count*order.seedPerBag;
+ const remaining=Math.max(0,usable-used);
+ const fillTotal=count*order.fillPerBag;
+ if(!Number.isSafeInteger(count)||![used,remaining,fillTotal].every(Number.isFinite)){
+  clear();error.textContent='Values are too large to calculate safely.';error.hidden=false;return;
+ }
+ $('qsPackAllEa').textContent=fmt(count,0)+' EA';
+ $('qsPackAllStatus').textContent=order.chemicalPct===0?'Untreated Seed':'Treated Seed (chemical added to fill weight)';
+ $('qsPackAllRemaining').textContent=fmt(remaining,3)+' KG';
+ $('qsPackAllUsed').textContent=fmt(used,3)+' KG';
+ $('qsPackAllFillTotal').textContent=fmt(fillTotal,3)+' KG';
+ if(available<order.samples){
+  error.textContent='Available seed is less than the samples reserved. No full bags can be packed.';
+  error.hidden=false;
+ }
+}
 function renderQuickSeed(){
  const es=prefs.language==='es',t=(en,sp)=>es?sp:en;
  const unit=$('qsUnit').value,needsPc=unit==='KS'||unit==='MS';
@@ -568,7 +602,7 @@ function renderQuickSeed(){
  const size=Number($('qsSize').value),ea=Number($('qsEa').value),pc=Number($('qsPc').value);
  const over=Number($('qsOver').value),chem=Number($('qsChem').value),samples=Number($('qsSamples').value);
  const tare=$('qsTare').value===''?0:Number($('qsTare').value);
- const clear=()=>{['qsNetKg','qsNetLb','qsFillKg','qsFillLb','qsGrossKg','qsGrossLb','qsTotalKg','qsTotalLb'].forEach(id=>$(id).textContent='—');$('qsBreakdown').replaceChildren();$('qsGuide').replaceChildren();$('qsGrossCard').hidden=true;};
+ const clear=()=>{renderPackAll(null);['qsNetKg','qsNetLb','qsFillKg','qsFillLb','qsGrossKg','qsGrossLb','qsTotalKg','qsTotalLb'].forEach(id=>$(id).textContent='—');$('qsBreakdown').replaceChildren();$('qsGuide').replaceChildren();$('qsGrossCard').hidden=true;};
  $('qsError').hidden=true;
  if(!fieldsComplete){clear();return;}
  const numericFields=['qsSize','qsEa','qsPc','qsOver','qsChem','qsSamples','qsTare'];
@@ -588,6 +622,7 @@ function renderQuickSeed(){
  const setWeight=(prefix,value,round=false)=>{$(prefix+'Kg').textContent=fmt(value,round?0:3)+' KG';$(prefix+'Lb').textContent=lb(value)+' LB';};
  setWeight('qsNet',base);setWeight('qsFill',fill);setWeight('qsGross',gross);setWeight('qsTotal',total,true);
  $('qsGrossCard').hidden=$('qsTare').value===''||tare<=0;
+ renderPackAll({seedPerBag:seedWithOverpack,fillPerBag:fill,samples,chemicalPct:chem,ea});
 
  // Show a complete per-bag section first, then the matching totals for the entire order.
  // All displayed values are rounded; calculations below retain full precision.
@@ -676,8 +711,9 @@ function renderQuickSeed(){
   section.append(h,desc,math);guide.append(section);
  });
 }
+$('qsAvailable').addEventListener('input',renderQuickSeed);
 $('quickSeedHome').onclick=openQuickSeed;
-$('qsReset').onclick=()=>{$('qsSize').value='';$('qsEa').value='';$('qsPc').value='';$('qsOver').value='1';$('qsChem').value='1.2';$('qsSamples').value='5';$('qsTare').value='';$('qsUnit').value='KS';renderQuickSeed();};
+$('qsReset').onclick=()=>{$('qsSize').value='';$('qsEa').value='';$('qsPc').value='';$('qsOver').value='1';$('qsChem').value='1.2';$('qsSamples').value='5';$('qsTare').value='';$('qsAvailable').value='';$('qsUnit').value='KS';renderQuickSeed();};
 document.querySelectorAll('[data-qs-unit]').forEach(b=>b.addEventListener('click',()=>{$('qsUnit').value=b.dataset.qsUnit;renderQuickSeed();}));
 ['qsSize','qsEa','qsPc','qsOver','qsChem','qsSamples','qsTare'].forEach(id=>{
  const el=$(id);
@@ -697,10 +733,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-14';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-15';
 const releaseNotes={
- en:{title:"What's New · TEST Build 14",items:["Quick Seed Breakdown now shows per-bag and order totals, and every How Was This Calculated? step explains its purpose.","Chemical Weight changes Fill Weight only; Bag Tare changes Gross Bag Weight only.","Production line explanations show KG to 3 decimals and LB to 2 decimals."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
- es:{title:'Novedades · TEST Build 14',items:['Quick Seed ahora muestra pesos por bolsa y totales de orden en Breakdown, y explica cada paso del cálculo.','Chemical Weight solo cambia Fill Weight; Bag Tare solo cambia Gross Bag Weight.','Las explicaciones muestran KG con 3 decimales y LB con 2.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
+ en:{title:"What's New · TEST Build 15",items:["New Pack All Calculator estimates full bags from available seed, reserves samples, and shows remaining seed. TEST defaults: 100 KS, PC 2500, 100 EA, 1% overpack and chemical.","Chemical Weight changes Fill Weight only; Bag Tare changes Gross Bag Weight only.","Production line explanations show KG to 3 decimals and LB to 2 decimals."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
+ es:{title:'Novedades · TEST Build 15',items:['Nuevo Pack All calcula bolsas completas según la semilla disponible, reserva muestras y muestra el sobrante. Valores TEST: 100 KS, PC 2500, 100 EA, 1% overpack y químico.','Chemical Weight solo cambia Fill Weight; Bag Tare solo cambia Gross Bag Weight.','Las explicaciones muestran KG con 3 decimales y LB con 2.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -772,7 +808,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-14';
+const LOCAL_TEST_BUILD='v2.5-test-build-15';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
