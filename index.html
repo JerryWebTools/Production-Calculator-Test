@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1220"><title>Prod Calc TEST · v2.5</title><link rel="stylesheet" href="styles.css?v=25-test-build-12-demo-v1"><link rel="stylesheet" href="brain.css?v=25-test-build-12-demo-v1"><link rel="manifest" href="manifest.webmanifest?v=25-test-build-12-demo-v1"><link rel="apple-touch-icon" sizes="180x180" href="assets/prod-calc-test-180.png"><meta name="apple-mobile-web-app-title" content="Prod Calc TEST"></head><body><main class="app">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1220"><title>Prod Calc TEST · v2.5</title><link rel="stylesheet" href="styles.css?v=25-test-build-13-ux-v1"><link rel="stylesheet" href="brain.css?v=25-test-build-13-ux-v1"><link rel="manifest" href="manifest.webmanifest?v=25-test-build-13-ux-v1"><link rel="apple-touch-icon" sizes="180x180" href="assets/prod-calc-test-180.png"><meta name="apple-mobile-web-app-title" content="Prod Calc TEST"></head><body><main class="app">
 <div class="testEnvironmentBanner" role="status">🧪 TEST VERSION — NOT FOR PRODUCTION</div>
 <header class="compactHeader">
   <div class="brandFooter"><img src="assets/js-studio.png" alt="JS Studio logo"><span>JS Studio</span></div>
@@ -34,7 +34,7 @@
   <h2>Enter Order Details</h2>
   <div class="qsPackRow">
    <label class="qsField qsPackSize">Pack Size
-    <input id="qsSize" type="number" min="0" step="any" inputmode="decimal" placeholder="80" autocomplete="off">
+    <input id="qsSize" type="text" inputmode="decimal" placeholder="80" autocomplete="off">
    </label>
    <div class="qsUnitField">
     <div class="qsUnitTitle">Select Unit</div>
@@ -50,28 +50,28 @@
   <p class="qsExamples qsPackExamples">Examples: 100KS, 80KS, 50KS, 25KS, 20KS, 10KS, 500KS - 1MS, 5MS - 25KG, 20KG, 10KG, 1KG - 50LB</p>
   <div class="qsFields">
    <label id="qsPcField" class="qsField">Seed Count (PC)
-    <input id="qsPc" type="number" min="0" step="any" inputmode="decimal" placeholder="3000" autocomplete="off">
-    <span class="qsExamples">e.g. 2500 seeds/lb</span>
+    <input id="qsPc" type="text" inputmode="decimal" placeholder="3000" autocomplete="off">
+    <span class="qsExamples">Examples: 2500 seeds/lb</span>
    </label>
    <label class="qsField">Quantity (EA)
-    <input id="qsEa" type="number" min="1" step="1" inputmode="numeric" placeholder="120" autocomplete="off">
-    <span class="qsExamples">e.g. 100 bags</span>
+    <input id="qsEa" type="text" inputmode="numeric" placeholder="120" autocomplete="off">
+    <span class="qsExamples">Examples: 100 bags</span>
    </label>
    <label class="qsField">Overpack (%)
-    <input id="qsOver" type="number" min="0" max="100" step="any" inputmode="decimal" value="1">
-    <span class="qsExamples">1% Commercial · 0.5% Parent</span>
+    <input id="qsOver" type="text" inputmode="decimal" value="1">
+    <span class="qsExamples">Examples: 1% Commercial · 0.5% Parent</span>
    </label>
    <label class="qsField">Chemical (%)
-    <input id="qsChem" type="number" min="0" max="100" step="any" inputmode="decimal" value="1.2">
-    <span class="qsExamples">1% Normal · 1.2% Shrunken</span>
+    <input id="qsChem" type="text" inputmode="decimal" value="1.2">
+    <span class="qsExamples">Examples: 1% Normal · 1.2% Shrunken · 0% Untreated</span>
    </label>
    <label class="qsField">Samples (KG)
-    <input id="qsSamples" type="number" min="0" step="any" inputmode="decimal" value="5">
-    <span class="qsExamples">e.g. 5, 3, or 0</span>
+    <input id="qsSamples" type="text" inputmode="decimal" value="5">
+    <span class="qsExamples">Examples: 5, 3, or 0</span>
    </label>
    <label class="qsField">Bag Tare (KG) <span class="qsOptional">Optional</span>
-    <input id="qsTare" type="number" min="0" step="any" inputmode="decimal" placeholder="0.100">
-    <span class="qsExamples">e.g. 0.100 KG</span>
+    <input id="qsTare" type="text" inputmode="decimal" placeholder="0.100">
+    <span class="qsExamples">Examples: 0.100 KG</span>
    </label>
   </div>
   <p id="qsError" class="qsError" hidden role="alert"></p>
@@ -81,12 +81,12 @@
   <div class="qsTotalCard">
    <strong>TOTAL SEED TO TREAT</strong>
    <div class="qsTotalNumber" id="qsTotalKg">—</div>
-   <div class="qsLb" id="qsTotalLb">—</div>
+   <div class="qsLb" id="qsTotalLb">—</div><p class="qsMeaning">Total seed required for the order, including overpack and samples. Excludes chemical weight and bag tare.</p>
   </div>
   <div class="qsSmallCards">
-   <div class="qsSmallCard"><span>Net Seed / EA</span><div class="qsSmallNumber" id="qsNetKg">—</div><div class="qsLb" id="qsNetLb">—</div></div>
-   <div class="qsSmallCard"><span>Fill Weight / EA</span><div class="qsSmallNumber" id="qsFillKg">—</div><div class="qsLb" id="qsFillLb">—</div></div>
-   <div id="qsGrossCard" class="qsSmallCard qsGrossCard" hidden><span>Gross Bag Weight / EA (with tare)</span><div class="qsSmallNumber" id="qsGrossKg">—</div><div class="qsLb" id="qsGrossLb">—</div></div>
+   <div class="qsSmallCard"><span>Net Seed / EA</span><div class="qsSmallNumber" id="qsNetKg">—</div><div class="qsLb" id="qsNetLb">—</div><p class="qsMeaning">Actual seed weight per bag, before overpack and chemical weight.</p></div>
+   <div class="qsSmallCard"><span>Fill Weight / EA</span><div class="qsSmallNumber" id="qsFillKg">—</div><div class="qsLb" id="qsFillLb">—</div><p class="qsMeaning">Target fill weight per bag, including overpack and chemical weight. Excludes bag tare.</p></div>
+   <div id="qsGrossCard" class="qsSmallCard qsGrossCard" hidden><span>Gross Bag Weight / EA (with tare)</span><div class="qsSmallNumber" id="qsGrossKg">—</div><div class="qsLb" id="qsGrossLb">—</div><p class="qsMeaning">Fill weight plus bag tare. Shown only when tare is entered.</p></div>
   </div>
  </div>
  <details id="qsBreakdownDetails" class="qsDisclosure"><summary>Calculation Breakdown</summary><div id="qsBreakdown"></div></details>
@@ -175,4 +175,4 @@
     <button id="whatsNewClose" type="button" class="primary">Continue</button>
   </div>
 </div>
-<script src="app.js?v=25-test-build-12-demo-v1"></script><script src="brain.js?v=25-test-build-12-demo-v1"></script></body></html>
+<script src="app.js?v=25-test-build-13-ux-v1"></script><script src="brain.js?v=25-test-build-13-ux-v1"></script></body></html>
