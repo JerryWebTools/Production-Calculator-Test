@@ -315,7 +315,7 @@ const originalText=new WeakMap();
 function translateUI(){const spanish=prefs.language==='es';document.querySelectorAll('button, label, h1, h2, strong, summary, .eyebrow, .pill, small').forEach(el=>{if(el.closest('#quickHistory,#packAllOutput,#savedList,#breakdown'))return;for(const node of el.childNodes){if(node.nodeType!==3)continue;if(!originalText.has(node))originalText.set(node,node.nodeValue);const base=originalText.get(node);const trimmed=base.trim();if(!trimmed)continue;const clean=trimmed.replace(/^[←▦⚙️💾]+\s*/u,'');const t=translations[clean];if(t)node.nodeValue=spanish?base.replace(clean,t):base;}});document.querySelectorAll('option').forEach(el=>{if(!el.dataset.originalLabel)el.dataset.originalLabel=el.textContent;const t=translations[el.dataset.originalLabel];el.textContent=spanish&&t?t:el.dataset.originalLabel;});}
 function openPrefs(){prefReturn=document.querySelector('#quick:not([hidden])')?'quick':document.querySelector('#calc:not([hidden])')?'calc':document.querySelector('#settings:not([hidden])')?'settings':'home';show('preferences');title('Settings','Language, theme and button color');applyPrefs();}
 function closePrefs(){show(prefReturn==='settings'?'calc':prefReturn);if(prefReturn==='home')home();else if(prefReturn==='quick')title('Quick Calculator','Calculator + Unit Converter');else title(lineName(line),'Calculator');}
-function openQuick(from){qActive='right';quickReturn=from;show('quick');$('quickHistoryPanel').hidden=true;$('unitPanel').hidden=true;$('seedPanel').hidden=true;title('Quick Calculator','Calculator + Unit Converter');$('quickBack').textContent=from==='home'?'← Back to Home':`← Back to ${lineName(line)} Summary`;renderQuick();translateUI();}
+function openQuick(from){qActive='right';$('percentPanel').hidden=true;quickReturn=from;show('quick');$('quickHistoryPanel').hidden=true;$('unitPanel').hidden=true;$('seedPanel').hidden=true;title('Quick Calculator','Calculator + Unit Converter');$('quickBack').textContent=from==='home'?'← Back to Home':`← Back to ${lineName(line)} Summary`;renderQuick();translateUI();}
 function backQuick(){if(quickReturn==='home')home();else{show('calc');title(lineName(line),'Calculator');calculate();}}
 const KG_TO_LB=2.2046226218487757;
 const convPairs={'kg-lb':['KG','LB',KG_TO_LB],'lb-kg':['LB','KG',1/KG_TO_LB],'g-oz':['g','oz',1/28.349523125],'oz-g':['oz','g',28.349523125],'ml-foz':['mL','fl oz',1/29.5735295625],'foz-ml':['fl oz','mL',29.5735295625],'l-gal':['L','gal',1/3.785411784],'gal-l':['gal','L',3.785411784]};
@@ -328,9 +328,9 @@ function quickSaveUndo(){qUndo.push(quickSnapshot());if(qUndo.length>80)qUndo.sh
 function quickUndoAction(){if(!qUndo.length)return;const s=qUndo.pop();({qValue,qFirst,qOp,qFresh,qExpression,qConverter,qMiniValue,qMiniUnit,qActive}=s);$('converterPair').value=s.pair;qHistory=s.history;persist(HISTORY_KEY,qHistory);renderQuick();}
 function quickHistoryAdd(type,expression,value){qHistory.unshift({type,expression,value});qHistory=qHistory.slice(0,200);persist(HISTORY_KEY,qHistory);}
 function quickResizeNumbers(){
-  const adjust=(id,boxId,max,min)=>{const el=$(id),box=$(boxId);if(!el||!box||!box.getClientRects().length)return;const w=(id==='quickMiniInput'||id==='quickMiniOutput')?Math.max(20,$('quickMini').clientWidth-box.clientWidth-28):box.clientWidth-3;if(w<=0)return;const text=el.textContent||'0';const canvas=quickResizeNumbers.canvas||(quickResizeNumbers.canvas=document.createElement('canvas'));const ctx=canvas.getContext('2d');let size=max;while(size>min){ctx.font=`600 ${size}px Arial`;if(ctx.measureText(text).width<=w)break;size-=1;}el.style.fontSize=size+'px';};
+  const adjust=(id,boxId,max,min)=>{const el=$(id),box=$(boxId);if(!el||!box||!box.getClientRects().length)return;const w=(id==='quickMiniInput'||id==='quickMiniOutput')?Math.max(20,$('quickMini').clientWidth-34):Math.max(20,box.clientWidth-3);if(w<=0)return;const text=el.textContent||'0';const canvas=quickResizeNumbers.canvas||(quickResizeNumbers.canvas=document.createElement('canvas'));const ctx=canvas.getContext('2d');let size=max;while(size>min){ctx.font=`600 ${size}px Arial`;if(ctx.measureText(text).width<=w)break;size-=1;}el.style.fontSize=size+'px';};
   const wide=!qConverter;
-  adjust('quickNumber','quickCalcBottom',wide?78:62,23);
+  adjust('quickNumber','quickCalcBottom',wide?Math.min(94,Math.max(58,$('quickCalcPanel').clientWidth*.25)):62,23);
   adjust('quickMiniInput','quickMiniInputUnit',22,12);
   adjust('quickMiniOutput','quickMiniOutputUnit',22,12);
 }
@@ -341,6 +341,8 @@ function renderQuick(){
   $('quickMini').hidden=!on;
   $('quickSecondary').hidden=!on;
   $('quickMini').classList.toggle('quickSelected',on&&qActive==='left');
+  $('quickMini').setAttribute('aria-pressed',String(on&&qActive==='left'));
+  $('quickCalcPanel').setAttribute('aria-pressed',String(qActive==='right'));
   $('quickCalcPanel').classList.toggle('quickSelected',qActive==='right');
   $('quickMiniInput').textContent=quickInputFmt(qMiniValue);
   $('quickMiniInputUnit').textContent=qMiniUnit;
@@ -351,7 +353,7 @@ function renderQuick(){
   const live=$('quickLiveResult'),b=Number(qValue);
   const liveValue=qOp&&qFirst!==null&&!qFresh&&qValue!=='Error'?(qOp==='+'?qFirst+b:qOp==='−'?qFirst-b:qOp==='×'?qFirst*b:b===0?NaN:qFirst/b):null;
   live.hidden=liveValue===null||!Number.isFinite(liveValue);live.textContent=live.hidden?'':`= ${quickTwo(liveValue)}`;
-  $('converterToggle').textContent=on?'Converter ON':'Converter OFF';
+  $('converterToggle').querySelector('.toolLabel').textContent=on?'Converter ON':'Converter OFF';
   $('converterToggle').setAttribute('aria-pressed',String(on));
   $('quickMainSwap').textContent=`${pair[0]} → ${pair[1]} ⇄`;
   $('quickConverted').textContent=on&&qValue!=='Error'?`${quickTwo(Number(qValue)*pair[2])} ${pair[1]}`:'';
@@ -383,7 +385,7 @@ function quickKey(k){
   if(k==='AC'){qValue='0';qFirst=null;qOp=null;qFresh=true;qExpression='';}
   else if(k==='⌫'){qValue=qValue.length<2||qValue==='Error'?'0':qValue.slice(0,-1);qFresh=false;}
   else if(k==='±'){qValue=String(-Number(qValue));qFresh=false;}
-  else if(k==='%'){qValue=String(Number(qValue)/100);qFresh=false;}
+  else if(k==='%'){const value=Number(qValue);qValue=String(qFirst!==null&&['+','−'].includes(qOp)?qFirst*value/100:value/100);qFresh=false;}
   else if(['+','−','×','÷'].includes(k)){
     if(qOp!==null&&qFirst!==null&&!qFresh){quickCalculate(false);}
     qFirst=Number(qValue);qOp=k;qFresh=true;qExpression=`${quickFmt(qFirst)} ${k}`;
@@ -455,7 +457,7 @@ function unitSetup(){const group=unitGroups[$('unitCategory').value];for(const i
 function unitCalculate(){const g=unitGroups[$('unitCategory').value],raw=$('unitAmount').value,from=$('unitFrom').value,to=$('unitTo').value,n=Number(raw);let v=NaN;if(raw!==''&&Number.isFinite(n)){if(g===unitGroups.temperature){v=from===to?n:from==='°F'?(n-32)*5/9:n*9/5+32;}else v=n*g.factors[from]/g.factors[to];}const output=Number.isFinite(v)?`${Number(v.toPrecision(12)).toLocaleString('en-US',{maximumFractionDigits:7})} ${to}`:'—';$('unitResult').textContent=output;return output;}
 $('quickExit').onclick=backQuick;$('quickHomeButton').onclick=home;
 $('quickHistoryOpen').onclick=()=>{$('quickHistoryPanel').hidden=false;$('seedPanel').hidden=true;renderQuick()};$('quickHistoryClose').onclick=()=>$('quickHistoryPanel').hidden=true;
-$('unitOpen').onclick=()=>{$('unitPanel').hidden=false;$('seedPanel').hidden=true;unitCalculate()};$('unitClose').onclick=()=>$('unitPanel').hidden=true;
+$('unitOpen').onclick=()=>{$('unitPanel').hidden=false;$('seedPanel').hidden=true;$('percentPanel').hidden=true;unitCalculate()};$('unitClose').onclick=()=>$('unitPanel').hidden=true;
 $('unitCategory').onchange=unitSetup;['unitFrom','unitTo','unitAmount'].forEach(id=>$(id).addEventListener('input',unitCalculate));$('unitSwap').onclick=()=>{const f=$('unitFrom').value;$('unitFrom').value=$('unitTo').value;$('unitTo').value=f;unitCalculate()};
 $('unitCopy').onclick=async()=>{const result=unitCalculate();if(result==='—')return;const txt=`${$('unitAmount').value} ${$('unitFrom').value} = ${result}`;try{await navigator.clipboard.writeText(txt)}catch{window.prompt('Copy result:',txt)}};
 unitSetup();
@@ -478,11 +480,40 @@ function renderSeedConverter(){
  return valid?`KG: ${format(kg)}\nLB: ${format(lb)}\nKS: ${format(ks)}\nPC: ${format(pc)}`:null;
 }
 $('seedOpen').addEventListener('click',()=>{$('seedPanel').hidden=false;$('unitPanel').hidden=true;$('quickHistoryPanel').hidden=true;renderSeedConverter()});
-$('seedClose').addEventListener('click',()=>{$('seedPanel').hidden=true});
+$('seedClose').addEventListener('click',()=>{$('seedPanel').hidden=true;$('unitPanel').hidden=false;unitCalculate()});
+$('unitStandard').addEventListener('click',()=>{$('seedPanel').hidden=true;$('unitPanel').hidden=false;unitCalculate()});
 ['seedFrom','seedAmount','seedPc'].forEach(id=>$(id).addEventListener('input',renderSeedConverter));
 $('seedCopy').addEventListener('click',async()=>{const output=renderSeedConverter();if(!output)return;try{await navigator.clipboard.writeText(output)}catch{const input=document.createElement('textarea');input.value=output;document.body.appendChild(input);input.select();document.execCommand('copy');input.remove()}});
 $('prefLanguage').addEventListener('change',renderSeedConverter);
 renderSeedConverter();
+
+/* Build 9 percent modes. Input results are unit-neutral and retain full precision. */
+const percentModes={
+ add:{a:'Amount',b:'Percentage (%)',help:'Add a percentage of the amount.',compute:(a,b)=>a*(1+b/100)},
+ subtract:{a:'Amount',b:'Percentage (%)',help:'Subtract a percentage of the amount.',compute:(a,b)=>a*(1-b/100)},
+ of:{a:'Amount',b:'Percentage (%)',help:'Find the percentage of an amount.',compute:(a,b)=>a*b/100},
+ ratio:{a:'Part',b:'Total',help:'What percentage is the part of the total?',compute:(a,b)=>b===0?NaN:a/b*100,percent:true},
+ change:{a:'Original Amount',b:'New Amount',help:'Find the percentage change from original to new.',compute:(a,b)=>a===0?NaN:(b-a)/Math.abs(a)*100,percent:true},
+ reverse:{a:'Final Amount',b:'Added Percentage (%)',help:'Find the original amount before the percentage was added.',compute:(a,b)=>b===-100?NaN:a/(1+b/100)}
+};
+const percentDefaults={add:[1400,1],subtract:[1400,1],of:[1400,1],ratio:[14,1400],change:[1400,1470],reverse:[1414,1]};
+let percentComputed=NaN;
+function renderPercent(){
+ const mode=percentModes[$('percentMode').value],rawA=$('percentAmount').value,rawB=$('percentRate').value;
+ $('percentAmountLabel').textContent=mode.a;$('percentRateLabel').textContent=mode.b;$('percentHelp').textContent=mode.help;
+ percentComputed=rawA.trim()===''||rawB.trim()===''?NaN:mode.compute(Number(rawA),Number(rawB));
+ const valid=Number.isFinite(percentComputed);
+ $('percentResult').textContent=valid?quickTwo(percentComputed)+(mode.percent?'%':''):'—';
+ $('percentExplanation').textContent=valid?(mode.percent?'Percentage result':'Amount result · same unit as input'):'Enter valid values (denominator must not be zero).';
+ $('percentUse').disabled=!valid;
+}
+$('percentOpen').onclick=()=>{$('percentPanel').hidden=false;$('unitPanel').hidden=true;$('seedPanel').hidden=true;$('quickHistoryPanel').hidden=true;renderPercent()};
+$('percentClose').onclick=()=>{$('percentPanel').hidden=true;renderQuick()};
+$('percentMode').onchange=()=>{const [a,b]=percentDefaults[$('percentMode').value];$('percentAmount').value=a;$('percentRate').value=b;renderPercent()};
+['percentAmount','percentRate'].forEach(id=>$(id).addEventListener('input',renderPercent));
+$('percentUse').onclick=()=>{renderPercent();if(!Number.isFinite(percentComputed))return;quickSaveUndo();const mode=$('percentMode').value;const expression=mode+'('+ $('percentAmount').value+', '+$('percentRate').value+')';quickHistoryAdd('calculation',expression+' =',percentComputed);qValue=String(Number(percentComputed.toPrecision(15)));qFresh=false;qActive='right';if(qOp===null)qExpression='';$('percentPanel').hidden=true;renderQuick()};
+renderPercent();
+
 // Five taps on the footer version label unlock the secret arcade (Home only).
 let secretTaps=0,secretLast=0;
 function secretTap(){if($('home').hidden)return;const now=Date.now();secretTaps=now-secretLast<1100?secretTaps+1:1;secretLast=now;if(secretTaps>=5){secretTaps=0;show('brain');if(typeof window.startBrainBreak==='function')window.startBrainBreak();}}
@@ -496,10 +527,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-8';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-9';
 const releaseNotes={
- en:{title:"What's New · TEST Build 8",items:["Quick Calculator now has a compact Quick Converter and a larger main calculator.","Added Undo and a combined history of calculations and conversions.","Converter OFF hides conversion tools and expands the main display; numbers resize to fit."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
- es:{title:'Novedades · TEST Build 8',items:['Quick Calculator ahora incluye un mini conversor y una calculadora principal más grande.','Agregamos Undo e historial de cálculos y conversiones.','Converter OFF oculta los conversores y expande la pantalla principal; los números se ajustan al espacio.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
+ en:{title:"What's New · TEST Build 9",items:["Added a six-mode Percent Calculator with Use Result.","Unit Converter now includes Seed Converter; Standard Units opens by default.","Fixed calculator percentages and improved active-panel visibility and mobile spacing."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
+ es:{title:'Novedades · TEST Build 9',items:['Agregamos Percent Calculator con seis modos y Use Result.','Unit Converter ahora incluye Seed Converter y abre Standard Units por defecto.','Corregimos porcentajes y mejoramos la selección y el espacio en móviles.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
