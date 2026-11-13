@@ -1,16 +1,16 @@
-# Production Calculator · v2.5 TEST · Build 9
+# Production Calculator · v2.5 TEST · Build 10
 
-TEST-only branch. Do not merge into Production v2.4.
+TEST-only: display fixes following 7/9 Build 9 operator tests. Production v2.4 is untouched.
 
-- Four-tool toolbar: History, Converter ON/OFF, Unit Converter, Percent Calculator.
-- Unit Converter opens Standard Units; Seed Converter is a nested option.
-- Percent Calculator modes: Add, Subtract, Find, What %, % Change, Reverse %. Use Result transfers full precision to main calculator.
-- Main calculator percentage: + and − use percentage of the first operand, × and ÷ use fractional percentage.
-- Clear active-panel indicators, adaptive number sizes, and mobile transfer-button spacing.
+- White high-contrast active-panel border when Accent Color is Black or Gray.
+- Responsive main display measures the actual rendered digits on the device, starting large and shrinking to fit.
+- Both Converter ON (70% panel) and OFF (full-width panel) are supported.
+- Quick Converter input/output sizing uses actual available space; remeasure on resize.
+- No production formulas or percent calculation logic changed.
 
-## QA before merging
-1. 50 + 10% = 55; 50 - 10% = 45; 50 × 10% = 5; 50 ÷ 10% = 500.
-2. 1400 − (250 LB → KG using Use) = 1286.60; test button visibility on iPhone.
-3. Check Percent Calculator six modes, Use Result, Undo, History.
-4. Unit Converter defaults to Standard Units; Seed Converter Back returns to Standard Units.
-5. Confirm converter OFF, selected panel, long numbers, other production lines, and accent color.
+## Operator QA
+1. Choose Black, then Gray in Settings: selected panel must have a white border; other accent colors keep their original selection border.
+2. Converter OFF: enter 1400 (large), then 123456789.12345 (progressively smaller; all digits visible).
+3. Converter ON: enter 123456789.12345 in the main panel (all digits visible); also test left panel.
+4. Switch ON/OFF and rotate phone; font should grow/shrink with available width.
+5. Regression: 50 + 10% = 55; 1400 − (250 LB → KG) = 1286.60; Use Result, History and Undo still work.

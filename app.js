@@ -308,7 +308,7 @@ const prefDefaults={language:'en',theme:'dark',color:'blue'};
 let prefs={...prefDefaults,...read(PREF_KEY,{})},prefReturn='home',quickReturn='home',qValue='0',qFirst=null,qOp=null,qFresh=true,qExpression='',qConverter=true,qHistory=read(HISTORY_KEY,[]),qMiniValue='0',qMiniUnit='LB',qActive='right',qUndo=[];
 if(!Array.isArray(qHistory))qHistory=[];
 const colorCodes={blue:'#2563eb',red:'#dc2626',green:'#15803d',yellow:'#b88a00',pink:'#be185d',gray:'#64748b',black:'#3f3f46'};
-function applyPrefs(){if($('standaloneGuide')?.open&&['standalone','1','3','4'].includes(lastResult?.line))renderCalculationGuide();document.documentElement.dataset.theme=prefs.theme;document.documentElement.style.setProperty('--accent',colorCodes[prefs.color]||colorCodes.blue);document.documentElement.lang=prefs.language;['Language','Theme','Color'].forEach(k=>{const e=$('pref'+k);if(e)e.value=prefs[k.toLowerCase()]});translateUI();}
+function applyPrefs(){if($('standaloneGuide')?.open&&['standalone','1','3','4'].includes(lastResult?.line))renderCalculationGuide();document.documentElement.dataset.theme=prefs.theme;document.documentElement.dataset.quickAccent=prefs.color;document.documentElement.style.setProperty('--accent',colorCodes[prefs.color]||colorCodes.blue);document.documentElement.lang=prefs.language;['Language','Theme','Color'].forEach(k=>{const e=$('pref'+k);if(e)e.value=prefs[k.toLowerCase()]});translateUI();}
 const translations={
 'Production Calculator':'Production Calculator','Choose a production line.':'Selecciona una línea de producción.','Select a Production Line':'Seleccionar línea de producción','Line 1':'Line 1','Line 3':'Line 3','Line 4':'Line 4','Treat Only':'Solo tratamiento','Treat / Treat & Pack':'Tratar / Tratar y empacar','Leg':'Leg','Stand-Alone':'Stand-Alone','Pack Only':'Solo empaque','Bulk Line':'Bulk Line','Coming Soon 🚧':'Próximamente 🚧','Choose a mode':'Selecciona un modo','Treat & Pack':'Tratar y empacar','Seed to Treat':'Semilla por tratar','Seed to Treat + Bag Target':'Semilla por tratar + peso por bolsa','Crop Type':'Tipo de cultivo','Seed Type':'Tipo de semilla','Seed Condition':'Condición de semilla','Commercial':'Comercial','Parent / Basic':'Padre / Básica','Treated':'Tratada','Untreated':'Sin tratar','Pack Size':'Tamaño de empaque','Order EA':'EA de orden','Bag Tare Weight':'Tara de bolsa','Samples':'Muestras','Regular Sample':'Muestra regular','Edit ▾':'Editar ▾','Hide ▴':'Ocultar ▴','+ Add Custom Sample':'+ Agregar muestra personalizada','Extra EA':'EA adicionales','Net Seed Weight / EA':'Peso neto de semilla / EA','Gross Bag Weight / EA':'Peso bruto de bolsa / EA','Enter Bag Tare to calculate':'Ingresa la tara de la bolsa para calcular','Finished Bag Target':'Peso final por bolsa','Calculated EA':'EA calculados','Total Seed Required':'Semilla total requerida','Calculation Breakdown':'Desglose del cálculo','KILOGRAMS':'KILOGRAMOS','POUNDS':'LIBRAS','Save':'Guardar','Reset Inputs':'Restablecer datos','Saved Calculations':'Cálculos guardados','Settings':'Configuración','Formula Settings':'Configuración de fórmulas','Quick Calculator':'Calculadora rápida','Calculator + Unit Converter':'Calculadora + conversor de unidades','Converter ON':'Conversor activado','Converter OFF':'Conversor desactivado','Recent History':'Historial reciente','Clear':'Borrar','Close':'Cerrar','Apply Changes':'Aplicar cambios','Restore Defaults':'Restaurar valores','Pack All — Actual Available Seed':'Empacar todo — Semilla disponible real','Actual Available Seed (KG)':'Semilla disponible real (KG)','Calculation Summary':'Resumen del cálculo','Back to Home':'Volver al inicio','No recent calculations.':'Sin cálculos recientes.','Complete Bags':'Bolsas completas','Remaining Seed':'Semilla restante','PO Estimated EA':'EA estimados en PO','Actual EA Difference':'Diferencia de EA reales','Formula Settings':'Configuración de fórmulas',"✦ What's New · v2.5 TEST · Build 1":'✦ Novedades · v2.5 TEST · Build 1'};
 const originalText=new WeakMap();
@@ -328,12 +328,40 @@ function quickSaveUndo(){qUndo.push(quickSnapshot());if(qUndo.length>80)qUndo.sh
 function quickUndoAction(){if(!qUndo.length)return;const s=qUndo.pop();({qValue,qFirst,qOp,qFresh,qExpression,qConverter,qMiniValue,qMiniUnit,qActive}=s);$('converterPair').value=s.pair;qHistory=s.history;persist(HISTORY_KEY,qHistory);renderQuick();}
 function quickHistoryAdd(type,expression,value){qHistory.unshift({type,expression,value});qHistory=qHistory.slice(0,200);persist(HISTORY_KEY,qHistory);}
 function quickResizeNumbers(){
-  const adjust=(id,boxId,max,min)=>{const el=$(id),box=$(boxId);if(!el||!box||!box.getClientRects().length)return;const w=(id==='quickMiniInput'||id==='quickMiniOutput')?Math.max(20,$('quickMini').clientWidth-34):Math.max(20,box.clientWidth-3);if(w<=0)return;const text=el.textContent||'0';const canvas=quickResizeNumbers.canvas||(quickResizeNumbers.canvas=document.createElement('canvas'));const ctx=canvas.getContext('2d');let size=max;while(size>min){ctx.font=`600 ${size}px Arial`;if(ctx.measureText(text).width<=w)break;size-=1;}el.style.fontSize=size+'px';};
-  const wide=!qConverter;
-  adjust('quickNumber','quickCalcBottom',wide?Math.min(94,Math.max(58,$('quickCalcPanel').clientWidth*.25)):62,23);
-  adjust('quickMiniInput','quickMiniInputUnit',22,12);
-  adjust('quickMiniOutput','quickMiniOutputUnit',22,12);
+  // Measure the rendered text, not an estimated Arial width. iOS uses system fonts,
+  // and a canvas approximation can leave trailing digits clipped.
+  const fit=(id,max,min)=>{
+    const el=$(id);
+    if(!el||!el.getClientRects().length)return;
+    let available=el.clientWidth-6;
+    if(id==='quickMiniInput'||id==='quickMiniOutput'){
+      const holder=el.parentElement,unit=holder.lastElementChild;
+      const gap=parseFloat(getComputedStyle(holder).columnGap)||4;
+      available=holder.clientWidth-unit.getBoundingClientRect().width-gap-6;
+    }
+    if(available<=0)return;
+    const range=document.createRange();
+    range.selectNodeContents(el);
+    const fits=size=>{
+      el.style.fontSize=size+'px';
+      return range.getBoundingClientRect().width<=available;
+    };
+    if(fits(max))return;
+    if(!fits(min)){el.style.fontSize=min+'px';return;}
+    let low=min,high=max;
+    for(let i=0;i<11;i++){
+      const mid=(low+high)/2;
+      if(fits(mid))low=mid;else high=mid;
+    }
+    el.style.fontSize=(Math.floor(low*10)/10)+'px';
+  };
+  // Always start large for short values, then shrink as more digits are entered.
+  // A 12px minimum keeps up to 14 input digits plus separators visible on phones.
+  fit('quickNumber',qConverter?68:92,12);
+  fit('quickMiniInput',24,10);
+  fit('quickMiniOutput',24,10);
 }
+
 function renderQuick(){
   const pair=convPairs[$('converterPair').value],on=qConverter;
   if(!on)qActive='right';
@@ -430,6 +458,7 @@ for(const [id,side] of [['quickMini','left'],['quickCalcPanel','right']]){
   $(id).addEventListener('keydown',event=>{if((event.key==='Enter'||event.key===' ')&&event.target===$(id)){event.preventDefault();quickSelect(side)}});
 }
 window.addEventListener('resize',()=>requestAnimationFrame(quickResizeNumbers));
+if('ResizeObserver' in window){const quickSizeObserver=new ResizeObserver(()=>{if(!$('quick').hidden)requestAnimationFrame(quickResizeNumbers)});quickSizeObserver.observe($('quickCalcPanel'));quickSizeObserver.observe($('quickMini'));}
 // Handle touch on contact, avoiding Safari double-tap zoom and delayed synthesized clicks.
 // Keep normal click for mouse, trackpad, and keyboard accessibility.
 document.querySelectorAll('#quick .quickKeys [data-key]').forEach(b=>{
@@ -527,10 +556,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-9';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-10';
 const releaseNotes={
- en:{title:"What's New · TEST Build 9",items:["Added a six-mode Percent Calculator with Use Result.","Unit Converter now includes Seed Converter; Standard Units opens by default.","Fixed calculator percentages and improved active-panel visibility and mobile spacing."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
- es:{title:'Novedades · TEST Build 9',items:['Agregamos Percent Calculator con seis modos y Use Result.','Unit Converter ahora incluye Seed Converter y abre Standard Units por defecto.','Corregimos porcentajes y mejoramos la selección y el espacio en móviles.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
+ en:{title:"What's New · TEST Build 10",items:["Selected panel has a high-contrast outline with Black or Gray accents.","Calculator digits now start large and shrink automatically to fit both converter modes.","No calculation formulas were changed." ],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
+ es:{title:'Novedades · TEST Build 10',items:['El panel activo tiene un marco de alto contraste con Black o Gray.','Los números comienzan grandes y se reducen para caber en ambos modos del conversor.','No cambiamos las fórmulas de cálculo.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -602,7 +631,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-9';
+const LOCAL_TEST_BUILD='v2.5-test-build-10';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}

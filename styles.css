@@ -451,3 +451,25 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
   #quick .quickTools .toolLabel{font-size:9px}
   #quick .quickTools button{padding-left:1px;padding-right:1px}
 }
+
+/* v2.5 TEST Build 10: selection contrast and readable responsive numbers. */
+:root[data-quick-accent="black"] #quick .quickDisplays .quickSelected,
+:root[data-quick-accent="gray"] #quick .quickDisplays .quickSelected{
+  border-color:#fff;
+  box-shadow:inset 0 0 0 1px #fff,0 0 0 1px rgba(255,255,255,.45);
+}
+:root[data-quick-accent="black"] #quick .quickSelected .quickActiveMark,
+:root[data-quick-accent="gray"] #quick .quickSelected .quickActiveMark{color:#fff}
+:root[data-theme="light"][data-quick-accent="black"] #quick .quickDisplays .quickSelected,
+:root[data-theme="light"][data-quick-accent="gray"] #quick .quickDisplays .quickSelected{
+  background:#253146;
+  color:#fff;
+}
+:root[data-theme="light"][data-quick-accent="black"] #quick .quickDisplays .quickSelected .quickPanelTitle,
+:root[data-theme="light"][data-quick-accent="gray"] #quick .quickDisplays .quickSelected .quickPanelTitle,
+:root[data-theme="light"][data-quick-accent="black"] #quick .quickDisplays .quickSelected .quickFieldLabel,
+:root[data-theme="light"][data-quick-accent="gray"] #quick .quickDisplays .quickSelected .quickFieldLabel{color:#fff}
+#quick .quickCalcBottom{width:100%;max-width:100%;overflow:hidden}
+#quick #quickNumber{display:block;width:100%;max-width:100%;white-space:nowrap;overflow:hidden;text-align:right;letter-spacing:0;font-variant-numeric:tabular-nums}
+#quick #quickMiniInput,#quick #quickMiniOutput{display:inline-block;max-width:100%;white-space:nowrap;overflow:hidden;vertical-align:bottom}
+#quick .quickMiniValue{width:100%;overflow:hidden}
