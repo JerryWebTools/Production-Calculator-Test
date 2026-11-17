@@ -583,3 +583,38 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
  #bulkCalc .detailrow{align-items:flex-start}
  #bulkCalc .detailrow strong{max-width:57%}
 }
+
+
+/* Bulk Line shares the approved Quick Seed visual language. */
+#bulkCalc{max-width:850px;margin:0 auto;padding:2px 0 14px}
+#bulkCalc .qsPanel{background:var(--accent);border:1px solid color-mix(in srgb,var(--accent),white 16%);border-radius:15px;padding:18px;margin:12px 0;color:#fff}
+#bulkCalc .qsPanel h2{font-size:18px;font-weight:500;margin:2px 0 20px;color:#fff}
+#bulkCalc .qsField{display:block;color:#fff;font-weight:700;font-size:14px;min-width:0}
+#bulkCalc .qsField input,#bulkCalc .qsField select{display:block;width:100%;margin:9px 0 4px;border:1px solid #243b63;background:#0b172a;color:#fff;border-radius:10px;padding:12px 13px;font-size:18px;min-height:52px}
+#bulkCalc .qsField input::placeholder{color:#91a8c9}
+#bulkCalc .qsExamples{display:block;color:#d7e3ff;font-size:12px;font-weight:400;line-height:1.5;margin:5px 0 0}
+#bulkCalc .bulkIntro{margin:-12px 0 22px}
+#bulkCalc .qsPackRow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);align-items:end;gap:12px;margin-top:18px}
+#bulkCalc .qsUnitTitle{text-align:center;font-size:19px;font-weight:800;margin-bottom:9px}
+#bulkCalc .qsUnitButtons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+#bulkCalc .qsUnitButton{min-height:52px;padding:8px 3px;border-radius:10px;border:1px solid #a4bcf8;background:color-mix(in srgb,var(--accent),black 22%);color:#fff;font-size:14px;font-weight:800}
+#bulkCalc .qsUnitButton.qsUnitActive{background:#fff;color:#06142a;border-color:#fff}
+#bulkCalc .qsFields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:14px;row-gap:18px}
+#bulkCalc .bulkFollowupFields{margin-top:18px}
+#bulkCalc .qsResultHeading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+#bulkCalc .qsResultHeading h2{margin:0}
+#bulkCalc .qsReset{padding:10px 12px;border:1px solid #d5e1ff;border-radius:9px;background:transparent;color:#fff;font-size:12px;margin:8px 0}
+#bulkCalc .qsTotalCard,#bulkCalc .qsSmallCard{border:1px solid #9db8f8;border-radius:12px;background:color-mix(in srgb,var(--accent),black 12%);padding:16px;color:#fff}
+#bulkCalc .qsTotalNumber{font-size:clamp(32px,6vw,44px);font-weight:900;line-height:1.2;margin:18px 0 7px;overflow-wrap:anywhere}
+#bulkCalc .qsLb{font-size:13px;color:#e0eaff}
+#bulkCalc .qsSmallCards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+#bulkCalc .qsSmallCard>span{font-size:13px}
+#bulkCalc .qsSmallNumber{font-size:clamp(20px,4vw,26px);font-weight:800;margin:10px 0 3px;overflow-wrap:anywhere}
+#bulkCalc .qsDisclosure{background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:0;margin:12px 0;overflow:hidden}
+#bulkCalc .qsDisclosure>summary{padding:17px 15px;font-weight:700;font-size:13px;color:var(--fg)}
+#bulkCalc .qsDisclosure .bulkBreakdown{padding:4px 14px 16px}
+#bulkCalc .bulkResultsPanel .detailrow{color:#fff}
+#bulkCalc .bulkResultsPanel .detailrow strong{color:#fff}
+#bulkCalc #bulkAllOutput{margin-top:14px}
+#bulkCalc [hidden]{display:none!important}
+@media(max-width:540px){#bulkCalc .qsPanel{padding:13px}#bulkCalc .qsPackRow{gap:7px}#bulkCalc .qsUnitTitle{font-size:14px}#bulkCalc .qsUnitButton{font-size:12px;padding:5px 1px;min-height:50px}#bulkCalc .qsFields{gap:14px 9px}#bulkCalc .qsField{font-size:12px}#bulkCalc .qsField input,#bulkCalc .qsField select{font-size:16px;padding:10px;min-height:50px}#bulkCalc .qsExamples{font-size:10px}#bulkCalc .qsSmallCards{gap:8px}}
