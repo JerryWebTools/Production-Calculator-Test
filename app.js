@@ -449,7 +449,7 @@ function quickUseMini(){
 function bulkUpdate(){
  const g=id=>$(id),n=id=>Number(g(id).value),crop=g('bulkCrop').value,seed=g('bulkSeed').value,condition=g('bulkCondition').value,basis=g('bulkBasis').value,unit=g('bulkUnit').value;
  const isCount=['KS','MS'].includes(unit),samples=n('bulkSamples'),over=n('bulkOver')/100,chem=condition==='treated'?n('bulkChem')/100:0,pc=n('bulkPc'),factor=(1+over)*(1+chem);
- g('bulkPcField').hidden=!isCount;g('bulkFullNetField').hidden=basis!=='total';g('bulkSizeLabel').firstChild.textContent=basis==='total'?'Total PO NET':'NET / Tote';
+ g('bulkPcField').hidden=!isCount;g('bulkFullNetField').hidden=basis!=='total';g('bulkSizeText').textContent=basis==='total'?'Total PO NET':'NET / Tote';
  const err=g('bulkError'),out=g('bulkOutput'),all=g('bulkAllOutput'),availableRaw=g('bulkAvailable').value.trim();
  g('bulkAllInputs').hidden=availableRaw==='';err.hidden=true;all.replaceChildren();
  const fail=s=>{err.textContent=s;err.hidden=false;out.replaceChildren();};
@@ -500,6 +500,17 @@ function bulkDefaults(){
 }
 ['bulkBasis','bulkSize','bulkUnit','bulkEa','bulkPc','bulkOver','bulkChem','bulkSamples','bulkAvailable','bulkSuggested','bulkManualEa','bulkFullNet'].forEach(id=>$(id).addEventListener('input',bulkUpdate));
 ['bulkCrop','bulkSeed','bulkCondition'].forEach(id=>$(id).addEventListener('change',bulkDefaults));
+document.querySelectorAll('[data-bulk-unit]').forEach(button=>button.addEventListener('click',()=>{
+ $('bulkUnit').value=button.dataset.bulkUnit;
+ document.querySelectorAll('[data-bulk-unit]').forEach(b=>{const selected=b===button;b.classList.toggle('qsUnitActive',selected);b.setAttribute('aria-pressed',String(selected));});
+ bulkUpdate();
+}));
+$('bulkReset').addEventListener('click',()=>{
+ ['bulkCrop','bulkSeed','bulkCondition','bulkBasis','bulkUnit'].forEach((id,i)=>$(id).value=['peas','commercial','untreated','per','KG'][i]);
+ $('bulkSize').value='1000';$('bulkEa').value='30';$('bulkFullNet').value='1000';$('bulkPc').value='';$('bulkAvailable').value='';
+ document.querySelectorAll('[data-bulk-unit]').forEach(b=>{const selected=b.dataset.bulkUnit==='KG';b.classList.toggle('qsUnitActive',selected);b.setAttribute('aria-pressed',String(selected));});
+ bulkDefaults();
+});
 $('bulkRestore').addEventListener('click',()=>{$('bulkManualEa').value='';$('bulkSuggested').value=($('bulkCrop').value==='normalCorn'||$('bulkCrop').value==='shrunkenCorn')?'700':'1005';bulkUpdate();});
 function renderPackAll(){const supported=line==='1'||((line==='3'||line==='4')&&mode==='pack')||isPackOnly();$('packAll').hidden=!supported;if(!supported||!lastResult)return;const raw=$('availableKg').value,out=$('packAllOutput');if(raw===''){out.textContent='Enter available KG to calculate complete bags.';return;}const available=Number(raw),r=lastResult;if(!Number.isFinite(available)||available<0){out.textContent='Enter a valid KG amount.';return;}const reserve=r.samples;const usable=Math.max(0,available-reserve);if(available<reserve){out.innerHTML=`<p class="error">Not enough available seed for samples: ${fmt(available,3)} KG available, ${fmt(reserve,3)} KG reserved.</p>`;return;}const perBag=(r.line==='standalone'||r.line==='leg')?r.netBag:r.base*(1+r.over/100);if(!(perBag>0)){out.textContent='Complete the order inputs first.';return;}const ea=Math.max(0,Math.floor((usable+1e-9)/perBag));const remaining=Math.max(0,usable-ea*perBag);const difference=ea-r.orderEa;const unitLabel=r.line==='1'?'EA equivalents':'Complete Bags';out.innerHTML=`<div class="detailrow"><span>PO Estimated EA</span><strong>${r.orderEa}</strong></div><div class="detailrow"><span>Samples Reserved</span><strong>${fmt(reserve,3)} KG</strong></div><div class="detailrow"><span>${unitLabel}</span><strong>${ea} EA</strong></div><div class="detailrow"><span>Remaining Seed</span><strong>${fmt(remaining,3)} KG</strong></div><div class="detailrow"><span>Actual EA Difference</span><strong>${difference>0?'+':''}${difference} EA</strong></div>`;}
 $('quickHome').onclick=()=>openQuick('home');$('quickSummary').onclick=()=>openQuick('calc');$('quickBack').onclick=backQuick;
