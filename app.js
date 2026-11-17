@@ -453,14 +453,18 @@ function bulkSetUnit(unit){
 function bulkOrderDefaults(){
  const crop=$('bulkCrop').value,type=$('bulkOrderType').value;
  const corn=crop==='normalCorn'||crop==='shrunkenCorn';
- $('bulkOrderType').value=corn?'weight':type==='weight'?'export':type;
+ const orderType=$('bulkOrderType');
+ const cornOption=orderType.querySelector('[value="weight"]');
+ if(corn&&!cornOption){const option=document.createElement('option');option.value='weight';option.textContent='Corn · Equal Tote Fill';orderType.prepend(option);}
+ if(!corn&&cornOption)cornOption.remove();
+ orderType.value=corn?'weight':type==='weight'?'export':type;
  const selectedType=$('bulkOrderType').value;
  const count=selectedType==='count',domestic=selectedType==='domestic';
  const preset=$('bulkTotePreset');
  preset.replaceChildren();
  const options=domestic?[['2000lb','2,000 LB'],['2500lb','2,500 LB'],['1134','1,134 KG'],['custom','Custom NET']]:[['1000','1,000 KG'],['custom','Custom NET']];
  options.forEach(([value,label])=>{const option=document.createElement('option');option.value=value;option.textContent=label;preset.append(option);});
- $('bulkTotePreset').closest('label').hidden=corn;
+ $('bulkFullNetField').hidden=corn;
  $('bulkBasis').value=count?'per':'total';
  $('bulkSize').value=count?'5':domestic?'2000':corn?'2500':'30000';
  bulkSetUnit(count?'MS':domestic?'LB':'KG');
@@ -504,7 +508,7 @@ function bulkUpdate(){
  const totalFill=exactFull*scale+partialFill,required=totalFill+samples;
  const primaryScale=exactFull>0?scale:partialFill;
  const partialOnly=exactFull===0&&partialNet>0;
- const recommendedEa=isCorn&&basis==='total'&&!isCount?Math.max(1,Math.round(totalNet/700)):null;
+ const recommendedEa=isCorn&&basis==='total'&&!isCount?Math.max(1,Math.round(totalNet*factor/700)):null;
  const recommendedNet=recommendedEa?totalNet/recommendedEa:null;
  const recommendedFill=recommendedEa?Math.ceil(recommendedNet*factor-1e-9):null;
  const recommendedTotal=recommendedEa?recommendedEa*recommendedFill+samples:null;
