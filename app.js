@@ -468,15 +468,15 @@ function bulkUpdate(){
  const partialFill=partialNet>1e-8?Math.ceil(partialNet*factor-1e-10):0;
  const packedNet=exactFull*fullNet+partialNet;
  const totalFill=exactFull*scale+partialFill,required=totalFill+samples;
- const note=basis==='total'?'Total PO NET is divided using the entered standard NET per full tote.':'Scale target rounded UP for each tote.';
+ const note=basis==='total'?'Total PO NET uses the entered full-tote target and one partial tote if required.':'Scale target rounded UP for each tote.';
  out.innerHTML=`<h2>Order Results — Pack Only</h2><p class="muted tiny">${esc(note)}</p><div class="huge">${fmt(scale,0)} KG / Tote</div>${row('NET / Full Tote',weight(fullNet))}${row('Raw Fill / Full Tote',weight(rawFill))}${row('Full Totes',String(exactFull))}${partialNet>1e-8?row('Partial Tote NET',weight(partialNet))+row('Partial Tote Fill',weight(partialFill)):''}${row('Total NET Packed',weight(packedNet))}${row('Total Scale Fill',weight(totalFill))}${row('Samples',weight(samples))}${row('Total Seed Required',weight(required))}<details><summary>Calculation Breakdown</summary><p>NET × (1 + Overpack) × (1 + Existing Chemical Weight) = Raw Fill. Each tote scale target rounds UP to a whole KG; samples are added once.</p></details>`;
  if(!availableRaw)return;
  const available=n('bulkAvailable'),suggest=n('bulkSuggested'),manualRaw=g('bulkManualEa').value.trim(),manual=manualRaw?Number(manualRaw):null;
  if(!Number.isFinite(available)||available<0||!(suggest>0)||manual!==null&&(!Number.isInteger(manual)||manual<1)){all.innerHTML='<p class="error">Enter valid available seed, fill target, and optional whole tote count.</p>';return;}
  if(available<samples){all.innerHTML='<p class="error">Available seed is less than the sample reserve.</p>';return;}
  const usable=available-samples,fill=Math.floor(suggest),autoEa=fill>0?Math.floor((usable+1e-9)/fill):0;
- const ea=manual===null?autoEa:manual,used=ea*fill,remaining=usable-used,delta=ea-orderEa;
- all.innerHTML=`<h2>${manual===null?'Auto Suggestion':'Operator Adjusted'}</h2><div class="huge">${ea} EA × ${fmt(fill,0)} KG</div>${row('Samples Reserved',weight(samples))}${row('PO Order EA',String(orderEa))}${row('Full Totes',String(ea))}${row('EA Difference', (delta>0?'+':'')+delta)}${row('Remaining Seed',weight(Math.max(0,remaining)))}${remaining<0?'<p class="error">Not enough seed for the selected number of totes at this fill weight.</p>':''}<p class="muted tiny">Scale fill suggestion rounded DOWN; confirm first tote capacity. Remaining seed excludes reserved samples.</p>`;
+ const ea=manual===null?autoEa:manual,used=ea*fill,remaining=usable-used,delta=ea-orderEa,possibleAtOrderEa=orderEa>0?Math.floor(usable/orderEa):0;
+ all.innerHTML=`<h2>${manual===null?'Auto Suggestion':'Operator Adjusted'}</h2><div class="huge">${ea} EA × ${fmt(fill,0)} KG</div>${row('Samples Reserved',weight(samples))}${row('PO Order EA',String(orderEa))}${row('Suggested KG / Tote for PO EA',weight(possibleAtOrderEa))}${row('Full Totes',String(ea))}${row('EA Difference', (delta>0?'+':'')+delta)}${row('Remaining Seed',weight(Math.max(0,remaining)))}${remaining<0?'<p class="error">Not enough seed for the selected number of totes at this fill weight.</p>':''}<p class="muted tiny">Scale fill suggestion rounded DOWN; confirm first tote capacity. Remaining seed excludes reserved samples.</p>`;
 }
 function bulkDefaults(){
  const crop=$('bulkCrop').value,seed=$('bulkSeed').value,condition=$('bulkCondition').value;
