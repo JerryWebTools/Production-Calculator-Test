@@ -8,10 +8,10 @@ const fmt=(x,d)=>Number(x).toLocaleString('en-US',{minimumFractionDigits:d,maxim
 const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const validPositive=x=>Number.isFinite(x)&&x>0;
 const persist=(key,obj)=>{try{localStorage.setItem(key,JSON.stringify(obj));return true}catch{alert('Unable to save on this device. Check browser storage settings.');return false}};
-function show(view){['home','modeScreen','coming','calc','settings','saved','quick','quickSeed','preferences','brain'].forEach(id=>$(id).hidden=id!==view);$('settingsBtn').hidden=false;$('homeRefreshBtn').hidden=view!=='home';document.body.classList.toggle('quick-active',view==='quick');if($('installBanner'))$('installBanner').hidden=view!=='home'||window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true||(()=>{try{return localStorage.getItem('production-calculator-install-banner-dismissed')==='yes'}catch{return false}})();document.body.classList.toggle('brain-active',view==='brain');const navOn=view!=='home'&&view!=='quick'&&view!=='brain';$('globalNav').hidden=!navOn;['back','modeBack','quickBack'].forEach(id=>$(id).hidden=true);const backId=view==='calc'?'back':view==='modeScreen'?'modeBack':view==='quick'?'quickBack':null;if(backId)$(backId).hidden=false;$('modeLabel').hidden=true;document.querySelector('header').classList.toggle('insideView',navOn);}
+function show(view){['home','modeScreen','coming','bulkCalc','calc','settings','saved','quick','quickSeed','preferences','brain'].forEach(id=>$(id).hidden=id!==view);$('settingsBtn').hidden=false;$('homeRefreshBtn').hidden=view!=='home';document.body.classList.toggle('quick-active',view==='quick');if($('installBanner'))$('installBanner').hidden=view!=='home'||window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true||(()=>{try{return localStorage.getItem('production-calculator-install-banner-dismissed')==='yes'}catch{return false}})();document.body.classList.toggle('brain-active',view==='brain');const navOn=view!=='home'&&view!=='quick'&&view!=='brain';$('globalNav').hidden=!navOn;['back','modeBack','quickBack'].forEach(id=>$(id).hidden=true);const backId=view==='calc'?'back':view==='modeScreen'?'modeBack':view==='quick'?'quickBack':null;if(backId)$(backId).hidden=false;$('modeLabel').hidden=true;document.querySelector('header').classList.toggle('insideView',navOn);}
 function title(name,sub){$('title').textContent=(document.querySelector('#calc:not([hidden])')&&sub&&['Treat & Pack','Treat Only','Pack Only'].includes(sub))?name+' · '+sub:name;$('subtitle').textContent=sub;}
 function home(){line=null;mode=null;show('home');title('Production Calculator','Choose a production line.');}
-function openLine(v){line=v;if(v==='bulk'){show('coming');title('Bulk Line','Work in progress');return;}if(v==='3'||v==='4'){show('modeScreen');title('Line '+v,'Choose a calculation mode.');return;}openCalc(v==='1'?'treat':'standalone');}
+function openLine(v){line=v;if(v==='bulk'){show('bulkCalc');title('Bulk Line','Pack Exact / Pack All · TEST');bulkUpdate();return;}if(v==='3'||v==='4'){show('modeScreen');title('Line '+v,'Choose a calculation mode.');return;}openCalc(v==='1'?'treat':'standalone');}
 function cropOptions(select,items){select.innerHTML=items.map(c=>`<option value="${c}">${NAMES[c]}</option>`).join('');}
 function defaults(l,c,s){return {over:(c==='spinach'&&(l==='3'||l==='standalone'||l==='leg')?0.5:s==='commercial'?1:0.5),chem:(l==='3'||l==='standalone'||l==='leg')?(c==='normalCorn'?1:c==='shrunkenCorn'?1.2:0):0};}
 function settingKey(l,c,s){return `${l}|${c}|${s}`;}
@@ -445,6 +445,39 @@ function quickUseMini(){
   $('converterPair').value=target==='KG'?'kg-lb':'lb-kg';
   renderQuick();
 }
+// Bulk Line calculator. All scale targets are KG; treated chemical is an existing weight factor.
+function bulkUpdate(){
+ const g=id=>$(id),mode=g('bulkMode').value,crop=g('bulkCrop').value,seed=g('bulkSeed').value,condition=g('bulkCondition').value;
+ g('bulkAllInputs').hidden=mode!=='all';g('bulkPcField').hidden=!['KS','MS'].includes(g('bulkUnit').value);
+ const n=id=>Number(g(id).value),over=n('bulkOver')/100,chem=condition==='treated'?n('bulkChem')/100:0,samples=n('bulkSamples'),pc=n('bulkPc');
+ const out=g('bulkOutput'),error=g('bulkError');error.hidden=true;
+ const fail=s=>{error.textContent=s;error.hidden=false;out.replaceChildren();};
+ if([over,chem,samples].some(x=>!Number.isFinite(x)||x<0)||g('bulkOver').value===''||g('bulkChem').value===''||g('bulkSamples').value==='')return fail('Enter valid nonnegative overpack, chemical and sample values.');
+ const factor=(1+over)*(1+chem),unit=g('bulkUnit').value;
+ const row=(a,b)=>`<div class="detailrow"><span>${esc(a)}</span><strong>${esc(b)}</strong></div>`;
+ const weight=x=>fmt(x,3)+' KG / '+fmt(x*F,2)+' LB';
+ if(mode==='exact'){
+   const size=n('bulkSize'),ea=n('bulkEa');if(!(size>0)||!Number.isInteger(ea)||ea<1||(['KS','MS'].includes(unit)&&!(pc>0)))return fail('Enter a valid NET / Tote, whole tote count and PC when using KS/MS.');
+   const net=unitKg(size,unit,pc),rawFill=net*factor,scale=Math.ceil(rawFill-1e-10),totalFill=scale*ea,required=totalFill+samples;
+   out.innerHTML=`<h2>Pack Exact — Scale Target</h2><div class="huge">${fmt(scale,0)} KG / Tote</div><p class="muted">Rounded UP per tote · ${ea} EA</p>${row('Net Seed Weight / Tote',weight(net))}${row('Raw Fill Weight / Tote',weight(rawFill))}${row('Scale Fill Weight / Tote',weight(scale))}${row('Total Tote Fill',weight(totalFill))}${row('Samples',weight(samples))}${row('Total Required',weight(required))}<details><summary>Calculation Breakdown</summary><p>NET × (1 + Overpack) × (1 + existing Chemical Weight) = Raw Fill. Scale target = ceil(Raw Fill KG). Samples added once to total.</p></details>`;
+ }else{
+   const available=n('bulkAvailable'),suggest=n('bulkSuggested');
+   if(g('bulkAvailable').value===''){out.textContent='Enter available KG to calculate a packing suggestion.';return;}
+   if(!Number.isFinite(available)||available<0||!(suggest>0))return fail('Enter valid available seed and positive suggested KG per tote.');
+   if(available<samples)return fail('Available seed is less than the required sample reserve.');
+   const usable=available-samples,fill=Math.floor(suggest),ea=fill>0?Math.floor(usable/fill):0,remaining=usable-ea*fill;
+   out.innerHTML=`<h2>Pack All — Auto Suggestion</h2><div class="huge">${ea} EA × ${fmt(fill,0)} KG</div><p class="muted">Suggested scale fill rounded DOWN. Confirm actual capacity using the first tote.</p>${row('Available Seed',weight(available))}${row('Samples Reserved',weight(samples))}${row('Suggested Fill / Tote',weight(fill))}${row('Full Totes',String(ea))}${row('Remaining Seed',weight(remaining))}<p class="muted tiny">This suggestion uses total available scale weight, not a guaranteed tote capacity. The operator may change the suggested fill.</p>`;
+ }
+}
+function bulkDefaults(){
+ const crop=$('bulkCrop').value,seed=$('bulkSeed').value,condition=$('bulkCondition').value;
+ $('bulkOver').value=seed==='parent'?'0.5':(crop==='normalCorn'||crop==='shrunkenCorn'?'1':'0.5');
+ $('bulkChem').value=condition==='treated'?(crop==='normalCorn'?'1':crop==='shrunkenCorn'?'1.2':'0'):'0';
+ $('bulkSamples').value=seed==='parent'?'1.5':'5';
+ bulkUpdate();
+}
+['bulkMode','bulkSize','bulkUnit','bulkEa','bulkPc','bulkOver','bulkChem','bulkSamples','bulkAvailable','bulkSuggested'].forEach(id=>$(id).addEventListener('input',bulkUpdate));
+['bulkCrop','bulkSeed','bulkCondition'].forEach(id=>$(id).addEventListener('change',bulkDefaults));
 function renderPackAll(){const supported=line==='1'||((line==='3'||line==='4')&&mode==='pack')||isPackOnly();$('packAll').hidden=!supported;if(!supported||!lastResult)return;const raw=$('availableKg').value,out=$('packAllOutput');if(raw===''){out.textContent='Enter available KG to calculate complete bags.';return;}const available=Number(raw),r=lastResult;if(!Number.isFinite(available)||available<0){out.textContent='Enter a valid KG amount.';return;}const reserve=r.samples;const usable=Math.max(0,available-reserve);if(available<reserve){out.innerHTML=`<p class="error">Not enough available seed for samples: ${fmt(available,3)} KG available, ${fmt(reserve,3)} KG reserved.</p>`;return;}const perBag=(r.line==='standalone'||r.line==='leg')?r.netBag:r.base*(1+r.over/100);if(!(perBag>0)){out.textContent='Complete the order inputs first.';return;}const ea=Math.max(0,Math.floor((usable+1e-9)/perBag));const remaining=Math.max(0,usable-ea*perBag);const difference=ea-r.orderEa;const unitLabel=r.line==='1'?'EA equivalents':'Complete Bags';out.innerHTML=`<div class="detailrow"><span>PO Estimated EA</span><strong>${r.orderEa}</strong></div><div class="detailrow"><span>Samples Reserved</span><strong>${fmt(reserve,3)} KG</strong></div><div class="detailrow"><span>${unitLabel}</span><strong>${ea} EA</strong></div><div class="detailrow"><span>Remaining Seed</span><strong>${fmt(remaining,3)} KG</strong></div><div class="detailrow"><span>Actual EA Difference</span><strong>${difference>0?'+':''}${difference} EA</strong></div>`;}
 $('quickHome').onclick=()=>openQuick('home');$('quickSummary').onclick=()=>openQuick('calc');$('quickBack').onclick=backQuick;
 $('converterToggle').onclick=()=>{quickSaveUndo();qConverter=!qConverter;if(!qConverter)qActive='right';renderQuick()};
