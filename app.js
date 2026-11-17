@@ -461,16 +461,16 @@ function bulkUpdate(){
  const net=unitKg(size,unit,pc),totalNet=basis==='total'?net:net*orderEa;
  const fullNet=basis==='total'?n('bulkFullNet'):net;if(!(fullNet>0))return fail('Enter a positive standard NET / Full Tote.');
  // Total-PO orders: allow final partial tote when the total is not evenly divisible by the standard net/tote target.
- const fullCount=basis==='total'?Math.floor((totalNet+1e-9)/fullNet):orderEa;
+ const fullCount=basis==='total'?Math.floor((totalNet+1e-7)/fullNet):orderEa;
  const leftover=basis==='total'?totalNet-fullCount*fullNet:0;
  const partialNet=basis==='total'?(Math.abs(leftover)<1e-7?0:Math.max(0,leftover)):0;
  const exactFull=basis==='total'?fullCount:orderEa;if(basis==='total'&&fullCount+(partialNet>1e-8?1:0)!==orderEa)return fail('Order EA must equal full totes plus any partial tote. Check standard NET / Full Tote.');
- const rawFill=fullNet*factor,scale=Math.ceil(rawFill-1e-10);
- const partialFill=partialNet>1e-8?Math.ceil(partialNet*factor-1e-10):0;
+ const rawFill=fullNet*factor,scale=Math.ceil(rawFill-1e-9);
+ const partialFill=partialNet>1e-8?Math.ceil(partialNet*factor-1e-9):0;
  const packedNet=exactFull*fullNet+partialNet;
  const totalFill=exactFull*scale+partialFill,required=totalFill+samples;
- const note=basis==='total'?'Total PO NET uses the entered full-tote target and one partial tote if required.':'Scale target rounded UP for each tote.';
- out.innerHTML=`<h2>Order Results — Pack Only</h2><p class="muted tiny">${esc(note)}</p><div class="huge">${fmt(scale,0)} KG / Tote</div>${row('NET / Full Tote',weight(fullNet))}${row('Raw Fill / Full Tote',weight(rawFill))}${row('Full Totes',String(exactFull))}${partialNet>1e-8?row('Partial Tote NET',weight(partialNet))+row('Partial Tote Fill',weight(partialFill)):''}${row('Total NET Packed',weight(packedNet))}${row('Total Scale Fill',weight(totalFill))}${row('Samples',weight(samples))}${row('Total Seed Required',weight(required))}<details><summary>Calculation Breakdown</summary><p>NET × (1 + Overpack) × (1 + Existing Chemical Weight) = Raw Fill. Each tote scale target rounds UP to a whole KG; samples are added once.</p></details>`;
+ const note=basis==='total'?'Total PO NET uses the entered full-tote target and one partial tote if required.':'Scale target rounded UP for each tote.';const primaryScale=exactFull>0?scale:partialFill;
+ out.innerHTML=`<h2>Order Results — Pack Only</h2><p class="muted tiny">${esc(note)}</p><div class="huge">${fmt(primaryScale,0)} KG / ${exactFull>0?'Full Tote':'Partial Tote'}</div>${row('NET / Full Tote',weight(fullNet))}${row('Raw Fill / Full Tote',weight(rawFill))}${row('Full Totes',String(exactFull))}${partialNet>1e-8?row('Partial Tote NET',weight(partialNet))+row('Partial Tote Fill',weight(partialFill)):''}${row('Total NET Packed',weight(packedNet))}${row('Total Scale Fill',weight(totalFill))}${row('Samples',weight(samples))}${row('Total Seed Required',weight(required))}<details><summary>Calculation Breakdown</summary><p>NET × (1 + Overpack) × (1 + Existing Chemical Weight) = Raw Fill. Each tote scale target rounds UP to a whole KG; samples are added once.</p></details>`;
  if(!availableRaw)return;
  const available=n('bulkAvailable'),suggest=n('bulkSuggested'),manualRaw=g('bulkManualEa').value.trim(),manual=manualRaw?Number(manualRaw):null;
  if(!Number.isFinite(available)||available<0||!(suggest>0)||manual!==null&&(!Number.isInteger(manual)||manual<1)){all.innerHTML='<p class="error">Enter valid available seed, fill target, and optional whole tote count.</p>';return;}
