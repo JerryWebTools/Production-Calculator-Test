@@ -563,3 +563,23 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #quickSeed .qsPackAllMini>strong{font-size:clamp(16px,2.5vw,22px);overflow-wrap:anywhere}
 #quickSeed .qsPackAllMini>small{font-size:11px;opacity:.85;line-height:1.4}
 @media(max-width:540px){#quickSeed .qsPackAllOutputs{grid-template-columns:1fr}#quickSeed .qsPackAllMini{padding:12px}}
+
+/* Bulk Line operator layout — TEST */
+#bulkCalc .bulkPanel{padding:16px}
+#bulkCalc .bulkPanel>.grid{margin-top:12px}
+#bulkCalc .bulkFactors{margin-top:15px}
+#bulkCalc .bulkFactors summary{font-weight:700;padding:9px 0}
+#bulkCalc .bulkFactors .grid{margin-top:12px}
+#bulkCalc #bulkOutput .huge{color:#f8d66d;white-space:normal;overflow-wrap:anywhere;margin:10px 0}
+#bulkCalc #bulkAllOutput{margin-top:14px}
+#bulkCalc #bulkAllOutput .huge{color:#f8d66d;white-space:normal}
+#bulkCalc #bulkRestore{margin-top:10px}
+#bulkCalc .detailrow strong{overflow-wrap:anywhere}
+@media(max-width:540px){
+ #bulkCalc .bulkPanel{padding:13px}
+ #bulkCalc .grid{gap:10px}
+ #bulkCalc .grid label{font-size:12px}
+ #bulkCalc .grid input,#bulkCalc .grid select{padding:10px 8px}
+ #bulkCalc .detailrow{align-items:flex-start}
+ #bulkCalc .detailrow strong{max-width:57%}
+}
