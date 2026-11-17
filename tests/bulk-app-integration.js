@@ -12,7 +12,7 @@ function simulate(overrides={}){
  const defaults={bulkCrop:'peas',bulkSeed:'commercial',bulkCondition:'untreated',bulkBasis:'total',bulkUnit:'KG',bulkSize:'29741',bulkFullNet:'1000',bulkEa:'30',bulkOver:'0.5',bulkChem:'0',bulkSamples:'5',bulkSuggested:'1005'};
  for(const [id,value] of Object.entries({...defaults,...overrides}))elements[id].value=String(value);
  const context={$:id=>elements[id],fmt:(n,d)=>Number(n).toFixed(d),esc:s=>String(s),F:2.2046,unitKg:(w,u,pc)=>u==='KG'?w:u==='LB'?w/2.2046:u==='KS'?w*1000/pc/2.2046:u==='MS'?w*1e6/pc/2.2046:NaN};
- vm.runInNewContext(bulk+'\nbulkUpdate();',context,{timeout:1000});
+ vm.runInNewContext(bulk+'\nbulkUpdate();',{...context,document:{querySelectorAll:()=>[]}},{timeout:1000});
  return {result:elements.bulkOutput.innerHTML,all:elements.bulkAllOutput.innerHTML,error:elements.bulkError.hidden?'':elements.bulkError.textContent};
 }
 function includes(actual,expected){assert.ok(actual.includes(expected),'Expected '+JSON.stringify(expected)+' in '+actual.slice(-500));}
