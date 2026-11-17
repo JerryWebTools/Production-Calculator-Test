@@ -446,6 +446,23 @@ function quickUseMini(){
   renderQuick();
 }
 // Bulk Line calculator. All scale targets are KG; treated chemical is an existing weight factor.
+let bulkEaManual=false;
+function bulkAutoEa(){
+ const crop=$('bulkCrop').value;
+ if(crop!=='normalCorn'&&crop!=='shrunkenCorn')return null;
+ if($('bulkBasis').value!=='total')return null;
+ const size=Number($('bulkSize').value),pc=Number($('bulkPc').value),unit=$('bulkUnit').value;
+ const net=unitKg(size,unit,pc),over=Number($('bulkOver').value)/100;
+ const chem=$('bulkCondition').value==='treated'?Number($('bulkChem').value)/100:0;
+ const factor=(1+over)*(1+chem);
+ if(!(net>0)||!Number.isFinite(net)||!(factor>0))return null;
+ return Math.max(1,Math.round(net*factor/700));
+}
+function bulkSyncEa(){
+ const ea=bulkAutoEa();
+ if(ea!==null&&!bulkEaManual)$('bulkEa').value=String(ea);
+ bulkUpdate();
+}
 function bulkSetUnit(unit){
  $('bulkUnit').value=unit;
  document.querySelectorAll('[data-bulk-unit]').forEach(b=>{const selected=b.dataset.bulkUnit===unit;b.classList.toggle('qsUnitActive',selected);b.setAttribute('aria-pressed',String(selected));});
@@ -468,9 +485,11 @@ function bulkOrderDefaults(){
  $('bulkBasis').value=count?'per':'total';
  $('bulkSize').value=count?'5':domestic?'2000':corn?'2500':'30000';
  bulkSetUnit(count?'MS':domestic?'LB':'KG');
- $('bulkEa').value=corn?'4':'30';
+ bulkEaManual=false;
+ $('bulkEa').value=corn?String(Math.max(1,Math.round(2500*1.01/700))):'30';
  bulkTotePreset();
  bulkDefaults();
+ bulkSyncEa();
 }
 function bulkTotePreset(){
  const preset=$('bulkTotePreset').value;
@@ -526,7 +545,7 @@ function bulkUpdate(){
  ];
  out.innerHTML=`${recommendedEa!==null?`<div class="qsTotalCard bulkRecommendation"><strong>RECOMMENDED CORN TOTE PLAN · NEAR 700 KG</strong><div class="qsTotalNumber">${recommendedEa} EA × ${fmt(recommendedFill,0)} KG</div><div class="qsLb">NET / Tote: ${fmt(recommendedNet,3)} KG · Total Seed Required: ${fmt(recommendedTotal,0)} KG</div><button type="button" id="bulkApplyRecommendation" class="qsReset">Use ${recommendedEa} totes</button></div>`:''}<div class="qsTotalCard"><strong>TOTAL SEED REQUIRED</strong><div class="qsTotalNumber">${fmt(required,0)} KG</div><div class="qsLb">${fmt(required*F,2)} LB · ${orderEa} EA · ${fmt(samples,3)} KG samples included</div></div><div class="qsSmallCards"><div class="qsSmallCard"><span>Net Seed Weight / Tote</span><div class="qsSmallNumber">${fmt(partialOnly?partialNet:toteNet,3)} KG</div><div class="qsLb">${fmt((partialOnly?partialNet:toteNet)*F,2)} LB</div></div><div class="qsSmallCard"><span>Fill Weight / Tote</span><div class="qsSmallNumber">${fmt(primaryScale,0)} KG</div><div class="qsLb">${fmt(primaryScale*F,2)} LB</div></div></div>${partialNet>1e-8?row('Partial Tote Fill Weight',weight(partialFill)):''}<details class="qsDisclosure"><summary>Calculation Breakdown</summary><div class="bulkBreakdown">${breakdown.map(([label,value])=>row(label,value)).join('')}<p class="muted tiny">NET × (1 + Overpack) × (1 + Chemical Weight) = Fill Weight. Bulk Line rounds each tote fill target UP to a whole KG; samples are added once.</p></div></details>`;
  const applyRecommendation=$('bulkApplyRecommendation');
- if(applyRecommendation)applyRecommendation.addEventListener('click',()=>{$('bulkEa').value=String(recommendedEa);bulkUpdate();});
+ if(applyRecommendation)applyRecommendation.addEventListener('click',()=>{bulkEaManual=false;bulkSyncEa();});
  if(!availableRaw)return;
  const available=n('bulkAvailable'),suggest=n('bulkSuggested'),manualRaw=g('bulkManualEa').value.trim(),manual=manualRaw?Number(manualRaw):null;
  if(!Number.isFinite(available)||available<0||g('bulkSuggested').value.trim()===''||!(suggest>=1)||manual!==null&&(!Number.isInteger(manual)||manual<1)){all.innerHTML='<p class="error">Enter valid available seed, fill target, and optional whole tote count.</p>';return;}
@@ -539,9 +558,11 @@ function bulkDefaults(){
  const crop=$('bulkCrop').value,seed=$('bulkSeed').value,condition=$('bulkCondition').value;
  $('bulkOver').value=seed==='parent'?'0.5':(crop==='normalCorn'||crop==='shrunkenCorn'?'1':'0.5');
  $('bulkChem').value=condition==='treated'?(crop==='normalCorn'?'1':crop==='shrunkenCorn'?'1.2':'0'):'0';
- $('bulkSamples').value=seed==='parent'?'1.5':'5';$('bulkSuggested').value=(crop==='normalCorn'||crop==='shrunkenCorn')?'700':'1005';$('bulkManualEa').value='';bulkUpdate();
+ $('bulkSamples').value=seed==='parent'?'1.5':'5';$('bulkSuggested').value=(crop==='normalCorn'||crop==='shrunkenCorn')?'700':'1005';$('bulkManualEa').value='';bulkSyncEa();
 }
-['bulkBasis','bulkSize','bulkUnit','bulkEa','bulkPc','bulkOver','bulkChem','bulkSamples','bulkAvailable','bulkSuggested','bulkManualEa','bulkFullNet'].forEach(id=>$(id).addEventListener('input',bulkUpdate));
+['bulkBasis','bulkSize','bulkUnit','bulkPc','bulkOver','bulkChem'].forEach(id=>$(id).addEventListener('input',bulkSyncEa));
+$('bulkEa').addEventListener('input',()=>{bulkEaManual=true;bulkUpdate();});
+['bulkSamples','bulkAvailable','bulkSuggested','bulkManualEa','bulkFullNet'].forEach(id=>$(id).addEventListener('input',bulkUpdate));
 ['bulkSeed','bulkCondition'].forEach(id=>$(id).addEventListener('change',bulkDefaults));
 $('bulkCrop').addEventListener('change',()=>{
  const crop=$('bulkCrop').value,corn=crop==='normalCorn'||crop==='shrunkenCorn';
@@ -553,7 +574,7 @@ $('bulkCrop').addEventListener('change',()=>{
 $('bulkOrderType').addEventListener('change',bulkOrderDefaults);
 $('bulkTotePreset').addEventListener('change',bulkTotePreset);
 $('bulkFullNet').addEventListener('input',()=>{$('bulkTotePreset').value='custom';});
-document.querySelectorAll('[data-bulk-unit]').forEach(button=>button.addEventListener('click',()=>{bulkSetUnit(button.dataset.bulkUnit);bulkUpdate();}));
+document.querySelectorAll('[data-bulk-unit]').forEach(button=>button.addEventListener('click',()=>{bulkSetUnit(button.dataset.bulkUnit);bulkSyncEa();}));
 $('bulkReset').addEventListener('click',()=>{
  ['bulkCrop','bulkSeed','bulkCondition'].forEach((id,i)=>$(id).value=['peas','commercial','untreated'][i]);$('bulkOrderType').value='export';
  $('bulkSize').value='1000';$('bulkEa').value='30';$('bulkFullNet').value='1000';$('bulkPc').value='';$('bulkAvailable').value='';
