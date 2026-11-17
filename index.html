@@ -18,28 +18,41 @@
 <div id="installBanner" class="installBanner" hidden><span id="installBannerText">Want faster access? Add Prod Calc to your Home Screen.</span><div><button id="installBannerShow" class="secondary small" type="button">Show Instructions</button><button id="installBannerDismiss" class="secondary small" type="button">Not Now</button></div></div>
 <section id="home" class="lines"><button data-line="1">Line 1 <small>Treat Only</small></button><button data-line="3">Line 3 <small>Treat / Treat &amp; Pack</small></button><button data-line="4">Line 4 <small>Treat / Treat &amp; Pack</small></button><button data-line="leg">Leg <small>Concetti · Pack Only</small></button><button data-line="standalone">Stand-Alone <small>Pack Only</small></button><button data-line="bulk">Bulk Line <small>Pack Only · TEST</small></button><button id="quickSeedHome" class="quickHome">🌱 Quick Seed Calculator <small>Seed to Treat + Fill Weight</small></button><button id="quickHome" class="quickHome">▦ Quick Calculator <small>Calculator + Unit Converter</small></button></section>
 <section id="bulkCalc" hidden>
-<div class="card bulkPanel"><h2>Bulk Line — Pack Only</h2><p class="muted tiny">Order Details · All scale targets are KG · No tote tare</p>
-<div class="grid">
-<label>Crop<select id="bulkCrop"><option value="peas">Peas</option><option value="beans">Beans</option><option value="normalCorn">Normal Corn</option><option value="shrunkenCorn">Shrunken Corn</option><option value="spinach">Spinach</option></select></label>
-<label>Seed Type<select id="bulkSeed"><option value="commercial">Commercial</option><option value="parent">Parent / Basic</option></select></label>
-<label>Condition<select id="bulkCondition"><option value="untreated">Untreated</option><option value="treated">Treated</option></select></label>
-<label>Order Basis<select id="bulkBasis"><option value="per">NET per Tote</option><option value="total">Total PO NET</option></select></label>
-<label id="bulkSizeLabel">NET / Tote<div class="inline"><input id="bulkSize" type="number" min="0" step="any" value="1000" inputmode="decimal"><select id="bulkUnit"><option>KG</option><option>LB</option><option>KS</option><option>MS</option></select></div></label>
-<label id="bulkFullNetField" hidden>Standard NET / Full Tote (KG)<input id="bulkFullNet" type="number" min="0" step="any" value="1000" inputmode="decimal"></label><label>Order EA (Totes)<input id="bulkEa" type="number" min="1" step="1" value="30" inputmode="numeric"></label>
-<label id="bulkPcField" hidden>PC (Seeds/LB)<input id="bulkPc" type="number" min="1" step="any" placeholder="e.g. 3896" inputmode="decimal"></label>
+<div class="qsPanel bulkPanel">
+ <h2>Enter Order Details</h2>
+ <p class="qsExamples bulkIntro">Bulk Line — Pack Only · Fill targets in KG · No tote tare</p>
+ <div class="qsFields">
+  <label class="qsField">Crop<select id="bulkCrop"><option value="peas">Peas</option><option value="beans">Beans</option><option value="normalCorn">Normal Corn</option><option value="shrunkenCorn">Shrunken Corn</option><option value="spinach">Spinach</option></select></label>
+  <label class="qsField">Seed Type<select id="bulkSeed"><option value="commercial">Commercial</option><option value="parent">Parent / Basic</option></select></label>
+  <label class="qsField">Condition<select id="bulkCondition"><option value="untreated">Untreated</option><option value="treated">Treated</option></select></label>
+  <label class="qsField">Order Basis<select id="bulkBasis"><option value="per">NET per Tote</option><option value="total">Total PO NET</option></select></label>
+ </div>
+ <div class="qsPackRow bulkPackRow">
+  <label class="qsField" id="bulkSizeLabel"><span id="bulkSizeText">NET / Tote</span><input id="bulkSize" type="number" min="0" step="any" value="1000" inputmode="decimal"></label>
+  <div class="qsUnitField"><div class="qsUnitTitle">Select Unit</div><div class="qsUnitButtons" role="group" aria-label="Select Bulk Unit">
+   <button type="button" class="qsUnitButton qsUnitActive" data-bulk-unit="KG" aria-pressed="true">KG</button>
+   <button type="button" class="qsUnitButton" data-bulk-unit="LB" aria-pressed="false">LB</button>
+   <button type="button" class="qsUnitButton" data-bulk-unit="KS" aria-pressed="false">KS</button>
+   <button type="button" class="qsUnitButton" data-bulk-unit="MS" aria-pressed="false">MS</button>
+  </div><input id="bulkUnit" type="hidden" value="KG"></div>
+ </div>
+ <div class="qsFields bulkFollowupFields">
+  <label class="qsField" id="bulkFullNetField" hidden>Standard NET / Full Tote (KG)<input id="bulkFullNet" type="number" min="0" step="any" value="1000" inputmode="decimal"></label>
+  <label class="qsField">Quantity (EA)<input id="bulkEa" type="number" min="1" step="1" value="30" inputmode="numeric"><span class="qsExamples">Number of totes in the order</span></label>
+  <label class="qsField" id="bulkPcField" hidden>Seed Count (PC)<input id="bulkPc" type="number" min="1" step="any" placeholder="3896" inputmode="decimal"><span class="qsExamples">Seeds per pound · KS/MS only</span></label>
+  <label class="qsField">Overpack (%)<input id="bulkOver" type="number" min="0" step="any" value="0.5" inputmode="decimal"></label>
+  <label class="qsField">Chemical Weight (%)<input id="bulkChem" type="number" min="0" step="any" value="0" inputmode="decimal"></label>
+  <label class="qsField">Samples (KG)<input id="bulkSamples" type="number" min="0" step="any" value="5" inputmode="decimal"></label>
+ </div>
 </div>
-<details class="bulkFactors"><summary>Overpack, Chemical Weight &amp; Samples</summary><div class="grid">
-<label>Overpack %<input id="bulkOver" type="number" min="0" step="any" value="0.5"></label>
-<label>Existing Chemical Weight %<input id="bulkChem" type="number" min="0" step="any" value="0"></label>
-<label>Samples (KG)<input id="bulkSamples" type="number" min="0" step="any" value="5"></label>
-</div></details></div>
-<div id="bulkError" class="error" hidden></div><div id="bulkOutput" class="card result" aria-live="polite"></div>
-<div class="card bulkPanel"><div class="sectionhead"><h2>Pack All — Available Seed</h2><span class="muted tiny">Optional</span></div>
-<label>Available Seed (KG)<input id="bulkAvailable" type="number" min="0" step="any" placeholder="Enter actual available KG" inputmode="decimal"></label>
-<div id="bulkAllInputs" hidden><div class="grid">
-<label>Fill Target / Tote (KG)<input id="bulkSuggested" type="number" min="1" step="any" value="700" inputmode="decimal"></label>
-<label>Operator Tote Count (optional)<input id="bulkManualEa" type="number" min="1" step="1" placeholder="Auto" inputmode="numeric"></label>
-</div><button id="bulkRestore" type="button" class="secondary small">Restore Auto Suggestion</button><p class="muted tiny">For corn, 700 KG is only a starting estimate. Confirm fit with the first physical tote.</p><div id="bulkAllOutput" aria-live="polite"></div></div>
+<div id="bulkError" class="error qsError" hidden></div>
+<div class="qsPanel bulkResultsPanel"><div class="qsResultHeading"><h2>Results</h2><button type="button" id="bulkReset" class="qsReset">↺ Reset</button></div><div id="bulkOutput" aria-live="polite"></div></div>
+<div class="qsPanel bulkPanel"><h2>Pack All — Available Seed</h2><p class="qsExamples">Optional · Enter available seed to expand</p>
+<label class="qsField">Available Seed (KG)<input id="bulkAvailable" type="number" min="0" step="any" placeholder="Enter available KG" inputmode="decimal"></label>
+<div id="bulkAllInputs" hidden><div class="qsFields bulkFollowupFields">
+<label class="qsField">Fill Weight / Tote (KG)<input id="bulkSuggested" type="number" min="1" step="any" value="700" inputmode="decimal"></label>
+<label class="qsField">Operator Tote Count (optional)<input id="bulkManualEa" type="number" min="1" step="1" placeholder="Auto" inputmode="numeric"></label>
+</div><button id="bulkRestore" type="button" class="qsReset">Restore Auto Suggestion</button><p class="qsExamples">Suggested fill is an estimate. Confirm tote capacity before packing.</p><div id="bulkAllOutput" aria-live="polite"></div></div>
 </div></section>
 <section id="coming" class="card center" hidden><div class="bigemoji">🚧🌱</div><h2>Bulk Line — Coming Soon!</h2><p>Our calculator is still under construction.</p><p class="muted">The seeds are ready... the math is still growing! 😄</p><button class="primary" id="comingBack">← Back to Lines</button></section>
 <section id="modeScreen" class="card" hidden><h2>Choose a mode</h2><div class="lines"><button data-mode="treat">Treat Only <small>Seed to Treat</small></button><button data-mode="pack">Treat &amp; Pack <small>Seed to Treat + Bag Target</small></button></div></section>
