@@ -3,7 +3,7 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const source=fs.readFileSync(path.join(__dirname,'../app.js'),'utf8');
-const start=source.indexOf('function bulkSetUnit(unit){'),end=source.indexOf('function renderPackAll()',start);
+const start=source.indexOf('let bulkEaManual=false;'),end=source.indexOf('function renderPackAll()',start);
 assert.ok(start>=0&&end>start,'bulkUpdate source not found');
 const bulk=source.slice(start,end);
 const ids='bulkCrop bulkSeed bulkCondition bulkBasis bulkUnit bulkSamples bulkOver bulkChem bulkPc bulkSize bulkEa bulkFullNet bulkAvailable bulkSuggested bulkManualEa bulkPcField bulkFullNetField bulkSizeLabel bulkError bulkOutput bulkAllOutput bulkAllInputs bulkRestore bulkReset bulkSizeText bulkOrderType bulkTotePreset'.split(' ');
