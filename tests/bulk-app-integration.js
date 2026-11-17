@@ -6,7 +6,7 @@ const source=fs.readFileSync(path.join(__dirname,'../app.js'),'utf8');
 const start=source.indexOf('function bulkUpdate(){'),end=source.indexOf('function renderPackAll()',start);
 assert.ok(start>=0&&end>start,'bulkUpdate source not found');
 const bulk=source.slice(start,end);
-const ids='bulkCrop bulkSeed bulkCondition bulkBasis bulkUnit bulkSamples bulkOver bulkChem bulkPc bulkSize bulkEa bulkFullNet bulkAvailable bulkSuggested bulkManualEa bulkPcField bulkFullNetField bulkSizeLabel bulkError bulkOutput bulkAllOutput bulkAllInputs bulkRestore'.split(' ');
+const ids='bulkCrop bulkSeed bulkCondition bulkBasis bulkUnit bulkSamples bulkOver bulkChem bulkPc bulkSize bulkEa bulkFullNet bulkAvailable bulkSuggested bulkManualEa bulkPcField bulkFullNetField bulkSizeLabel bulkError bulkOutput bulkAllOutput bulkAllInputs bulkRestore bulkReset bulkSizeText'.split(' ');
 function simulate(overrides={}){
  const elements=Object.fromEntries(ids.map(id=>[id,{value:'',hidden:false,firstChild:{textContent:''},innerHTML:'',textContent:'',replaceChildren(){this.innerHTML=''},addEventListener(){}}]));
  const defaults={bulkCrop:'peas',bulkSeed:'commercial',bulkCondition:'untreated',bulkBasis:'total',bulkUnit:'KG',bulkSize:'29741',bulkFullNet:'1000',bulkEa:'30',bulkOver:'0.5',bulkChem:'0',bulkSamples:'5',bulkSuggested:'1005'};
