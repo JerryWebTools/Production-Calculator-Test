@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1220"><title>Prod Calc TEST · v2.5</title><link rel="stylesheet" href="styles.css?v=25-test-corn-auto-ea-20261117c"><link rel="stylesheet" href="brain.css?v=25-test-corn-auto-ea-20261117c"><link rel="manifest" href="manifest.webmanifest?v=25-test-corn-auto-ea-20261117c"><link rel="apple-touch-icon" sizes="180x180" href="assets/prod-calc-test-180.png"><meta name="apple-mobile-web-app-title" content="Prod Calc TEST"></head><body><main class="app">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1220"><title>Prod Calc TEST · v2.5</title><link rel="stylesheet" href="styles.css?v=25-test-corn-ea-stepper-20261117d"><link rel="stylesheet" href="brain.css?v=25-test-corn-ea-stepper-20261117d"><link rel="manifest" href="manifest.webmanifest?v=25-test-corn-ea-stepper-20261117d"><link rel="apple-touch-icon" sizes="180x180" href="assets/prod-calc-test-180.png"><meta name="apple-mobile-web-app-title" content="Prod Calc TEST"></head><body><main class="app">
 <div class="testEnvironmentBanner" role="status">🧪 TEST VERSION — NOT FOR PRODUCTION</div>
 <header class="compactHeader">
   <div class="brandFooter"><img src="assets/js-studio.png" alt="JS Studio logo"><span>JS Studio</span></div>
@@ -39,7 +39,7 @@
  </div>
  <div class="qsFields bulkFollowupFields">
   <label class="qsField" id="bulkFullNetField">Standard NET / Full Tote <select id="bulkTotePreset"><option value="1000">1,000 KG · Export</option><option value="2000lb">2,000 LB · Domestic</option><option value="2500lb">2,500 LB · Domestic</option><option value="1134">1,134 KG · Domestic</option><option value="custom">Custom NET</option></select><input id="bulkFullNet" type="number" min="0" step="any" value="1000" inputmode="decimal"><span class="qsExamples">Editable NET in KG; overpack is added separately</span></label>
-  <label class="qsField">Quantity (EA)<input id="bulkEa" type="number" min="1" step="1" value="30" inputmode="numeric"><span class="qsExamples">Number of totes in the order</span></label>
+  <label class="qsField">Quantity (EA)<span class="bulkEaStepper"><button id="bulkEaMinus" type="button" aria-label="Decrease tote quantity by one">−</button><input id="bulkEa" type="number" min="1" step="1" value="30" inputmode="numeric" aria-label="Tote quantity"><button id="bulkEaPlus" type="button" aria-label="Increase tote quantity by one">+</button></span><span class="qsExamples">Estimated totes · use − / + to adjust</span></label>
   <label class="qsField" id="bulkPcField" hidden>Seed Count (PC)<input id="bulkPc" type="number" min="1" step="any" placeholder="3896" inputmode="decimal"><span class="qsExamples">Seeds per pound · KS/MS only</span></label>
   <label class="qsField">Overpack (%)<input id="bulkOver" type="number" min="0" step="any" value="0.5" inputmode="decimal"></label>
   <label class="qsField">Chemical Weight (%)<input id="bulkChem" type="number" min="0" step="any" value="0" inputmode="decimal"></label>
@@ -231,4 +231,4 @@
     <button id="whatsNewClose" type="button" class="primary">Continue</button>
   </div>
 </div>
-<script src="app.js?v=25-test-corn-auto-ea-20261117c"></script><script src="brain.js?v=25-test-corn-auto-ea-20261117c"></script></body></html>
+<script src="app.js?v=25-test-corn-ea-stepper-20261117d"></script><script src="brain.js?v=25-test-corn-ea-stepper-20261117d"></script></body></html>
