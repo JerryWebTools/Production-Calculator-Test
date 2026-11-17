@@ -23,9 +23,10 @@
  <p class="qsExamples bulkIntro">Bulk Line — Pack Only · Fill targets in KG · No tote tare</p>
  <div class="qsFields">
   <label class="qsField">Crop<select id="bulkCrop"><option value="peas">Peas</option><option value="beans">Beans</option><option value="normalCorn">Normal Corn</option><option value="shrunkenCorn">Shrunken Corn</option><option value="spinach">Spinach</option></select></label>
+  <label class="qsField">Order Type<select id="bulkOrderType"><option value="export">Export</option><option value="domestic">Domestic</option><option value="count">Seed Count (KS/MS)</option></select></label>
+  <label class="qsField">Order Basis<select id="bulkBasis"><option value="total">Total PO NET</option><option value="per">NET per Tote</option></select></label>
   <label class="qsField">Seed Type<select id="bulkSeed"><option value="commercial">Commercial</option><option value="parent">Parent / Basic</option></select></label>
   <label class="qsField">Condition<select id="bulkCondition"><option value="untreated">Untreated</option><option value="treated">Treated</option></select></label>
-  <label class="qsField">Order Basis<select id="bulkBasis"><option value="per">NET per Tote</option><option value="total">Total PO NET</option></select></label>
  </div>
  <div class="qsPackRow bulkPackRow">
   <label class="qsField" id="bulkSizeLabel"><span id="bulkSizeText">NET / Tote</span><input id="bulkSize" type="number" min="0" step="any" value="1000" inputmode="decimal"></label>
@@ -37,7 +38,7 @@
   </div><input id="bulkUnit" type="hidden" value="KG"></div>
  </div>
  <div class="qsFields bulkFollowupFields">
-  <label class="qsField" id="bulkFullNetField" hidden>Standard NET / Full Tote (KG)<input id="bulkFullNet" type="number" min="0" step="any" value="1000" inputmode="decimal"></label>
+  <label class="qsField" id="bulkFullNetField">Standard NET / Full Tote <select id="bulkTotePreset"><option value="1000">1,000 KG · Export</option><option value="2000lb">2,000 LB · Domestic</option><option value="2500lb">2,500 LB · Domestic</option><option value="1134">1,134 KG · Domestic</option><option value="custom">Custom NET</option></select><input id="bulkFullNet" type="number" min="0" step="any" value="1000" inputmode="decimal"><span class="qsExamples">Editable NET in KG; overpack is added separately</span></label>
   <label class="qsField">Quantity (EA)<input id="bulkEa" type="number" min="1" step="1" value="30" inputmode="numeric"><span class="qsExamples">Number of totes in the order</span></label>
   <label class="qsField" id="bulkPcField" hidden>Seed Count (PC)<input id="bulkPc" type="number" min="1" step="any" placeholder="3896" inputmode="decimal"><span class="qsExamples">Seeds per pound · KS/MS only</span></label>
   <label class="qsField">Overpack (%)<input id="bulkOver" type="number" min="0" step="any" value="0.5" inputmode="decimal"></label>
