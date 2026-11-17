@@ -11,7 +11,7 @@ const persist=(key,obj)=>{try{localStorage.setItem(key,JSON.stringify(obj));retu
 function show(view){['home','modeScreen','coming','bulkCalc','calc','settings','saved','quick','quickSeed','preferences','brain'].forEach(id=>$(id).hidden=id!==view);$('settingsBtn').hidden=false;$('homeRefreshBtn').hidden=view!=='home';document.body.classList.toggle('quick-active',view==='quick');if($('installBanner'))$('installBanner').hidden=view!=='home'||window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true||(()=>{try{return localStorage.getItem('production-calculator-install-banner-dismissed')==='yes'}catch{return false}})();document.body.classList.toggle('brain-active',view==='brain');const navOn=view!=='home'&&view!=='quick'&&view!=='brain';$('globalNav').hidden=!navOn;['back','modeBack','quickBack'].forEach(id=>$(id).hidden=true);const backId=view==='calc'?'back':view==='modeScreen'?'modeBack':view==='quick'?'quickBack':null;if(backId)$(backId).hidden=false;$('modeLabel').hidden=true;document.querySelector('header').classList.toggle('insideView',navOn);}
 function title(name,sub){$('title').textContent=(document.querySelector('#calc:not([hidden])')&&sub&&['Treat & Pack','Treat Only','Pack Only'].includes(sub))?name+' · '+sub:name;$('subtitle').textContent=sub;}
 function home(){line=null;mode=null;show('home');title('Production Calculator','Choose a production line.');}
-function openLine(v){line=v;if(v==='bulk'){show('bulkCalc');title('Bulk Line','Pack Exact / Pack All · TEST');bulkUpdate();return;}if(v==='3'||v==='4'){show('modeScreen');title('Line '+v,'Choose a calculation mode.');return;}openCalc(v==='1'?'treat':'standalone');}
+function openLine(v){line=v;if(v==='bulk'){show('bulkCalc');title('Bulk Line','Pack Only · TEST');bulkUpdate();return;}if(v==='3'||v==='4'){show('modeScreen');title('Line '+v,'Choose a calculation mode.');return;}openCalc(v==='1'?'treat':'standalone');}
 function cropOptions(select,items){select.innerHTML=items.map(c=>`<option value="${c}">${NAMES[c]}</option>`).join('');}
 function defaults(l,c,s){return {over:(c==='spinach'&&(l==='3'||l==='standalone'||l==='leg')?0.5:s==='commercial'?1:0.5),chem:(l==='3'||l==='standalone'||l==='leg')?(c==='normalCorn'?1:c==='shrunkenCorn'?1.2:0):0};}
 function settingKey(l,c,s){return `${l}|${c}|${s}`;}
@@ -447,8 +447,8 @@ function quickUseMini(){
 }
 // Bulk Line calculator. All scale targets are KG; treated chemical is an existing weight factor.
 function bulkUpdate(){
- const g=id=>$(id),mode=g('bulkMode').value,crop=g('bulkCrop').value,seed=g('bulkSeed').value,condition=g('bulkCondition').value;
- g('bulkAllInputs').hidden=mode!=='all';g('bulkPcField').hidden=!['KS','MS'].includes(g('bulkUnit').value);
+ const g=id=>$(id),mode=g('bulkAvailable').value.trim()!==''?'all':'exact',crop=g('bulkCrop').value,seed=g('bulkSeed').value,condition=g('bulkCondition').value;
+ g('bulkAllInputs').hidden=false;g('bulkPcField').hidden=!['KS','MS'].includes(g('bulkUnit').value);
  const n=id=>Number(g(id).value),over=n('bulkOver')/100,chem=condition==='treated'?n('bulkChem')/100:0,samples=n('bulkSamples'),pc=n('bulkPc');
  const out=g('bulkOutput'),error=g('bulkError');error.hidden=true;
  const fail=s=>{error.textContent=s;error.hidden=false;out.replaceChildren();};
