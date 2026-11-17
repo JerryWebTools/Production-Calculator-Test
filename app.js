@@ -462,7 +462,8 @@ function bulkUpdate(){
  const fullNet=basis==='total'?n('bulkFullNet'):net;if(!(fullNet>0))return fail('Enter a positive standard NET / Full Tote.');
  // Total-PO orders: allow final partial tote when the total is not evenly divisible by the standard net/tote target.
  const fullCount=basis==='total'?Math.floor((totalNet+1e-9)/fullNet):orderEa;
- const partialNet=basis==='total'?Math.max(0,totalNet-fullCount*fullNet):0;
+ const leftover=basis==='total'?totalNet-fullCount*fullNet:0;
+ const partialNet=basis==='total'?(Math.abs(leftover)<1e-7?0:Math.max(0,leftover)):0;
  const exactFull=basis==='total'?fullCount:orderEa;if(basis==='total'&&fullCount+(partialNet>1e-8?1:0)!==orderEa)return fail('Order EA must equal full totes plus any partial tote. Check standard NET / Full Tote.');
  const rawFill=fullNet*factor,scale=Math.ceil(rawFill-1e-10);
  const partialFill=partialNet>1e-8?Math.ceil(partialNet*factor-1e-10):0;
