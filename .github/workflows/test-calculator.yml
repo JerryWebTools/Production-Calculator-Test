@@ -1,0 +1,27 @@
+name: TEST calculator checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  javascript-and-bulk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout TEST
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check application JavaScript syntax
+        run: node --check app.js
+      - name: Check Bulk mathematical regression
+        run: node tests/bulk-regression.js
+      - name: Check actual Bulk integration
+        run: node tests/bulk-app-integration.js
