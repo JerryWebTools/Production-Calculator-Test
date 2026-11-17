@@ -25,7 +25,7 @@
 <label>Condition<select id="bulkCondition"><option value="untreated">Untreated</option><option value="treated">Treated</option></select></label>
 <label>Order Basis<select id="bulkBasis"><option value="per">NET per Tote</option><option value="total">Total PO NET</option></select></label>
 <label id="bulkSizeLabel">NET / Tote<div class="inline"><input id="bulkSize" type="number" min="0" step="any" value="1000" inputmode="decimal"><select id="bulkUnit"><option>KG</option><option>LB</option><option>KS</option><option>MS</option></select></div></label>
-<label>Order EA (Totes)<input id="bulkEa" type="number" min="1" step="1" value="30" inputmode="numeric"></label>
+<label id="bulkFullNetField" hidden>Standard NET / Full Tote (KG)<input id="bulkFullNet" type="number" min="0" step="any" value="1000" inputmode="decimal"></label><label>Order EA (Totes)<input id="bulkEa" type="number" min="1" step="1" value="30" inputmode="numeric"></label>
 <label id="bulkPcField" hidden>PC (Seeds/LB)<input id="bulkPc" type="number" min="1" step="any" placeholder="e.g. 3896" inputmode="decimal"></label>
 </div>
 <details class="bulkFactors"><summary>Overpack, Chemical Weight &amp; Samples</summary><div class="grid">
