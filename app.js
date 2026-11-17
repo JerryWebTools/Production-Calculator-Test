@@ -461,29 +461,35 @@ function bulkUpdate(){
  const net=unitKg(size,unit,pc),totalNet=basis==='total'?net:net*orderEa;
  const fullNet=basis==='total'?n('bulkFullNet'):net;if(!(fullNet>0)||basis==='total'&&g('bulkFullNet').value.trim()==='')return fail('Enter a positive standard NET / Full Tote.');
  // Total-PO orders: allow final partial tote when the total is not evenly divisible by the standard net/tote target.
- const fullCount=basis==='total'?Math.floor((totalNet+1e-7)/fullNet):orderEa;
- const leftover=basis==='total'?totalNet-fullCount*fullNet:0;
- const partialNet=basis==='total'?(Math.abs(leftover)<1e-7?0:Math.max(0,leftover)):0;
- const exactFull=basis==='total'?fullCount:orderEa;if(basis==='total'&&fullCount+(partialNet>1e-8?1:0)!==orderEa)return fail('Order EA must equal full totes plus any partial tote. Check standard NET / Full Tote.');
- const rawFill=fullNet*factor,scale=Math.ceil(rawFill-1e-9);
+ const referenceFullCount=basis==='total'?Math.floor((totalNet+1e-7)/fullNet):orderEa;
+ const referenceLeftover=basis==='total'?totalNet-referenceFullCount*fullNet:0;
+ const referencePartial=basis==='total'&&Math.abs(referenceLeftover)>1e-7?Math.max(0,referenceLeftover):0;
+ // Preserve a full/partial order only when its EA matches that arrangement.
+ // Otherwise, distribute total PO NET evenly across the operator's requested EA.
+ const mixed=basis==='total'&&referenceFullCount+(referencePartial>1e-8?1:0)===orderEa;
+ const uniform=basis==='total'&&!mixed;
+ const toteNet=uniform?totalNet/orderEa:fullNet;
+ const exactFull=uniform?orderEa:referenceFullCount;
+ const partialNet=uniform?0:referencePartial;
+ const rawFill=toteNet*factor,scale=Math.ceil(rawFill-1e-9);
  const partialFill=partialNet>1e-8?Math.ceil(partialNet*factor-1e-9):0;
- const packedNet=exactFull*fullNet+partialNet;
+ const packedNet=uniform?totalNet:exactFull*toteNet+partialNet;
  const totalFill=exactFull*scale+partialFill,required=totalFill+samples;
  const primaryScale=exactFull>0?scale:partialFill;
  const partialOnly=exactFull===0&&partialNet>0;
  const breakdown=[
-  ['NET / Full Tote',weight(fullNet)],
+  ['Net Seed Weight / Tote',weight(partialOnly?partialNet:toteNet)],
   ['Overpack',fmt(over*100,2)+'%'],
   ['Chemical Weight',fmt(chem*100,2)+'%'],
   ['Order EA',String(orderEa)],
-  ['Full Totes',String(exactFull)],
+  ['Full Totes',String(exactFull)],...(uniform?[['Distribution','Equal NET per tote']]:[]),
   ...(partialNet>1e-8?[['Partial Tote NET',weight(partialNet)],['Partial Tote Fill Weight',weight(partialFill)]]:[]),
   ['Total NET Packed',weight(packedNet)],
   ['Total Fill Weight',weight(totalFill)],
   ['Samples',weight(samples)],
   ['Final rounded total',weight(required)]
  ];
- out.innerHTML=`<div class="qsTotalCard"><strong>TOTAL SEED REQUIRED</strong><div class="qsTotalNumber">${fmt(required,0)} KG</div><div class="qsLb">${fmt(required*F,2)} LB · ${orderEa} EA · ${fmt(samples,3)} KG samples included</div></div><div class="qsSmallCards"><div class="qsSmallCard"><span>Net Seed Weight / Tote</span><div class="qsSmallNumber">${fmt(partialOnly?partialNet:fullNet,3)} KG</div><div class="qsLb">${fmt((partialOnly?partialNet:fullNet)*F,2)} LB</div></div><div class="qsSmallCard"><span>Fill Weight / Tote</span><div class="qsSmallNumber">${fmt(primaryScale,0)} KG</div><div class="qsLb">${fmt(primaryScale*F,2)} LB</div></div></div>${partialNet>1e-8?row('Partial Tote Fill Weight',weight(partialFill)):''}<details class="qsDisclosure"><summary>Calculation Breakdown</summary><div class="bulkBreakdown">${breakdown.map(([label,value])=>row(label,value)).join('')}<p class="muted tiny">NET × (1 + Overpack) × (1 + Chemical Weight) = Fill Weight. Bulk Line rounds each tote fill target UP to a whole KG; samples are added once.</p></div></details>`;
+ out.innerHTML=`<div class="qsTotalCard"><strong>TOTAL SEED REQUIRED</strong><div class="qsTotalNumber">${fmt(required,0)} KG</div><div class="qsLb">${fmt(required*F,2)} LB · ${orderEa} EA · ${fmt(samples,3)} KG samples included</div></div><div class="qsSmallCards"><div class="qsSmallCard"><span>Net Seed Weight / Tote</span><div class="qsSmallNumber">${fmt(partialOnly?partialNet:toteNet,3)} KG</div><div class="qsLb">${fmt((partialOnly?partialNet:toteNet)*F,2)} LB</div></div><div class="qsSmallCard"><span>Fill Weight / Tote</span><div class="qsSmallNumber">${fmt(primaryScale,0)} KG</div><div class="qsLb">${fmt(primaryScale*F,2)} LB</div></div></div>${partialNet>1e-8?row('Partial Tote Fill Weight',weight(partialFill)):''}<details class="qsDisclosure"><summary>Calculation Breakdown</summary><div class="bulkBreakdown">${breakdown.map(([label,value])=>row(label,value)).join('')}<p class="muted tiny">NET × (1 + Overpack) × (1 + Chemical Weight) = Fill Weight. Bulk Line rounds each tote fill target UP to a whole KG; samples are added once.</p></div></details>`;
  if(!availableRaw)return;
  const available=n('bulkAvailable'),suggest=n('bulkSuggested'),manualRaw=g('bulkManualEa').value.trim(),manual=manualRaw?Number(manualRaw):null;
  if(!Number.isFinite(available)||available<0||g('bulkSuggested').value.trim()===''||!(suggest>=1)||manual!==null&&(!Number.isInteger(manual)||manual<1)){all.innerHTML='<p class="error">Enter valid available seed, fill target, and optional whole tote count.</p>';return;}
