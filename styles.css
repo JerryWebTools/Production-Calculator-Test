@@ -630,3 +630,11 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #bulkCalc .qsDisclosure{background:var(--input);border-color:var(--edge)}
 #bulkCalc .qsDisclosure>summary,#bulkCalc .qsDisclosure .detailrow{color:var(--fg)}
 #bulkCalc .bulkRecommendation{margin-bottom:12px}
+
+/* Bulk tote EA stepper: theme-aware controls beside quantity. */
+#bulkCalc .bulkEaStepper{display:grid;grid-template-columns:52px minmax(0,1fr) 52px;gap:6px;align-items:stretch;margin-top:9px}
+#bulkCalc .bulkEaStepper input{margin:0;min-width:0;text-align:center;appearance:textfield;-moz-appearance:textfield}
+#bulkCalc .bulkEaStepper input::-webkit-inner-spin-button,#bulkCalc .bulkEaStepper input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+#bulkCalc .bulkEaStepper button{border:1px solid var(--edge);background:var(--input);color:var(--fg);border-radius:10px;font-size:28px;font-weight:700;min-height:52px;touch-action:manipulation}
+#bulkCalc .bulkEaStepper button:active{background:var(--accent);color:#fff}
+@media(max-width:540px){#bulkCalc .bulkEaStepper{grid-template-columns:42px minmax(0,1fr) 42px;gap:4px}#bulkCalc .bulkEaStepper button{font-size:24px;min-height:50px}}
