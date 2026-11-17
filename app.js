@@ -562,6 +562,14 @@ function bulkDefaults(){
 }
 ['bulkBasis','bulkSize','bulkUnit','bulkPc','bulkOver','bulkChem'].forEach(id=>$(id).addEventListener('input',bulkSyncEa));
 $('bulkEa').addEventListener('input',()=>{bulkEaManual=true;bulkUpdate();});
+function bulkStepEa(change){
+ const current=Number($('bulkEa').value);
+ $('bulkEa').value=String(Math.max(1,(Number.isInteger(current)&&current>=1?current:1)+change));
+ bulkEaManual=true;
+ bulkUpdate();
+}
+$('bulkEaMinus').addEventListener('click',()=>bulkStepEa(-1));
+$('bulkEaPlus').addEventListener('click',()=>bulkStepEa(1));
 ['bulkSamples','bulkAvailable','bulkSuggested','bulkManualEa','bulkFullNet'].forEach(id=>$(id).addEventListener('input',bulkUpdate));
 ['bulkSeed','bulkCondition'].forEach(id=>$(id).addEventListener('change',bulkDefaults));
 $('bulkCrop').addEventListener('change',()=>{
