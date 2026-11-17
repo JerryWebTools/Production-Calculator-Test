@@ -469,8 +469,21 @@ function bulkUpdate(){
  const partialFill=partialNet>1e-8?Math.ceil(partialNet*factor-1e-9):0;
  const packedNet=exactFull*fullNet+partialNet;
  const totalFill=exactFull*scale+partialFill,required=totalFill+samples;
- const note=basis==='total'?'Total PO NET uses the entered full-tote target and one partial tote if required.':'Scale target rounded UP for each tote.';const primaryScale=exactFull>0?scale:partialFill;
- out.innerHTML=`<h2>Order Results — Pack Only</h2><p class="muted tiny">${esc(note)}</p><div class="huge">${fmt(primaryScale,0)} KG / ${exactFull>0?'Full Tote':'Partial Tote'}</div>${row('NET / Full Tote',weight(fullNet))}${row('Raw Fill / Full Tote',weight(rawFill))}${row('Full Totes',String(exactFull))}${partialNet>1e-8?row('Partial Tote NET',weight(partialNet))+row('Partial Tote Fill',weight(partialFill)):''}${row('Total NET Packed',weight(packedNet))}${row('Total Scale Fill',weight(totalFill))}${row('Samples',weight(samples))}${row('Total Seed Required',weight(required))}<details><summary>Calculation Breakdown</summary><p>NET × (1 + Overpack) × (1 + Existing Chemical Weight) = Raw Fill. Each tote scale target rounds UP to a whole KG; samples are added once.</p></details>`;
+ const primaryScale=exactFull>0?scale:partialFill;
+ const partialOnly=exactFull===0&&partialNet>0;
+ const breakdown=[
+  ['NET / Full Tote',weight(fullNet)],
+  ['Overpack',fmt(over*100,2)+'%'],
+  ['Chemical Weight',fmt(chem*100,2)+'%'],
+  ['Order EA',String(orderEa)],
+  ['Full Totes',String(exactFull)],
+  ...(partialNet>1e-8?[['Partial Tote NET',weight(partialNet)],['Partial Tote Fill Weight',weight(partialFill)]]:[]),
+  ['Total NET Packed',weight(packedNet)],
+  ['Total Fill Weight',weight(totalFill)],
+  ['Samples',weight(samples)],
+  ['Final rounded total',weight(required)]
+ ];
+ out.innerHTML=`<h2>Results — Pack Only</h2><div class="huge">${fmt(required,0)} KG</div><p class="muted tiny">${fmt(required*F,2)} LB · ${orderEa} EA · ${fmt(samples,3)} KG samples included</p><div class="detailrow"><span>Net Seed Weight / Tote</span><strong>${weight(partialOnly?partialNet:fullNet)}</strong></div><div class="detailrow"><span>Fill Weight / Tote</span><strong>${weight(primaryScale)}</strong></div>${partialNet>1e-8?row('Partial Tote Fill Weight',weight(partialFill)):''}${row('Total Seed Required',weight(required))}<details><summary>Calculation Breakdown</summary>${breakdown.map(([label,value])=>row(label,value)).join('')}<p class="muted tiny">NET × (1 + Overpack) × (1 + Chemical Weight) = Fill Weight. Bulk Line rounds each tote fill target UP to a whole KG; samples are added once.</p></details>`;
  if(!availableRaw)return;
  const available=n('bulkAvailable'),suggest=n('bulkSuggested'),manualRaw=g('bulkManualEa').value.trim(),manual=manualRaw?Number(manualRaw):null;
  if(!Number.isFinite(available)||available<0||g('bulkSuggested').value.trim()===''||!(suggest>=1)||manual!==null&&(!Number.isInteger(manual)||manual<1)){all.innerHTML='<p class="error">Enter valid available seed, fill target, and optional whole tote count.</p>';return;}
