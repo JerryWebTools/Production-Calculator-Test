@@ -447,37 +447,46 @@ function quickUseMini(){
 }
 // Bulk Line calculator. All scale targets are KG; treated chemical is an existing weight factor.
 function bulkUpdate(){
- const g=id=>$(id),mode=g('bulkAvailable').value.trim()!==''?'all':'exact',crop=g('bulkCrop').value,seed=g('bulkSeed').value,condition=g('bulkCondition').value;
- g('bulkAllInputs').hidden=false;g('bulkPcField').hidden=!['KS','MS'].includes(g('bulkUnit').value);
- const n=id=>Number(g(id).value),over=n('bulkOver')/100,chem=condition==='treated'?n('bulkChem')/100:0,samples=n('bulkSamples'),pc=n('bulkPc');
- const out=g('bulkOutput'),error=g('bulkError');error.hidden=true;
- const fail=s=>{error.textContent=s;error.hidden=false;out.replaceChildren();};
- if([over,chem,samples].some(x=>!Number.isFinite(x)||x<0)||g('bulkOver').value===''||g('bulkChem').value===''||g('bulkSamples').value==='')return fail('Enter valid nonnegative overpack, chemical and sample values.');
- const factor=(1+over)*(1+chem),unit=g('bulkUnit').value;
- const row=(a,b)=>`<div class="detailrow"><span>${esc(a)}</span><strong>${esc(b)}</strong></div>`;
+ const g=id=>$(id),n=id=>Number(g(id).value),crop=g('bulkCrop').value,seed=g('bulkSeed').value,condition=g('bulkCondition').value,basis=g('bulkBasis').value,unit=g('bulkUnit').value;
+ const isCount=['KS','MS'].includes(unit),samples=n('bulkSamples'),over=n('bulkOver')/100,chem=condition==='treated'?n('bulkChem')/100:0,pc=n('bulkPc'),factor=(1+over)*(1+chem);
+ g('bulkPcField').hidden=!isCount;g('bulkSizeLabel').firstChild.textContent=basis==='total'?'Total PO NET':'NET / Tote';
+ const err=g('bulkError'),out=g('bulkOutput'),all=g('bulkAllOutput'),availableRaw=g('bulkAvailable').value.trim();
+ g('bulkAllInputs').hidden=availableRaw==='';err.hidden=true;all.replaceChildren();
+ const fail=s=>{err.textContent=s;err.hidden=false;out.replaceChildren();};
  const weight=x=>fmt(x,3)+' KG / '+fmt(x*F,2)+' LB';
- if(mode==='exact'){
-   const size=n('bulkSize'),ea=n('bulkEa'),basis=g('bulkBasis').value;if(!(size>0)||!Number.isInteger(ea)||ea<1||(['KS','MS'].includes(unit)&&!(pc>0)))return fail('Enter a valid NET weight, whole tote count and PC when using KS/MS.');if(basis==='total'&&!['KG','LB'].includes(unit))return fail('Total PO NET currently supports KG and LB only. Select NET per Tote for KS/MS.');
-   const net=unitKg(size,unit,pc)/(basis==='total'?ea:1),rawFill=net*factor,scale=Math.ceil(rawFill-1e-10),totalFill=scale*ea,required=totalFill+samples;
-   out.innerHTML=`<h2>Pack Exact — Scale Target</h2><div class="huge">${fmt(scale,0)} KG / Tote</div><p class="muted">Rounded UP per tote · ${ea} EA</p>${row('Net Seed Weight / Tote',weight(net))}${row('Raw Fill Weight / Tote',weight(rawFill))}${row('Scale Fill Weight / Tote',weight(scale))}${row('Total Tote Fill',weight(totalFill))}${row('Samples',weight(samples))}${row('Total Required',weight(required))}<details><summary>Calculation Breakdown</summary><p>NET × (1 + Overpack) × (1 + existing Chemical Weight) = Raw Fill. Scale target = ceil(Raw Fill KG). Samples added once to total.</p></details>`;
- }else{
-   const available=n('bulkAvailable'),suggest=n('bulkSuggested');
-   if(g('bulkAvailable').value===''){out.textContent='Enter available KG to calculate a packing suggestion.';return;}
-   if(!Number.isFinite(available)||available<0||!(suggest>0))return fail('Enter valid available seed and positive suggested KG per tote.');
-   if(available<samples)return fail('Available seed is less than the required sample reserve.');
-   const usable=available-samples,fill=Math.floor(suggest),ea=fill>0?Math.floor(usable/fill):0,remaining=usable-ea*fill;
-   out.innerHTML=`<h2>Pack All — Auto Suggestion</h2><div class="huge">${ea} EA × ${fmt(fill,0)} KG</div><p class="muted">Suggested scale fill rounded DOWN. Confirm actual capacity using the first tote.</p>${row('Available Seed',weight(available))}${row('Samples Reserved',weight(samples))}${row('Suggested Fill / Tote',weight(fill))}${row('Full Totes',String(ea))}${row('Remaining Seed',weight(remaining))}<p class="muted tiny">This suggestion uses total available scale weight, not a guaranteed tote capacity. The operator may change the suggested fill.</p>`;
- }
+ const row=(a,b)=>`<div class="detailrow"><span>${esc(a)}</span><strong>${esc(b)}</strong></div>`;
+ if([over,chem,samples].some(x=>!Number.isFinite(x)||x<0)||['bulkOver','bulkChem','bulkSamples'].some(id=>g(id).value===''))return fail('Enter valid overpack, existing chemical weight, and sample amounts.');
+ const size=n('bulkSize'),orderEa=n('bulkEa');if(!(size>0)||!Number.isInteger(orderEa)||orderEa<1||(isCount&&!(pc>0)))return fail('Enter a positive NET amount, whole tote count, and PC for KS/MS.');
+ if(basis==='total'&&isCount)return fail('For KS/MS orders, select NET per Tote.');
+ const net=unitKg(size,unit,pc),totalNet=basis==='total'?net:net*orderEa;
+ const fullNet=basis==='total'?Math.min(net,1000):net;
+ // Total-PO orders: allow final partial tote when the total is not evenly divisible by the standard net/tote target.
+ const fullCount=basis==='total'?Math.floor((totalNet+1e-9)/fullNet):orderEa;
+ const partialNet=basis==='total'?Math.max(0,totalNet-fullCount*fullNet):0;
+ const exactFull=basis==='total'?Math.min(fullCount,orderEa):orderEa;
+ const rawFill=fullNet*factor,scale=Math.ceil(rawFill-1e-10);
+ const partialFill=partialNet>1e-8?Math.ceil(partialNet*factor-1e-10):0;
+ const packedNet=exactFull*fullNet+partialNet;
+ const totalFill=exactFull*scale+partialFill,required=totalFill+samples;
+ const note=basis==='total'?'Total PO NET is divided using the current 1,000 KG standard tote target. Verify this target for the order.':'Scale target rounded UP for each tote.';
+ out.innerHTML=`<h2>Order Results — Pack Only</h2><p class="muted tiny">${esc(note)}</p><div class="huge">${fmt(scale,0)} KG / Tote</div>${row('NET / Full Tote',weight(fullNet))}${row('Raw Fill / Full Tote',weight(rawFill))}${row('Full Totes',String(exactFull))}${partialNet>1e-8?row('Partial Tote NET',weight(partialNet))+row('Partial Tote Fill',weight(partialFill)):''}${row('Total NET Packed',weight(packedNet))}${row('Total Scale Fill',weight(totalFill))}${row('Samples',weight(samples))}${row('Total Seed Required',weight(required))}<details><summary>Calculation Breakdown</summary><p>NET × (1 + Overpack) × (1 + Existing Chemical Weight) = Raw Fill. Each tote scale target rounds UP to a whole KG; samples are added once.</p></details>`;
+ if(!availableRaw)return;
+ const available=n('bulkAvailable'),suggest=n('bulkSuggested'),manualRaw=g('bulkManualEa').value.trim(),manual=manualRaw?Number(manualRaw):null;
+ if(!Number.isFinite(available)||available<0||!(suggest>0)||manual!==null&&(!Number.isInteger(manual)||manual<1)){all.innerHTML='<p class="error">Enter valid available seed, fill target, and optional whole tote count.</p>';return;}
+ if(available<samples){all.innerHTML='<p class="error">Available seed is less than the sample reserve.</p>';return;}
+ const usable=available-samples,fill=Math.floor(suggest),autoEa=fill>0?Math.floor((usable+1e-9)/fill):0;
+ const ea=manual===null?autoEa:manual,used=ea*fill,remaining=usable-used,delta=ea-orderEa;
+ all.innerHTML=`<h2>${manual===null?'Auto Suggestion':'Operator Adjusted'}</h2><div class="huge">${ea} EA × ${fmt(fill,0)} KG</div>${row('Samples Reserved',weight(samples))}${row('PO Order EA',String(orderEa))}${row('Full Totes',String(ea))}${row('EA Difference', (delta>0?'+':'')+delta)}${row('Remaining Seed',weight(Math.max(0,remaining)))}${remaining<0?'<p class="error">Not enough seed for the selected number of totes at this fill weight.</p>':''}<p class="muted tiny">Scale fill suggestion rounded DOWN; confirm first tote capacity. Remaining seed excludes reserved samples.</p>`;
 }
 function bulkDefaults(){
  const crop=$('bulkCrop').value,seed=$('bulkSeed').value,condition=$('bulkCondition').value;
  $('bulkOver').value=seed==='parent'?'0.5':(crop==='normalCorn'||crop==='shrunkenCorn'?'1':'0.5');
  $('bulkChem').value=condition==='treated'?(crop==='normalCorn'?'1':crop==='shrunkenCorn'?'1.2':'0'):'0';
- $('bulkSamples').value=seed==='parent'?'1.5':'5';
- bulkUpdate();
+ $('bulkSamples').value=seed==='parent'?'1.5':'5';bulkUpdate();
 }
-['bulkBasis','bulkMode','bulkSize','bulkUnit','bulkEa','bulkPc','bulkOver','bulkChem','bulkSamples','bulkAvailable','bulkSuggested'].forEach(id=>$(id).addEventListener('input',bulkUpdate));
+['bulkBasis','bulkSize','bulkUnit','bulkEa','bulkPc','bulkOver','bulkChem','bulkSamples','bulkAvailable','bulkSuggested','bulkManualEa'].forEach(id=>$(id).addEventListener('input',bulkUpdate));
 ['bulkCrop','bulkSeed','bulkCondition'].forEach(id=>$(id).addEventListener('change',bulkDefaults));
+$('bulkRestore').addEventListener('click',()=>{$('bulkManualEa').value='';$('bulkSuggested').value='700';bulkUpdate();});
 function renderPackAll(){const supported=line==='1'||((line==='3'||line==='4')&&mode==='pack')||isPackOnly();$('packAll').hidden=!supported;if(!supported||!lastResult)return;const raw=$('availableKg').value,out=$('packAllOutput');if(raw===''){out.textContent='Enter available KG to calculate complete bags.';return;}const available=Number(raw),r=lastResult;if(!Number.isFinite(available)||available<0){out.textContent='Enter a valid KG amount.';return;}const reserve=r.samples;const usable=Math.max(0,available-reserve);if(available<reserve){out.innerHTML=`<p class="error">Not enough available seed for samples: ${fmt(available,3)} KG available, ${fmt(reserve,3)} KG reserved.</p>`;return;}const perBag=(r.line==='standalone'||r.line==='leg')?r.netBag:r.base*(1+r.over/100);if(!(perBag>0)){out.textContent='Complete the order inputs first.';return;}const ea=Math.max(0,Math.floor((usable+1e-9)/perBag));const remaining=Math.max(0,usable-ea*perBag);const difference=ea-r.orderEa;const unitLabel=r.line==='1'?'EA equivalents':'Complete Bags';out.innerHTML=`<div class="detailrow"><span>PO Estimated EA</span><strong>${r.orderEa}</strong></div><div class="detailrow"><span>Samples Reserved</span><strong>${fmt(reserve,3)} KG</strong></div><div class="detailrow"><span>${unitLabel}</span><strong>${ea} EA</strong></div><div class="detailrow"><span>Remaining Seed</span><strong>${fmt(remaining,3)} KG</strong></div><div class="detailrow"><span>Actual EA Difference</span><strong>${difference>0?'+':''}${difference} EA</strong></div>`;}
 $('quickHome').onclick=()=>openQuick('home');$('quickSummary').onclick=()=>openQuick('calc');$('quickBack').onclick=backQuick;
 $('converterToggle').onclick=()=>{quickSaveUndo();qConverter=!qConverter;if(!qConverter)qActive='right';renderQuick()};
