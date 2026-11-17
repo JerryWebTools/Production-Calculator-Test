@@ -452,15 +452,19 @@ function bulkSetUnit(unit){
 }
 function bulkOrderDefaults(){
  const crop=$('bulkCrop').value,type=$('bulkOrderType').value;
- const count=type==='count',domestic=type==='domestic';
+ const corn=crop==='normalCorn'||crop==='shrunkenCorn';
+ $('bulkOrderType').value=corn?'weight':type==='weight'?'export':type;
+ const selectedType=$('bulkOrderType').value;
+ const count=selectedType==='count',domestic=selectedType==='domestic';
  const preset=$('bulkTotePreset');
  preset.replaceChildren();
  const options=domestic?[['2000lb','2,000 LB'],['2500lb','2,500 LB'],['1134','1,134 KG'],['custom','Custom NET']]:[['1000','1,000 KG'],['custom','Custom NET']];
  options.forEach(([value,label])=>{const option=document.createElement('option');option.value=value;option.textContent=label;preset.append(option);});
+ $('bulkTotePreset').closest('label').hidden=corn;
  $('bulkBasis').value=count?'per':'total';
- $('bulkSize').value=count?'5':domestic?'2000':'30000';
+ $('bulkSize').value=count?'5':domestic?'2000':corn?'2500':'30000';
  bulkSetUnit(count?'MS':domestic?'LB':'KG');
- $('bulkEa').value='30';
+ $('bulkEa').value=corn?'4':'30';
  bulkTotePreset();
  bulkDefaults();
 }
@@ -471,8 +475,8 @@ function bulkTotePreset(){
 }
 function bulkUpdate(){
  const g=id=>$(id),n=id=>Number(g(id).value),crop=g('bulkCrop').value,seed=g('bulkSeed').value,condition=g('bulkCondition').value,basis=g('bulkBasis').value,unit=g('bulkUnit').value;
- const isCount=['KS','MS'].includes(unit),samples=n('bulkSamples'),over=n('bulkOver')/100,chem=condition==='treated'?n('bulkChem')/100:0,pc=n('bulkPc'),factor=(1+over)*(1+chem);
- g('bulkPcField').hidden=!isCount;g('bulkFullNetField').hidden=basis!=='total'||isCount;g('bulkSizeText').textContent=basis==='total'?'Total PO NET':'NET / Tote';
+ const isCorn=crop==='normalCorn'||crop==='shrunkenCorn',isCount=['KS','MS'].includes(unit),samples=n('bulkSamples'),over=n('bulkOver')/100,chem=condition==='treated'?n('bulkChem')/100:0,pc=n('bulkPc'),factor=(1+over)*(1+chem);
+ g('bulkPcField').hidden=!isCount;g('bulkFullNetField').hidden=isCorn||basis!=='total'||isCount;g('bulkSizeText').textContent=basis==='total'?'Total PO NET':'NET / Tote';
  const err=g('bulkError'),out=g('bulkOutput'),all=g('bulkAllOutput'),availableRaw=g('bulkAvailable').value.trim();
  g('bulkAllInputs').hidden=availableRaw==='';err.hidden=true;all.replaceChildren();
  const fail=s=>{err.textContent=s;err.hidden=false;out.replaceChildren();};
@@ -482,14 +486,14 @@ function bulkUpdate(){
  const size=n('bulkSize'),orderEa=n('bulkEa');if(g('bulkSize').value.trim()===''||g('bulkEa').value.trim()===''||!(size>0)||!Number.isInteger(orderEa)||orderEa<1||(isCount&&(!(pc>0)||g('bulkPc').value.trim()==='')))return fail('Enter a positive NET amount, whole tote count, and PC for KS/MS.');
  
  const net=unitKg(size,unit,pc),totalNet=basis==='total'?net:net*orderEa;
- const fullNet=basis==='total'?n('bulkFullNet'):net;if(!(fullNet>0)||basis==='total'&&g('bulkFullNet').value.trim()==='')return fail('Enter a positive standard NET / Full Tote.');
+ const fullNet=basis==='total'&&!isCorn?n('bulkFullNet'):net;if(!(fullNet>0)||basis==='total'&&!isCorn&&g('bulkFullNet').value.trim()==='')return fail('Enter a positive standard NET / Full Tote.');
  // Total-PO orders: allow final partial tote when the total is not evenly divisible by the standard net/tote target.
  const referenceFullCount=basis==='total'?Math.floor((totalNet+1e-7)/fullNet):orderEa;
  const referenceLeftover=basis==='total'?totalNet-referenceFullCount*fullNet:0;
  const referencePartial=basis==='total'&&Math.abs(referenceLeftover)>1e-7?Math.max(0,referenceLeftover):0;
  // Preserve a full/partial order only when its EA matches that arrangement.
  // Otherwise, distribute total PO NET evenly across the operator's requested EA.
- const mixed=basis==='total'&&referenceFullCount+(referencePartial>1e-8?1:0)===orderEa;
+ const mixed=!isCorn&&basis==='total'&&referenceFullCount+(referencePartial>1e-8?1:0)===orderEa;
  const uniform=basis==='total'&&!mixed;
  const toteNet=uniform?totalNet/orderEa:fullNet;
  const exactFull=uniform?orderEa:referenceFullCount;
@@ -500,6 +504,10 @@ function bulkUpdate(){
  const totalFill=exactFull*scale+partialFill,required=totalFill+samples;
  const primaryScale=exactFull>0?scale:partialFill;
  const partialOnly=exactFull===0&&partialNet>0;
+ const recommendedEa=isCorn&&basis==='total'&&!isCount?Math.max(1,Math.round(totalNet/700)):null;
+ const recommendedNet=recommendedEa?totalNet/recommendedEa:null;
+ const recommendedFill=recommendedEa?Math.ceil(recommendedNet*factor-1e-9):null;
+ const recommendedTotal=recommendedEa?recommendedEa*recommendedFill+samples:null;
  const breakdown=[
   ['Net Seed Weight / Tote',weight(partialOnly?partialNet:toteNet)],
   ['Overpack',fmt(over*100,2)+'%'],
@@ -512,7 +520,9 @@ function bulkUpdate(){
   ['Samples',weight(samples)],
   ['Final rounded total',weight(required)]
  ];
- out.innerHTML=`<div class="qsTotalCard"><strong>TOTAL SEED REQUIRED</strong><div class="qsTotalNumber">${fmt(required,0)} KG</div><div class="qsLb">${fmt(required*F,2)} LB · ${orderEa} EA · ${fmt(samples,3)} KG samples included</div></div><div class="qsSmallCards"><div class="qsSmallCard"><span>Net Seed Weight / Tote</span><div class="qsSmallNumber">${fmt(partialOnly?partialNet:toteNet,3)} KG</div><div class="qsLb">${fmt((partialOnly?partialNet:toteNet)*F,2)} LB</div></div><div class="qsSmallCard"><span>Fill Weight / Tote</span><div class="qsSmallNumber">${fmt(primaryScale,0)} KG</div><div class="qsLb">${fmt(primaryScale*F,2)} LB</div></div></div>${partialNet>1e-8?row('Partial Tote Fill Weight',weight(partialFill)):''}<details class="qsDisclosure"><summary>Calculation Breakdown</summary><div class="bulkBreakdown">${breakdown.map(([label,value])=>row(label,value)).join('')}<p class="muted tiny">NET × (1 + Overpack) × (1 + Chemical Weight) = Fill Weight. Bulk Line rounds each tote fill target UP to a whole KG; samples are added once.</p></div></details>`;
+ out.innerHTML=`${recommendedEa!==null?`<div class="qsTotalCard bulkRecommendation"><strong>RECOMMENDED CORN TOTE PLAN · NEAR 700 KG</strong><div class="qsTotalNumber">${recommendedEa} EA × ${fmt(recommendedFill,0)} KG</div><div class="qsLb">NET / Tote: ${fmt(recommendedNet,3)} KG · Total Seed Required: ${fmt(recommendedTotal,0)} KG</div><button type="button" id="bulkApplyRecommendation" class="qsReset">Use ${recommendedEa} totes</button></div>`:''}<div class="qsTotalCard"><strong>TOTAL SEED REQUIRED</strong><div class="qsTotalNumber">${fmt(required,0)} KG</div><div class="qsLb">${fmt(required*F,2)} LB · ${orderEa} EA · ${fmt(samples,3)} KG samples included</div></div><div class="qsSmallCards"><div class="qsSmallCard"><span>Net Seed Weight / Tote</span><div class="qsSmallNumber">${fmt(partialOnly?partialNet:toteNet,3)} KG</div><div class="qsLb">${fmt((partialOnly?partialNet:toteNet)*F,2)} LB</div></div><div class="qsSmallCard"><span>Fill Weight / Tote</span><div class="qsSmallNumber">${fmt(primaryScale,0)} KG</div><div class="qsLb">${fmt(primaryScale*F,2)} LB</div></div></div>${partialNet>1e-8?row('Partial Tote Fill Weight',weight(partialFill)):''}<details class="qsDisclosure"><summary>Calculation Breakdown</summary><div class="bulkBreakdown">${breakdown.map(([label,value])=>row(label,value)).join('')}<p class="muted tiny">NET × (1 + Overpack) × (1 + Chemical Weight) = Fill Weight. Bulk Line rounds each tote fill target UP to a whole KG; samples are added once.</p></div></details>`;
+ const applyRecommendation=$('bulkApplyRecommendation');
+ if(applyRecommendation)applyRecommendation.addEventListener('click',()=>{$('bulkEa').value=String(recommendedEa);bulkUpdate();});
  if(!availableRaw)return;
  const available=n('bulkAvailable'),suggest=n('bulkSuggested'),manualRaw=g('bulkManualEa').value.trim(),manual=manualRaw?Number(manualRaw):null;
  if(!Number.isFinite(available)||available<0||g('bulkSuggested').value.trim()===''||!(suggest>=1)||manual!==null&&(!Number.isInteger(manual)||manual<1)){all.innerHTML='<p class="error">Enter valid available seed, fill target, and optional whole tote count.</p>';return;}
@@ -529,7 +539,14 @@ function bulkDefaults(){
 }
 ['bulkBasis','bulkSize','bulkUnit','bulkEa','bulkPc','bulkOver','bulkChem','bulkSamples','bulkAvailable','bulkSuggested','bulkManualEa','bulkFullNet'].forEach(id=>$(id).addEventListener('input',bulkUpdate));
 ['bulkSeed','bulkCondition'].forEach(id=>$(id).addEventListener('change',bulkDefaults));
-['bulkCrop','bulkOrderType'].forEach(id=>$(id).addEventListener('change',bulkOrderDefaults));
+$('bulkCrop').addEventListener('change',()=>{
+ const crop=$('bulkCrop').value,corn=crop==='normalCorn'||crop==='shrunkenCorn';
+ const select=$('bulkOrderType');
+ if(corn){if(!select.querySelector('[value="weight"]')){const opt=document.createElement('option');opt.value='weight';opt.textContent='Corn · Equal Tote Fill';select.prepend(opt);}select.value='weight';}
+ else{select.querySelector('[value="weight"]')?.remove();select.value='export';}
+ bulkOrderDefaults();
+});
+$('bulkOrderType').addEventListener('change',bulkOrderDefaults);
 $('bulkTotePreset').addEventListener('change',bulkTotePreset);
 $('bulkFullNet').addEventListener('input',()=>{$('bulkTotePreset').value='custom';});
 document.querySelectorAll('[data-bulk-unit]').forEach(button=>button.addEventListener('click',()=>{bulkSetUnit(button.dataset.bulkUnit);bulkUpdate();}));
