@@ -314,7 +314,7 @@ const translations={
 const originalText=new WeakMap();
 function translateUI(){const spanish=prefs.language==='es';document.querySelectorAll('button, label, h1, h2, strong, summary, .eyebrow, .pill, small').forEach(el=>{if(el.closest('#quickHistory,#packAllOutput,#savedList,#breakdown'))return;for(const node of el.childNodes){if(node.nodeType!==3)continue;if(!originalText.has(node))originalText.set(node,node.nodeValue);const base=originalText.get(node);const trimmed=base.trim();if(!trimmed)continue;const clean=trimmed.replace(/^[←▦⚙️💾]+\s*/u,'');const t=translations[clean];if(t)node.nodeValue=spanish?base.replace(clean,t):base;}});document.querySelectorAll('option').forEach(el=>{if(!el.dataset.originalLabel)el.dataset.originalLabel=el.textContent;const t=translations[el.dataset.originalLabel];el.textContent=spanish&&t?t:el.dataset.originalLabel;});}
 function openPrefs(){prefReturn=document.querySelector('#quick:not([hidden])')?'quick':document.querySelector('#quickSeed:not([hidden])')?'quickSeed':document.querySelector('#boxSplit:not([hidden])')?'boxSplit':document.querySelector('#calc:not([hidden])')?'calc':document.querySelector('#settings:not([hidden])')?'settings':'home';show('preferences');title('Settings','Language, theme and button color');applyPrefs();}
-function closePrefs(){show(prefReturn==='settings'?'calc':prefReturn);if(prefReturn==='home')home();else if(prefReturn==='quick')title('Quick Calculator','Calculator + Unit Converter');else if(prefReturn==='quickSeed'){title('Quick Seed Calculator','Manual seed and bag weight calculation');renderQuickSeed();}else if(prefReturn==='boxSplit'){title('PO Box Split','Gross / Tare / Net');splitRender();}else title(lineName(line),'Calculator');}
+function closePrefs(){show(prefReturn==='settings'?'calc':prefReturn);if(prefReturn==='home')home();else if(prefReturn==='quick')title('Quick Calculator','Calculator + Unit Converter');else if(prefReturn==='quickSeed'){title('Quick Seed Calculator','Manual seed and bag weight calculation');renderQuickSeed();}else if(prefReturn==='boxSplit'){title('PO Weight Calculator','Gross / Tare / Net');splitRender();}else title(lineName(line),'Calculator');}
 function openQuick(from){qActive='right';$('percentPanel').hidden=true;quickReturn=from;show('quick');$('quickHistoryPanel').hidden=true;$('unitPanel').hidden=true;$('seedPanel').hidden=true;title('Quick Calculator','Calculator + Unit Converter');$('quickBack').textContent=from==='home'?'← Back to Home':`← Back to ${lineName(line)} Summary`;renderQuick();translateUI();}
 function backQuick(){if(quickReturn==='home')home();else{show('calc');title(lineName(line),'Calculator');calculate();}}
 const KG_TO_LB=2.2046226218487757;
@@ -878,7 +878,7 @@ document.querySelectorAll('[data-qs-unit]').forEach(b=>b.addEventListener('click
  el.addEventListener('input',renderQuickSeed);
 });
 
-// PO Box Split: operator enters gross and tare for each box; last box is split by NET.
+// PO Weight Calculator: operator enters gross and tare for each box; last box is split by NET.
 const splitRows=[{gross:'',tare:''},{gross:'',tare:''},{gross:'',tare:''},{gross:'',tare:''}];
 function splitNum(value){const x=Number(value);return String(value).trim()!==''&&Number.isFinite(x)&&x>=0?x:null;}
 function splitWeight(x){return fmt(x,3)+' KG / '+fmt(x*F,2)+' LB';}
@@ -921,7 +921,7 @@ function splitCalculate(){
  '<details><summary>Calculation Breakdown</summary>'+row('NET before last box',before)+row('Last box Gross',split.gross)+row('Last box Tare',split.tare)+row('Last box NET',split.net)+row('PO NET from last box',split.poNet)+row('NET to Return',split.returnNet)+row('Total PO NET',target)+'</details>'+
  (totalNet>target+split.returnNet+1e-8?'<p class="muted tiny">Additional boxes after the PO is filled are not included in the last-box return amount.</p>':'');
 }
-$('boxSplitHome').addEventListener('click',()=>{show('boxSplit');title('PO Box Split','Gross / Tare / Net');splitRender();});
+$('boxSplitHome').addEventListener('click',()=>{show('boxSplit');title('PO Weight Calculator','Gross / Tare / Net');splitRender();});
 $('splitTarget').addEventListener('input',splitCalculate);
 $('splitAdd').addEventListener('click',()=>{splitRows.push({gross:'',tare:''});splitRender();});
 $('splitReset').addEventListener('click',()=>{$('splitResetConfirm').hidden=false;});
