@@ -8,7 +8,7 @@ const fmt=(x,d)=>Number(x).toLocaleString('en-US',{minimumFractionDigits:d,maxim
 const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const validPositive=x=>Number.isFinite(x)&&x>0;
 const persist=(key,obj)=>{try{localStorage.setItem(key,JSON.stringify(obj));return true}catch{alert('Unable to save on this device. Check browser storage settings.');return false}};
-function show(view){['home','modeScreen','coming','bulkCalc','calc','settings','saved','quick','quickSeed','preferences','brain'].forEach(id=>$(id).hidden=id!==view);$('settingsBtn').hidden=false;$('homeRefreshBtn').hidden=view!=='home';document.body.classList.toggle('quick-active',view==='quick');if($('installBanner'))$('installBanner').hidden=view!=='home'||window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true||(()=>{try{return localStorage.getItem('production-calculator-install-banner-dismissed')==='yes'}catch{return false}})();document.body.classList.toggle('brain-active',view==='brain');const navOn=view!=='home'&&view!=='quick'&&view!=='brain';$('globalNav').hidden=!navOn;['back','modeBack','quickBack'].forEach(id=>$(id).hidden=true);const backId=(view==='calc'||view==='bulkCalc')?'back':view==='modeScreen'?'modeBack':view==='quick'?'quickBack':null;if(backId)$(backId).hidden=false;$('modeLabel').hidden=true;document.querySelector('header').classList.toggle('insideView',navOn);}
+function show(view){['home','modeScreen','coming','bulkCalc','calc','settings','saved','quick','quickSeed','boxSplit','preferences','brain'].forEach(id=>$(id).hidden=id!==view);$('settingsBtn').hidden=false;$('homeRefreshBtn').hidden=view!=='home';document.body.classList.toggle('quick-active',view==='quick');if($('installBanner'))$('installBanner').hidden=view!=='home'||window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true||(()=>{try{return localStorage.getItem('production-calculator-install-banner-dismissed')==='yes'}catch{return false}})();document.body.classList.toggle('brain-active',view==='brain');const navOn=view!=='home'&&view!=='quick'&&view!=='brain';$('globalNav').hidden=!navOn;['back','modeBack','quickBack'].forEach(id=>$(id).hidden=true);const backId=(view==='calc'||view==='bulkCalc'||view==='boxSplit')?'back':view==='modeScreen'?'modeBack':view==='quick'?'quickBack':null;if(backId)$(backId).hidden=false;$('modeLabel').hidden=true;document.querySelector('header').classList.toggle('insideView',navOn);}
 function title(name,sub){$('title').textContent=(document.querySelector('#calc:not([hidden])')&&sub&&['Treat & Pack','Treat Only','Pack Only'].includes(sub))?name+' · '+sub:name;$('subtitle').textContent=sub;}
 function home(){line=null;mode=null;show('home');title('Production Calculator','Choose a production line.');}
 function openLine(v){line=v;if(v==='bulk'){show('bulkCalc');title('Bulk Line','Pack Only · TEST');bulkDefaults();return;}if(v==='3'||v==='4'){show('modeScreen');title('Line '+v,'Choose a calculation mode.');return;}openCalc(v==='1'?'treat':'standalone');}
@@ -877,6 +877,53 @@ document.querySelectorAll('[data-qs-unit]').forEach(b=>b.addEventListener('click
  el.addEventListener('touchend',()=>requestAnimationFrame(moveCaret),{passive:true});
  el.addEventListener('input',renderQuickSeed);
 });
+
+// PO Box Split: operator enters gross and tare for each box; last box is split by NET.
+const splitRows=[{gross:'',tare:''},{gross:'',tare:''},{gross:'',tare:''},{gross:'',tare:''}];
+function splitNum(value){const x=Number(value);return String(value).trim()!==''&&Number.isFinite(x)&&x>=0?x:null;}
+function splitWeight(x){return fmt(x,3)+' KG / '+fmt(x*F,2)+' LB';}
+function splitRender(){
+ const host=$('splitRows');host.replaceChildren();
+ splitRows.forEach((box,i)=>{
+  const row=document.createElement('div');row.className='splitRow';
+  row.innerHTML='<span class="splitIndex">'+(i+1)+'</span><label>Gross<input type="number" min="0" step="any" inputmode="decimal" aria-label="Box '+(i+1)+' Gross" placeholder="Gross"></label><label>Tare<input type="number" min="0" step="any" inputmode="decimal" aria-label="Box '+(i+1)+' Tare" placeholder="Tare"></label><button type="button" class="secondary splitRemove" aria-label="Remove box '+(i+1)+'">×</button>';
+  const inputs=row.querySelectorAll('input');inputs[0].value=box.gross;inputs[1].value=box.tare;
+  inputs.forEach((el,k)=>el.addEventListener('input',()=>{box[k===0?'gross':'tare']=el.value;splitCalculate();}));
+  row.querySelector('button').addEventListener('click',()=>{if(splitRows.length<=1)return;splitRows.splice(i,1);splitRender();});
+  host.append(row);
+ });
+ splitCalculate();
+}
+function splitCalculate(){
+ const target=splitNum($('splitTarget').value),result=$('splitResults'),total=$('splitTotal');
+ const valid=splitRows.map((b,i)=>({i,gross:splitNum(b.gross),tare:splitNum(b.tare)}));
+ const entered=valid.filter(x=>x.gross!==null||x.tare!==null);
+ if(!entered.length){total.textContent='';result.innerHTML='<p class="muted">Enter Gross and Tare weights to calculate the split.</p>';return;}
+ if(entered.some(x=>x.gross===null||x.tare===null||x.tare>x.gross)){
+  total.textContent='';result.innerHTML='<p class="error">Each entered box needs valid Gross and Tare; Tare cannot exceed Gross.</p>';return;
+ }
+ const boxes=entered.map(x=>({...x,net:x.gross-x.tare}));
+ const totalNet=boxes.reduce((s,x)=>s+x.net,0);
+ total.innerHTML='<strong>Total Net: '+splitWeight(totalNet)+'</strong><span class="muted tiny">'+boxes.length+' boxes entered</span>';
+ if(target===null||target<=0){result.innerHTML='<p class="muted">Enter Required PO NET to calculate the allocation.</p>';return;}
+ if(totalNet+1e-8<target){result.innerHTML='<p class="error">Short '+splitWeight(target-totalNet)+' for the PO. Add more boxes or correct the weights.</p>';return;}
+ let remaining=target,split=null;
+ for(const box of boxes){if(remaining>box.net+1e-8){remaining-=box.net;continue;}split={...box,poNet:Math.max(0,remaining),returnNet:Math.max(0,box.net-remaining)};break;}
+ if(!split){result.innerHTML='<p class="error">Unable to allocate the entered weights.</p>';return;}
+ const before=target-split.poNet;
+ const row=(name,value)=>'<div class="detailrow"><span>'+name+'</span><strong>'+splitWeight(value)+'</strong></div>';
+ result.innerHTML='<p class="muted tiny">Box '+(split.i+1)+' · NET '+splitWeight(split.net)+'</p>'+
+ '<div class="splitCards"><div class="card mini"><strong>PO NET — Last Box</strong><div class="number">'+fmt(split.poNet,3)+' KG</div><p class="muted tiny">Gross on scale: '+fmt(split.poNet+split.tare,3)+' KG (includes tare)</p></div>'+
+ '<div class="card mini"><strong>RETURN NET</strong><div class="number">'+fmt(split.returnNet,3)+' KG</div><p class="muted tiny">Return Gross: '+fmt(split.returnNet+split.tare,3)+' KG if using the same tare</p></div></div>'+
+ '<details><summary>Calculation Breakdown</summary>'+row('NET before last box',before)+row('Last box Gross',split.gross)+row('Last box Tare',split.tare)+row('Last box NET',split.net)+row('PO NET from last box',split.poNet)+row('NET to Return',split.returnNet)+row('Total PO NET',target)+'</details>'+
+ (totalNet>target+split.returnNet+1e-8?'<p class="muted tiny">Additional boxes after the PO is filled are not included in the last-box return amount.</p>':'');
+}
+$('boxSplitHome').addEventListener('click',()=>{show('boxSplit');title('PO Box Split','Gross / Tare / Net');splitRender();});
+$('splitTarget').addEventListener('input',splitCalculate);
+$('splitAdd').addEventListener('click',()=>{splitRows.push({gross:'',tare:''});splitRender();});
+$('splitReset').addEventListener('click',()=>{$('splitResetConfirm').hidden=false;});
+$('splitCancelReset').addEventListener('click',()=>{$('splitResetConfirm').hidden=true;});
+$('splitConfirmReset').addEventListener('click',()=>{splitRows.splice(0,splitRows.length,...Array.from({length:4},()=>({gross:'',tare:''})));$('splitTarget').value='';$('splitResetConfirm').hidden=true;splitRender();});
 
 // Navigation
  $('homeShortcut').onclick=home;
