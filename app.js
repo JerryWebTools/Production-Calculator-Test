@@ -881,7 +881,7 @@ document.querySelectorAll('[data-qs-unit]').forEach(b=>b.addEventListener('click
 // PO Weight Calculator: operator enters gross and tare for each box; last box is split by NET.
 const splitRows=[{gross:'',tare:''},{gross:'',tare:''},{gross:'',tare:''},{gross:'',tare:''}];
 function splitNum(value){const x=Number(value);return String(value).trim()!==''&&Number.isFinite(x)&&x>=0?x:null;}
-function splitWeight(x){return fmt(x,3)+' KG / '+fmt(x*F,2)+' LB';}
+function splitWeight(x){return fmt(x,1)+' KG / '+fmt(x*F,1)+' LB';}
 function splitRender(){
  const host=$('splitRows');host.replaceChildren();
  splitRows.forEach((box,i)=>{
@@ -899,7 +899,7 @@ function splitCalculate(){
  const valid=splitRows.map((b,i)=>({i,gross:splitNum(b.gross),tare:splitNum(b.tare)}));
  const entered=valid.filter(x=>x.gross!==null||x.tare!==null);
  const netOutputs=$('splitRows').querySelectorAll('.splitNet');
- valid.forEach((x,i)=>{const net=x.gross!==null&&x.tare!==null&&x.gross>=x.tare?x.gross-x.tare:null;if(netOutputs[i])netOutputs[i].textContent=net===null?'—':fmt(net,3);});
+ valid.forEach((x,i)=>{const net=x.gross!==null&&x.tare!==null&&x.gross>=x.tare?x.gross-x.tare:null;if(netOutputs[i])netOutputs[i].textContent=net===null?'—':fmt(net,1);});
 
  if(!entered.length){total.textContent='Total Net: —';result.innerHTML='<p class="muted">Enter Gross and Tare weights to calculate the split.</p>';return;}
  if(entered.some(x=>x.gross===null||x.tare===null||x.tare>x.gross)){
@@ -907,7 +907,7 @@ function splitCalculate(){
  }
  const boxes=entered.map(x=>({...x,net:x.gross-x.tare}));
  const totalNet=boxes.reduce((s,x)=>s+x.net,0);
- total.innerHTML='<strong>Total Net: '+fmt(totalNet,1)+' KG / '+fmt(totalNet*F,1)+' LB</strong><span class="muted tiny">'+boxes.length+' boxes entered</span>';
+ total.innerHTML='<span class="splitTotalLabel">Total Net</span><strong class="splitTotalKg">'+fmt(totalNet,1)+' KG</strong><span class="splitTotalLb">'+fmt(totalNet*F,1)+' LB</span><span class="muted tiny">'+boxes.length+' '+(boxes.length===1?'box':'boxes')+' entered</span>';
  if(target===null||target<=0){result.innerHTML='<p class="muted">Enter Required PO NET to calculate the allocation.</p>';return;}
  if(totalNet+1e-8<target){result.innerHTML='<p class="error">Short '+splitWeight(target-totalNet)+' for the PO. Add more boxes or correct the weights.</p>';return;}
  let remaining=target,split=null;
@@ -916,8 +916,8 @@ function splitCalculate(){
  const before=target-split.poNet;
  const row=(name,value)=>'<div class="detailrow"><span>'+name+'</span><strong>'+splitWeight(value)+'</strong></div>';
  result.innerHTML='<p class="muted tiny">Box '+(split.i+1)+' · NET '+splitWeight(split.net)+'</p>'+
- '<div class="splitCards"><div class="card mini"><strong>PO NET — Last Box</strong><div class="number">'+fmt(split.poNet,3)+' KG</div><p class="muted tiny">Gross on scale: '+fmt(split.poNet+split.tare,3)+' KG (includes tare)</p></div>'+
- '<div class="card mini"><strong>RETURN NET</strong><div class="number">'+fmt(split.returnNet,3)+' KG</div><p class="muted tiny">Return Gross: '+fmt(split.returnNet+split.tare,3)+' KG if using the same tare</p></div></div>'+
+ '<div class="splitCards"><div class="card mini"><strong>PO NET — Last Box</strong><div class="number">'+fmt(split.poNet,1)+' KG</div><p class="muted tiny">Gross on scale: '+fmt(split.poNet+split.tare,1)+' KG (includes tare)</p></div>'+
+ '<div class="card mini"><strong>RETURN NET</strong><div class="number">'+fmt(split.returnNet,1)+' KG</div><p class="muted tiny">Return Gross: '+fmt(split.returnNet+split.tare,1)+' KG if using the same tare</p></div></div>'+
  '<details><summary>Calculation Breakdown</summary>'+row('NET before last box',before)+row('Last box Gross',split.gross)+row('Last box Tare',split.tare)+row('Last box NET',split.net)+row('PO NET from last box',split.poNet)+row('NET to Return',split.returnNet)+row('Total PO NET',target)+'</details>'+
  (totalNet>target+split.returnNet+1e-8?'<p class="muted tiny">Additional boxes after the PO is filled are not included in the last-box return amount.</p>':'');
 }
