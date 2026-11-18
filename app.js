@@ -886,7 +886,7 @@ function splitRender(){
  const host=$('splitRows');host.replaceChildren();
  splitRows.forEach((box,i)=>{
   const row=document.createElement('div');row.className='splitRow';
-  row.innerHTML='<span class="splitIndex">'+(i+1)+'</span><label>Gross<input type="number" min="0" step="any" inputmode="decimal" aria-label="Box '+(i+1)+' Gross" placeholder="Gross"></label><label>Tare<input type="number" min="0" step="any" inputmode="decimal" aria-label="Box '+(i+1)+' Tare" placeholder="Tare"></label><button type="button" class="secondary splitRemove" aria-label="Remove box '+(i+1)+'">×</button>';
+  row.innerHTML='<span class="splitIndex">'+(i+1)+'</span><label><span class="srOnly">Gross box '+(i+1)+'</span><input type="number" min="0" step="any" inputmode="decimal" aria-label="Box '+(i+1)+' Gross" placeholder="Gross"></label><label><span class="srOnly">Tare box '+(i+1)+'</span><input type="number" min="0" step="any" inputmode="decimal" aria-label="Box '+(i+1)+' Tare" placeholder="Tare"></label><button type="button" class="secondary splitRemove" aria-label="Remove box '+(i+1)+'">×</button>';
   const inputs=row.querySelectorAll('input');inputs[0].value=box.gross;inputs[1].value=box.tare;
   inputs.forEach((el,k)=>el.addEventListener('input',()=>{box[k===0?'gross':'tare']=el.value;splitCalculate();}));
   row.querySelector('button').addEventListener('click',()=>{if(splitRows.length<=1)return;splitRows.splice(i,1);splitRender();});
