@@ -669,3 +669,16 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #boxSplit .splitConfirm[hidden]{display:none!important}
 #boxSplit .splitConfirm>.card{max-width:440px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3)}
 @media(max-width:430px){#boxSplit .splitRow{grid-template-columns:18px minmax(0,1fr) minmax(0,1fr) 28px;gap:4px}#boxSplit .splitRow input{font-size:16px;padding:9px 4px}#boxSplit .splitCards{gap:7px}#boxSplit .splitCards .card{padding:9px}}
+
+/* Home: split former full-width Quick Calculator into two equal adjacent actions. */
+#home .homeQuickPair{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-width:0}
+#home .homeQuickPair .quickHome{grid-column:auto;min-width:0;min-height:100px;font-size:clamp(14px,3.6vw,19px);padding:12px 8px;text-align:center;overflow-wrap:break-word}
+#home .homeQuickPair .quickHome small{font-size:clamp(10px,2.5vw,12px);line-height:1.25}
+/* Box rows: a single heading, four compact initial rows and the Add button before Total NET. */
+#boxSplit .splitColumns{display:grid;grid-template-columns:24px minmax(0,1fr) minmax(0,1fr) 34px;gap:7px;margin:0 0 5px;align-items:center;color:var(--muted);font-size:13px}
+#boxSplit .splitRow{align-items:center;margin-bottom:7px}
+#boxSplit .splitRow label{margin:0}
+#boxSplit .splitRow input{margin:0;min-height:44px}
+#boxSplit .srOnly{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+#boxSplit .splitHead{margin:14px 0 8px}
+@media(max-width:430px){#boxSplit .splitColumns{grid-template-columns:18px minmax(0,1fr) minmax(0,1fr) 28px;gap:4px}}
