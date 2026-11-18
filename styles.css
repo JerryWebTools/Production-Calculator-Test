@@ -638,3 +638,34 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #bulkCalc .bulkEaStepper button{border:1px solid var(--edge);background:var(--input);color:var(--fg);border-radius:10px;font-size:28px;font-weight:700;min-height:52px;touch-action:manipulation}
 #bulkCalc .bulkEaStepper button:active{background:var(--accent);color:#fff}
 @media(max-width:540px){#bulkCalc .bulkEaStepper{grid-template-columns:42px minmax(0,1fr) 42px;gap:4px}#bulkCalc .bulkEaStepper button{font-size:24px;min-height:50px}}
+
+/* TEST: Quick Calculator two related tones, always derived from Settings accent. */
+#quick .quickKeys button{background:color-mix(in srgb,var(--accent) 78%,var(--panel));border-color:color-mix(in srgb,var(--accent) 60%,var(--edge));color:#fff}
+#quick .quickKeys button[data-key="+"],#quick .quickKeys button[data-key="−"],#quick .quickKeys button[data-key="×"],#quick .quickKeys button[data-key="÷"],#quick .quickKeys button[data-key="%"],#quick .quickKeys button[data-key="±"]{background:color-mix(in srgb,var(--accent) 58%,var(--bg));border-color:color-mix(in srgb,var(--accent) 72%,var(--edge));color:#fff}
+#quick .quickKeys button[data-key="="]{background:var(--accent);border-color:var(--accent);color:#fff}
+#quick .quickKeys button[data-key="AC"],#quick .quickKeys button[data-key="⌫"]{background:color-mix(in srgb,var(--accent) 40%,var(--panel));color:var(--fg)}
+#quick .quickKeys button:hover{filter:brightness(1.1)}
+/* TEST: PO Box Split uses only theme tokens. */
+#boxSplit{max-width:850px;margin:0 auto}
+#boxSplit .boxSplitPanel{margin:12px 0}
+#boxSplit .boxSplitPanel>label{display:block;margin:12px 0}
+#boxSplit .boxSplitPanel>label input{display:block;width:100%;margin-top:7px;font-size:19px}
+#boxSplit .splitHead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:18px 0 8px}
+#boxSplit .splitRow{display:grid;grid-template-columns:24px minmax(0,1fr) minmax(0,1fr) 34px;gap:7px;align-items:end;margin-bottom:10px}
+#boxSplit .splitRow label{min-width:0;font-size:12px}
+#boxSplit .splitRow input{width:100%;min-width:0;font-size:17px;margin-top:6px;padding:10px 7px}
+#boxSplit .splitIndex{font-weight:800;align-self:center;text-align:center;color:var(--muted)}
+#boxSplit .splitRemove{padding:0;min-height:42px;font-size:22px}
+#boxSplit .splitAdd{display:block;margin:10px auto 18px}
+#boxSplit .splitTotal{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px;border-radius:12px;background:var(--bg)}
+#boxSplit .splitCards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}
+#boxSplit .splitCards .card{min-width:0;background:var(--bg)}
+#boxSplit .splitCards .number{font-size:clamp(20px,5vw,32px);overflow-wrap:anywhere}
+#boxSplit .splitCards p{overflow-wrap:anywhere}
+#boxSplit details{margin-top:16px}
+#boxSplit .detailrow{gap:12px}
+#boxSplit .detailrow strong{text-align:right;overflow-wrap:anywhere}
+#boxSplit .splitConfirm{position:fixed;inset:0;z-index:110;background:rgba(0,0,0,.72);display:grid;place-items:center;padding:18px}
+#boxSplit .splitConfirm[hidden]{display:none!important}
+#boxSplit .splitConfirm>.card{max-width:440px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+@media(max-width:430px){#boxSplit .splitRow{grid-template-columns:18px minmax(0,1fr) minmax(0,1fr) 28px;gap:4px}#boxSplit .splitRow input{font-size:16px;padding:9px 4px}#boxSplit .splitCards{gap:7px}#boxSplit .splitCards .card{padding:9px}}
