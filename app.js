@@ -886,7 +886,7 @@ function splitRender(){
  const host=$('splitRows');host.replaceChildren();
  splitRows.forEach((box,i)=>{
   const row=document.createElement('div');row.className='splitRow';
-  row.innerHTML='<span class="splitIndex">'+(i+1)+'</span><label><span class="srOnly">Gross box '+(i+1)+'</span><input type="number" min="0" step="any" inputmode="decimal" aria-label="Box '+(i+1)+' Gross" placeholder="Gross"></label><label><span class="srOnly">Tare box '+(i+1)+'</span><input type="number" min="0" step="any" inputmode="decimal" aria-label="Box '+(i+1)+' Tare" placeholder="Tare"></label><button type="button" class="secondary splitRemove" aria-label="Remove box '+(i+1)+'">×</button>';
+  row.innerHTML='<span class="splitIndex">'+(i+1)+'</span><label><span class="srOnly">Gross box '+(i+1)+'</span><input type="number" min="0" step="any" inputmode="decimal" aria-label="Box '+(i+1)+' Gross" placeholder="Gross"></label><label><span class="srOnly">Tare box '+(i+1)+'</span><input type="number" min="0" step="any" inputmode="decimal" aria-label="Box '+(i+1)+' Tare" placeholder="Tare"></label><output class="splitNet" aria-label="Box '+(i+1)+' Net Weight">—</output><button type="button" class="secondary splitRemove" aria-label="Remove box '+(i+1)+'">×</button>';
   const inputs=row.querySelectorAll('input');inputs[0].value=box.gross;inputs[1].value=box.tare;
   inputs.forEach((el,k)=>el.addEventListener('input',()=>{box[k===0?'gross':'tare']=el.value;splitCalculate();}));
   row.querySelector('button').addEventListener('click',()=>{if(splitRows.length<=1)return;splitRows.splice(i,1);splitRender();});
@@ -898,7 +898,10 @@ function splitCalculate(){
  const target=splitNum($('splitTarget').value),result=$('splitResults'),total=$('splitTotal');
  const valid=splitRows.map((b,i)=>({i,gross:splitNum(b.gross),tare:splitNum(b.tare)}));
  const entered=valid.filter(x=>x.gross!==null||x.tare!==null);
- if(!entered.length){total.textContent='';result.innerHTML='<p class="muted">Enter Gross and Tare weights to calculate the split.</p>';return;}
+ const netOutputs=$('splitRows').querySelectorAll('.splitNet');
+ valid.forEach((x,i)=>{const net=x.gross!==null&&x.tare!==null&&x.gross>=x.tare?x.gross-x.tare:null;if(netOutputs[i])netOutputs[i].textContent=net===null?'—':fmt(net,3);});
+
+ if(!entered.length){total.textContent='Total Net: —';result.innerHTML='<p class="muted">Enter Gross and Tare weights to calculate the split.</p>';return;}
  if(entered.some(x=>x.gross===null||x.tare===null||x.tare>x.gross)){
   total.textContent='';result.innerHTML='<p class="error">Each entered box needs valid Gross and Tare; Tare cannot exceed Gross.</p>';return;
  }
