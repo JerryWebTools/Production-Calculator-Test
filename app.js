@@ -907,7 +907,7 @@ function splitCalculate(){
  }
  const boxes=entered.map(x=>({...x,net:x.gross-x.tare}));
  const totalNet=boxes.reduce((s,x)=>s+x.net,0);
- total.innerHTML='<strong>Total Net: '+splitWeight(totalNet)+'</strong><span class="muted tiny">'+boxes.length+' boxes entered</span>';
+ total.innerHTML='<strong>Total Net: '+fmt(totalNet,1)+' KG / '+fmt(totalNet*F,1)+' LB</strong><span class="muted tiny">'+boxes.length+' boxes entered</span>';
  if(target===null||target<=0){result.innerHTML='<p class="muted">Enter Required PO NET to calculate the allocation.</p>';return;}
  if(totalNet+1e-8<target){result.innerHTML='<p class="error">Short '+splitWeight(target-totalNet)+' for the PO. Add more boxes or correct the weights.</p>';return;}
  let remaining=target,split=null;
