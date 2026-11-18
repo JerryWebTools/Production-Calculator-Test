@@ -698,3 +698,15 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #boxSplit .splitTotal{display:flex;flex-direction:column;align-items:stretch;gap:9px;padding:18px 16px}
 #boxSplit .splitTotal strong{display:block;font-size:clamp(22px,4.7vw,30px);line-height:1.3;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 @media(max-width:430px){#boxSplit .splitColumns,#boxSplit .splitRow{grid-template-columns:16px minmax(0,1fr) minmax(0,1fr) minmax(58px,.78fr) 26px;gap:4px}#boxSplit .splitRow input{font-size:16px}}
+
+/* PO Weight Calculator: use the app's Settings theme and consistent numeric hierarchy. */
+#boxSplit .splitColumns,#boxSplit .splitRow{grid-template-columns:17px minmax(0,.9fr) minmax(0,.9fr) minmax(92px,1.15fr) 27px;gap:5px}
+#boxSplit .splitRow input{font-size:16px;background:var(--input);color:var(--fg);border-color:var(--edge)}
+#boxSplit .splitNet{font-size:clamp(13px,3.3vw,16px);white-space:nowrap;overflow-wrap:normal;background:var(--input);color:var(--fg);border-color:var(--accent);font-variant-numeric:tabular-nums}
+#boxSplit .splitTotal{background:var(--panel);border:2px solid var(--accent);color:var(--fg);padding:19px 16px;gap:5px}
+#boxSplit .splitTotalLabel{font-size:18px;font-weight:750;color:var(--fg)}
+#boxSplit .splitTotalKg{font-size:clamp(34px,7.5vw,54px);line-height:1.12;letter-spacing:-.8px;font-weight:850;white-space:nowrap;overflow-wrap:normal}
+#boxSplit .splitTotalLb{font-size:clamp(17px,4vw,23px);font-weight:650;color:var(--muted);font-variant-numeric:tabular-nums}
+#boxSplit .splitCards .card{border-color:var(--accent);background:var(--panel)}
+#boxSplit .splitCards .number{color:var(--fg)}
+@media(max-width:430px){#boxSplit .splitColumns,#boxSplit .splitRow{grid-template-columns:16px minmax(0,.9fr) minmax(0,.9fr) minmax(83px,1.15fr) 26px;gap:4px}#boxSplit .splitNet{font-size:13px}}
