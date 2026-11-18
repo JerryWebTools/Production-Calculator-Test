@@ -710,3 +710,11 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #boxSplit .splitCards .card{border-color:var(--accent);background:var(--panel)}
 #boxSplit .splitCards .number{color:var(--fg)}
 @media(max-width:430px){#boxSplit .splitColumns,#boxSplit .splitRow{grid-template-columns:16px minmax(0,.9fr) minmax(0,.9fr) minmax(83px,1.15fr) 26px;gap:4px}#boxSplit .splitNet{font-size:13px}}
+
+/* PO calculator results: visible Settings accent, not just a thin border. */
+#boxSplit .splitTotal{background:var(--accent);border-color:var(--accent);color:#fff}
+#boxSplit .splitTotalLabel,#boxSplit .splitTotalKg{color:#fff}
+#boxSplit .splitTotalLb,#boxSplit .splitTotal .muted{color:#fff;opacity:.88}
+#boxSplit .splitCards .card{border:2px solid var(--accent);background:var(--panel)}
+#boxSplit .splitCards .card>strong{display:block;background:var(--accent);color:#fff;border-radius:7px;padding:8px;margin:-2px -2px 9px}
+#boxSplit .splitNet{border:2px solid var(--accent)}
