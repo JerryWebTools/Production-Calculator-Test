@@ -48,3 +48,5 @@ Current TEST app uses F=2.2046 LB/KG. Preserve working line-specific math.
 - Seven breakdown rows and one-decimal display retained; no formula change.
 
 - 2026-11-20: Breakdown typography refinement in TEST only (labels 16–17px, KG 18–19px, LB 13px; improved spacing). Awaiting user visual approval; math unchanged.
+
+- 2026-11-20: Implemented PO Weight Calculator EN/ES translation in TEST using existing Settings language; syntax checked, user mobile approval pending. No formula changes.
