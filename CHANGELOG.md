@@ -6,6 +6,11 @@ Created: 2026-11-20
 - Distinguish implemented, code-checked, browser-tested, and user-approved. Do not imply one means another.
 - Record commits for traceability. Production promotion requires explicit user approval.
 
+## 2026-11-20 — PO Calculation Breakdown hierarchy
+- User approved design: KG prominent on each row, LB smaller underneath, seven existing breakdown concepts retained.
+- Implemented in TEST in `app.js` and `styles.css`; asset version refreshed in `index.html`.
+- Code structure reviewed; mobile visual confirmation still pending. No calculation formula changes.
+
 ## 2026-11-20 — Documentation baseline
 - Added `DESIGN_SYSTEM.md`, `CHANGELOG.md`, `AGENTS.md` and updated `PROJECT_MEMORY.md`.
 - Purpose: make existing Quick Seed Calculator visual patterns the required reference for new tools.
