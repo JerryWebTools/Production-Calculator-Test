@@ -1,5 +1,5 @@
 # Production Calculator — Project Memory
-Updated: 2026-11-17
+Updated: 2026-11-20
 Status: Implementation authorized in TEST ONLY. Production must remain unchanged until explicit approval.
 Repositories: JerryWebTools/Production-Calculator-Test (TEST); JerryWebTools/Production-Calculator (PRODUCTION).
 Current TEST app uses F=2.2046 LB/KG. Preserve working line-specific math.
@@ -32,3 +32,12 @@ Current TEST app uses F=2.2046 LB/KG. Preserve working line-specific math.
 3. Run regression tests including above POs, unit conversions, samples, modes, iPhone responsive, offline.
 4. Keep PROJECT_MEMORY.md updated as changes land.
 5. Only promote to PRODUCTION after user tests and explicitly approves.
+
+## Design governance — added 2026-11-20
+- Mandatory reference: `DESIGN_SYSTEM.md`; assistant workflow: `AGENTS.md`; implementation history: `CHANGELOG.md`.
+- Consistency is a hard requirement. Quick Seed Calculator's **entire accent-colored input and results panels** are the visual reference for new tools, not merely colored buttons or isolated result tiles.
+- PO Weight Calculator is in TEST. Agreed: PO Required (KG), four starting Gross/Tare rows, calculated per-box Net, Add Box before Total Net, one displayed decimal, prominent KG and smaller LB, last-box PO/Return, reset confirmation.
+- PO Weight Calculator's most recent full-panel accent styling is implemented but **not yet visually approved** by user. Avoid describing it as complete until checked.
+- User requires one change at a time, checking existing code and approved demo first; no unrelated edits.
+- Bulk Line is paused. No promotion to production without explicit user approval.
+- This documentation update does not change app behavior, CSS, JS, or calculations.
