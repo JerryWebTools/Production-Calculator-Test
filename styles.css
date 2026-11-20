@@ -720,3 +720,9 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #boxSplit .splitCards .card{background:var(--panel);border:1px solid var(--edge);color:var(--fg)}
 #boxSplit .splitCards .card>strong{display:block;background:transparent;color:var(--fg);border:0;padding:0;margin:0;font-size:12px}
 #boxSplit .splitCards .number{color:var(--fg)}
+
+/* Match the existing #calc .twocards result cards: Settings accent fill. */
+#boxSplit .splitTotal,#boxSplit .splitCards .card{background:var(--accent);border:1px solid var(--accent);color:#fff}
+#boxSplit .splitTotalLabel,#boxSplit .splitTotalKg,#boxSplit .splitCards .card>strong,#boxSplit .splitCards .number{color:#fff}
+#boxSplit .splitTotalLb,#boxSplit .splitTotal .muted,#boxSplit .splitCards .card .muted{color:#fff;opacity:.88}
+#boxSplit .splitCards .card>strong{background:transparent;border:0;padding:0;margin:0;font-size:12px}
