@@ -909,7 +909,7 @@ function splitCalculate(){
  }
  const boxes=entered.map(x=>({...x,net:x.gross-x.tare}));
  const totalNet=boxes.reduce((s,x)=>s+x.net,0);
- total.innerHTML='<span class="splitTotalLabel">'+splitT('Total Net','NET total')+'</span><strong class="splitTotalKg">'+fmt(totalNet,1)+' KG</strong><span class="splitTotalLb">'+fmt(totalNet*F,1)+' LB</span><span class="muted tiny">'+boxes.length+' '+(boxes.length===1?'box':'boxes')+' entered</span>';
+ total.innerHTML='<span class="splitTotalLabel">'+splitT('Total Net','NET total')+'</span><strong class="splitTotalKg">'+fmt(totalNet,1)+' KG</strong><span class="splitTotalLb">'+fmt(totalNet*F,1)+' LB</span><span class="muted tiny">'+boxes.length+' '+(boxes.length===1?splitT('box entered','caja ingresada'):splitT('boxes entered','cajas ingresadas'))+'</span>';
  if(target===null||target<=0){result.innerHTML='<p class="muted">'+splitT('Enter Required PO NET to calculate the allocation.','Ingresa el NET requerido del PO para calcular la distribución.')+'</p>';return;}
  if(totalNet+1e-8<target){result.innerHTML='<p class="error">'+splitT('Short ','Faltan ')+splitWeight(target-totalNet)+splitT(' for the PO. Add more boxes or correct the weights.',' para el PO. Agrega más cajas o corrige los pesos.')+'</p>';return;}
  let remaining=target,split=null;
