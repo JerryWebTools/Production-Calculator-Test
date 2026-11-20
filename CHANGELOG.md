@@ -6,6 +6,11 @@ Created: 2026-11-20
 - Distinguish implemented, code-checked, browser-tested, and user-approved. Do not imply one means another.
 - Record commits for traceability. Production promotion requires explicit user approval.
 
+## 2026-11-20 — PO Weight Calculator EN/ES
+- Added PO-specific static labels to the existing translation dictionary, localized dynamic results, breakdown labels, box count, input placeholders and navigation title.
+- Used Settings language; retained calculations and theme. Syntax checked; iPhone/browser behavior and all translation states still require user verification.
+- Scope: TEST `app.js` and asset cache version in `index.html` only.
+
 ## 2026-11-20 — PO Breakdown typography refinement
 - Adjusted only CSS for the seven breakdown rows: label 16–17px, KG 18–19px, LB 13px; rebalanced available horizontal space and row padding.
 - Reference: user screenshot and approved Quick Seed result hierarchy. No changes to formulas, data or translations.
