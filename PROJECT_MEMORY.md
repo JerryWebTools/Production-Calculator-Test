@@ -41,3 +41,8 @@ Current TEST app uses F=2.2046 LB/KG. Preserve working line-specific math.
 - User requires one change at a time, checking existing code and approved demo first; no unrelated edits.
 - Bulk Line is paused. No promotion to production without explicit user approval.
 - This documentation update does not change app behavior, CSS, JS, or calculations.
+
+## PO Weight Calculator progress — 2026-11-20
+- User approved overall green accent full-panel design shown in screenshots.
+- User approved Calculation Breakdown layout with KG primary and LB smaller beneath; implemented in TEST, pending visual verification on iPhone.
+- Seven breakdown rows and one-decimal display retained; no formula change.
