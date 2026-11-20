@@ -6,6 +6,11 @@ Created: 2026-11-20
 - Distinguish implemented, code-checked, browser-tested, and user-approved. Do not imply one means another.
 - Record commits for traceability. Production promotion requires explicit user approval.
 
+## 2026-11-20 — PO Breakdown typography refinement
+- Adjusted only CSS for the seven breakdown rows: label 16–17px, KG 18–19px, LB 13px; rebalanced available horizontal space and row padding.
+- Reference: user screenshot and approved Quick Seed result hierarchy. No changes to formulas, data or translations.
+- Code change applied in TEST; visual verification on iPhone remains pending.
+
 ## 2026-11-20 — PO Calculation Breakdown hierarchy
 - User approved design: KG prominent on each row, LB smaller underneath, seven existing breakdown concepts retained.
 - Implemented in TEST in `app.js` and `styles.css`; asset version refreshed in `index.html`.
