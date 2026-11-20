@@ -6,6 +6,11 @@ Created: 2026-11-20
 - Distinguish implemented, code-checked, browser-tested, and user-approved. Do not imply one means another.
 - Record commits for traceability. Production promotion requires explicit user approval.
 
+## 2026-11-20 — PO Spanish terminology consistency
+- User requested consistent English NET / Spanish Neto throughout PO Weight Calculator.
+- Corrected Spanish static labels, dynamic totals, cards, breakdown rows, messages, and screen-reader box labels in TEST. No formulas or styling changed.
+- JS syntax verified; mobile visual confirmation pending.
+
 ## 2026-11-20 — PO Weight Calculator EN/ES
 - Added PO-specific static labels to the existing translation dictionary, localized dynamic results, breakdown labels, box count, input placeholders and navigation title.
 - Used Settings language; retained calculations and theme. Syntax checked; iPhone/browser behavior and all translation states still require user verification.
