@@ -741,3 +741,11 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #boxSplit .boxSplitPanel details{border-color:rgba(255,255,255,.4)}
 #boxSplit .boxSplitPanel summary{color:#fff}
 #boxSplit .boxSplitPanel .detailrow{border-color:rgba(255,255,255,.25)}
+
+/* PO Calculation Breakdown: KG primary, LB secondary, aligned like existing results. */
+#boxSplit .splitBreakRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;color:#fff}
+#boxSplit .splitBreakLabel{min-width:0;flex:1;line-height:1.35}
+#boxSplit .splitBreakValues{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex:0 0 auto;text-align:right;font-variant-numeric:tabular-nums}
+#boxSplit .splitBreakKg{font-size:16px;line-height:1.25;color:#fff;white-space:nowrap}
+#boxSplit .splitBreakLb{font-size:12px;line-height:1.3;color:rgba(255,255,255,.78);white-space:nowrap}
+@media(max-width:430px){#boxSplit .splitBreakRow{gap:8px}#boxSplit .splitBreakKg{font-size:15px}}
