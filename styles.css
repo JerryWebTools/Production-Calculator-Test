@@ -749,3 +749,11 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #boxSplit .splitBreakKg{font-size:16px;line-height:1.25;color:#fff;white-space:nowrap}
 #boxSplit .splitBreakLb{font-size:12px;line-height:1.3;color:rgba(255,255,255,.78);white-space:nowrap}
 @media(max-width:430px){#boxSplit .splitBreakRow{gap:8px}#boxSplit .splitBreakKg{font-size:15px}}
+
+/* PO Breakdown readability: balance labels with numeric values and available width. */
+#boxSplit .splitBreakRow{gap:14px;padding:13px 0;align-items:center}
+#boxSplit .splitBreakLabel{font-size:17px;font-weight:500;line-height:1.4;flex:1 1 48%;min-width:0}
+#boxSplit .splitBreakValues{flex:0 1 52%;min-width:0;gap:4px}
+#boxSplit .splitBreakKg{font-size:19px;font-weight:750;line-height:1.2;white-space:normal;overflow-wrap:normal}
+#boxSplit .splitBreakLb{font-size:13px;line-height:1.3;white-space:normal}
+@media(max-width:430px){#boxSplit .splitBreakRow{gap:10px;padding:12px 0}#boxSplit .splitBreakLabel{font-size:16px}#boxSplit .splitBreakKg{font-size:18px}#boxSplit .splitBreakLb{font-size:13px}}
