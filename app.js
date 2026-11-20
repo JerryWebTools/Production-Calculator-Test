@@ -914,7 +914,7 @@ function splitCalculate(){
  for(const box of boxes){if(remaining>box.net+1e-8){remaining-=box.net;continue;}split={...box,poNet:Math.max(0,remaining),returnNet:Math.max(0,box.net-remaining)};break;}
  if(!split){result.innerHTML='<p class="error">Unable to allocate the entered weights.</p>';return;}
  const before=target-split.poNet;
- const row=(name,value)=>'<div class="detailrow"><span>'+name+'</span><strong>'+splitWeight(value)+'</strong></div>';
+ const row=(name,value)=>'<div class="detailrow splitBreakRow"><span class="splitBreakLabel">'+name+'</span><span class="splitBreakValues"><strong class="splitBreakKg">'+fmt(value,1)+' KG</strong><small class="splitBreakLb">'+fmt(value*F,1)+' LB</small></span></div>';
  result.innerHTML='<p class="muted tiny">Box '+(split.i+1)+' · NET '+splitWeight(split.net)+'</p>'+
  '<div class="splitCards"><div class="card mini"><strong>PO NET — Last Box</strong><div class="number">'+fmt(split.poNet,1)+' KG</div><p class="muted tiny">Gross on scale: '+fmt(split.poNet+split.tare,1)+' KG (includes tare)</p></div>'+
  '<div class="card mini"><strong>RETURN NET</strong><div class="number">'+fmt(split.returnNet,1)+' KG</div><p class="muted tiny">Return Gross: '+fmt(split.returnNet+split.tare,1)+' KG if using the same tare</p></div></div>'+
