@@ -726,3 +726,18 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #boxSplit .splitTotalLabel,#boxSplit .splitTotalKg,#boxSplit .splitCards .card>strong,#boxSplit .splitCards .number{color:#fff}
 #boxSplit .splitTotalLb,#boxSplit .splitTotal .muted,#boxSplit .splitCards .card .muted{color:#fff;opacity:.88}
 #boxSplit .splitCards .card>strong{background:transparent;border:0;padding:0;margin:0;font-size:12px}
+
+/* Match Quick Seed Calculator's accent-colored input and results panels. */
+#boxSplit .boxSplitPanel{background:var(--accent);border:1px solid color-mix(in srgb,var(--accent),white 16%);color:#fff}
+#boxSplit .boxSplitPanel h2,#boxSplit .boxSplitPanel .splitHead,#boxSplit .boxSplitPanel .splitColumns,#boxSplit .boxSplitPanel label,#boxSplit .boxSplitPanel .muted{color:#fff}
+#boxSplit .boxSplitPanel>p.muted,#boxSplit .boxSplitPanel .tiny.muted{color:rgba(255,255,255,.83)}
+#boxSplit .boxSplitPanel input,#boxSplit .splitNet{background:var(--input);color:var(--fg);border:1px solid var(--edge)}
+#boxSplit .boxSplitPanel input::placeholder{color:var(--muted)}
+#boxSplit .boxSplitPanel .secondary{background:transparent;border:1px solid rgba(255,255,255,.8);color:#fff}
+#boxSplit .splitTotal{background:rgba(0,0,0,.17);border:1px solid rgba(255,255,255,.35);color:#fff}
+#boxSplit .splitTotalLabel,#boxSplit .splitTotalKg,#boxSplit .splitTotalLb,#boxSplit .splitTotal .muted{color:#fff}
+#boxSplit .splitCards .card{background:rgba(0,0,0,.17);border:1px solid rgba(255,255,255,.4);color:#fff}
+#boxSplit .splitCards .card>strong,#boxSplit .splitCards .number,#boxSplit .splitCards .card .muted{color:#fff}
+#boxSplit .boxSplitPanel details{border-color:rgba(255,255,255,.4)}
+#boxSplit .boxSplitPanel summary{color:#fff}
+#boxSplit .boxSplitPanel .detailrow{border-color:rgba(255,255,255,.25)}
