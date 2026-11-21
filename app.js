@@ -941,10 +941,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-16';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-17';
 const releaseNotes={
- en:{title:"What's New · TEST Build 16",items:["Quick Seed now shows 100 KS, PC 2500, 100 EA, 1% overpack, 1% chemical, and 5 KG samples as gray placeholders, not prefilled values. Reset clears all fields.","Chemical Weight changes Fill Weight only; Bag Tare changes Gross Bag Weight only.","Production line explanations show KG to 3 decimals and LB to 2 decimals."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
- es:{title:'Novedades · TEST Build 16',items:['Quick Seed muestra 100 KS, PC 2500, 100 EA, 1% overpack, 1% químico y 5 KG de muestras como ejemplos grises, sin llenar los campos. Reset limpia todo.','Chemical Weight solo cambia Fill Weight; Bag Tare solo cambia Gross Bag Weight.','Las explicaciones muestran KG con 3 decimales y LB con 2.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
+ en:{title:"What's New · TEST Build 17",items:["PO Weight Calculator: Gross, Tare, and Net values are now right-aligned.","Gross and Tare automatically format to one decimal when you leave the field (example: 1500 becomes 1,500.0).","Box Net and PO allocation still calculate live while you enter weights."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
+ es:{title:'Novedades · TEST Build 17',items:['PO Weight Calculator: los valores de Bruto, Tara y Neto ahora están alineados a la derecha.','Bruto y Tara muestran automáticamente un decimal al salir del campo (ejemplo: 1500 se convierte en 1,500.0).','El Neto de las cajas y la distribución del PO se siguen calculando mientras ingresas los pesos.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
