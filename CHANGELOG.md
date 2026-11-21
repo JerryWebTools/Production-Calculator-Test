@@ -9,6 +9,9 @@ Created: 2026-11-20
 
 
 
+## 2026-11-21 — Quick Seed unit button text correction
+- User screenshot confirmed Select Unit heading was already dark, but inactive MS/KG/LB buttons retained white text. Scoped dark text to yellow-accent inactive Quick Seed unit buttons; selected white button remains dark. Cache refreshed in `index.html`. TEST only; browser confirmation pending.
+
 ## 2026-11-21 — Quick Seed Yellow contrast follow-up
 - Corrected remaining pale/white hard-coded Quick Seed text on yellow surfaces: Select Unit, result explanations (`qsMeaning`), optional labels, LB values, Reset, and Pack All notes/status. Kept dark input fields and non-yellow accents unchanged.
 - Updated asset cache in `index.html`. CSS source reviewed; browser/mobile visual verification pending. TEST only.
