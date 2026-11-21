@@ -945,10 +945,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-19';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-20';
 const releaseNotes={
- en:{title:"What's New · TEST Build 19",items:["Quick Seed Calculation Breakdown → Order Details now includes Overpack, Chemical, Samples and Bag Tare.","If optional Bag Tare is empty, it shows Not entered; a typed zero displays 0.000 KG.","Calculation formulas and all other sections are unchanged."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
- es:{title:'Novedades · TEST Build 19',items:['Quick Seed → Desglose del cálculo → Detalles de la orden ahora incluye Overpack, Químico, Muestras y Tara de bolsa.','Si la tara opcional está vacía, aparece No ingresada; si escribes cero, muestra 0.000 KG.','Las fórmulas y las demás secciones no cambiaron.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
+ en:{title:"What's New · TEST Build 20",items:["Quick Seed Calculation Breakdown section headings are slightly larger and bolder for easier scanning.","Order Details, Per Bag, Order Totals and Seed Required are easier to distinguish.","No formulas, values or other layouts changed."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
+ es:{title:'Novedades · TEST Build 20',items:['Los títulos de las secciones de Desglose del cálculo en Quick Seed son un poco más grandes y destacados.','Detalles de la orden, Por bolsa, Totales de la orden y Semilla requerida se distinguen mejor.','No cambiaron fórmulas, valores ni otros diseños.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
