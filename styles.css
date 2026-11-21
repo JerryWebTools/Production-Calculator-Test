@@ -544,7 +544,7 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #quickSeed .qsField input{caret-color:#fff}
 
 /* Build 14: grouped order breakdown and explained calculation steps */
-#quickSeed .qsBreakHeading{font-size:14px;font-weight:800;color:var(--fg);margin:18px 0 8px;padding-bottom:7px;border-bottom:1px solid var(--edge)}
+#quickSeed .qsBreakHeading{font-size:17px;font-weight:800;color:var(--fg);margin:18px 0 8px;padding-bottom:7px;border-bottom:1px solid var(--edge)}
 #quickSeed .qsBreakHeading:first-child{margin-top:8px}
 #quickSeed .qsStepMeaning{font-size:13px;line-height:1.55;color:var(--fg);margin:7px 0 10px;opacity:.85}
 #quickSeed #qsBreakdown .detailrow{gap:10px;align-items:flex-start}
