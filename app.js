@@ -777,14 +777,19 @@ function renderQuickSeed(){syncQsOperation();saveQuickSeedDraft();const es=prefs
  const base=unit==='KS'?size*1000/pc/exactLbPerKg:unit==='MS'?size*1000000/pc/exactLbPerKg:unit==='LB'?size/exactLbPerKg:size;
  const overKg=base*over/100,seedWithOverpack=base+overKg;
  const chemicalKg=seedWithOverpack*chem/100,fill=seedWithOverpack+chemicalKg,gross=fill+tare;
- const orderSeed=seedWithOverpack*ea,raw=orderSeed+samples,total=Math.ceil(raw);
+ const orderSeed=seedWithOverpack*ea,raw=orderSeed+samples;
+ // Packing Only estimates finished treated fill weight; treatment modes use untreated seed.
+ const modeRaw=qsOperation==='pack'?fill*ea+samples:raw,total=Math.ceil(modeRaw);
  if(![base,overKg,seedWithOverpack,chemicalKg,fill,gross,orderSeed,raw,total].every(Number.isFinite)||!Number.isSafeInteger(total)){
    clear();$('qsError').textContent=t('The values are too large to calculate safely.','Los valores son demasiado grandes para calcular con seguridad.');$('qsError').hidden=false;return;
  }
  const kg=x=>fmt(x,3),lb=x=>fmt(x*exactLbPerKg,2),pct=x=>Number(x).toLocaleString('en-US',{maximumFractionDigits:5});
  const setWeight=(prefix,value,round=false)=>{$(prefix+'Kg').textContent=fmt(value,round?0:3)+' KG';$(prefix+'Lb').textContent=lb(value)+' LB';};
  setWeight('qsNet',base);setWeight('qsFill',fill);setWeight('qsGross',gross);setWeight('qsTotal',total,true);
- $('qsGrossCard').hidden=$('qsTare').value===''||tare<=0;
+ const fillCard=$('qsFillKg').closest('.qsSmallCard');if(fillCard)fillCard.hidden=qsOperation==='treat';
+ const totalMeaning=$('qsTotalKg').closest('.qsTotalCard')?.querySelector('.qsMeaning');
+ if(totalMeaning)totalMeaning.textContent=qsOperation==='pack'?t('Estimated treated fill weight for all bags plus samples, rounded up. Excludes empty-bag tare.','Peso estimado de llenado tratado para todas las bolsas más muestras, redondeado hacia arriba. No incluye tara.'):t('Untreated seed needed for the order, including overpack and samples. Excludes chemical and tare.','Semilla sin tratar necesaria para la orden, incluyendo overpack y muestras. Excluye químico y tara.');
+ $('qsGrossCard').hidden=qsOperation==='treat'||$('qsTare').value===''||tare<=0;
  renderPackAll({seedPerBag:seedWithOverpack,fillPerBag:fill,samples,chemicalPct:chem,ea});
 
  // Show a complete per-bag section first, then the matching totals for the entire order.
@@ -824,7 +829,7 @@ function renderQuickSeed(){syncQsOperation();saveQuickSeedDraft();const es=prefs
  addHeading(t('Seed Required','Semilla requerida'));
  addRow(t('Samples','Muestras'),weight(samples));
  addRow(t('Seed + Overpack + Samples','Semilla + Overpack + Muestras'),weight(raw));
- addRow(t('TOTAL SEED REQUIRED (rounded up)','SEMILLA TOTAL REQUERIDA (redondeada)'),weight(total));
+ addRow(qsOperation==='pack'?t('TOTAL TREATED FILL (rounded up)','LLENADO TRATADO TOTAL (redondeado)'):t('TOTAL SEED TO TREAT (rounded up)','SEMILLA TOTAL PARA TRATAR (redondeada)'),weight(total));
 
  const conversion=needsPc
    ?pct(size)+' '+unit+' × '+(unit==='KS'?'1,000':'1,000,000')+' = '+fmt(size*(unit==='KS'?1000:1000000),0)+' '+t('seeds','semillas')+'\n'+fmt(size*(unit==='KS'?1000:1000000),0)+' ÷ '+pct(pc)+' PC = '+lb(base)+' LB\n'+lb(base)+' LB ÷ '+exactLbPerKg+' = '+kg(base)+' KG'
@@ -867,10 +872,11 @@ function renderQuickSeed(){syncQsOperation();saveQuickSeedDraft();const es=prefs
  }
  ];
  const guide=$('qsGuide');guide.replaceChildren();
+ const visibleSteps=qsOperation==='treat'?steps.filter((_,i)=>![3,4,5].includes(i)):qsOperation==='pack'?steps.filter((_,i)=>i!==2):steps;
  const intro=document.createElement('p');intro.className='muted tiny';
  intro.textContent=t('Steps display rounded numbers, but calculations use full internal precision. KG: 3 decimals; LB: 2 decimals.','Los pasos muestran números redondeados, pero los cálculos usan precisión interna completa. KG: 3 decimales; LB: 2 decimales.');
  guide.append(intro);
- steps.forEach((step,i)=>{
+ visibleSteps.forEach((step,i)=>{
   const section=document.createElement('section');section.className='guideStep';
   const h=document.createElement('strong');h.textContent=(i+1)+'. '+step.title;
   const desc=document.createElement('p');desc.className='qsStepMeaning';desc.textContent=step.explanation;
