@@ -60,3 +60,5 @@ Current TEST app uses F=2.2046 LB/KG. Preserve working line-specific math.
 - 2026-11-21: Yellow `#FACC15` accent requires near-black text (`#111827`) on yellow surfaces; other accent colors keep white text. TEST-only CSS implementation; user visual approval pending.
 
 - 2026-11-21: PO Weight Calculator TEST: user approved right-aligned Gross/Tare/Net weights and one-decimal auto-format for Gross/Tare on blur, with comma grouping. Implemented, pending user mobile verification; formulas unchanged.
+
+- 2026-11-21: TEST What's New advanced to Build 17, bilingual announcement for PO weight alignment and automatic one-decimal formatting; pending user verification.
