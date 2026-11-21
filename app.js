@@ -957,10 +957,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-23';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-24';
 const releaseNotes={
- en:{title:"What's New · TEST Build 23",items:["Removed the seedling icon from the Quick Seed Calculator home button.","Updated its description to: Treating • Treating & Packing • Packing.","No calculation formulas changed."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
- es:{title:"Novedades · TEST Build 23",items:["Se quitó el ícono de la opción Quick Seed Calculator en la pantalla principal.","La descripción ahora dice: Treating • Treating & Packing • Packing.","No se modificaron las fórmulas."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
+ en:{title:"What's New · TEST Build 24",items:["Quick Seed Reset confirmation now appears as a centered pop-up over a dimmed background.","Cancel keeps the calculation; Reset clears it only after confirmation.","No calculation formulas changed."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
+ es:{title:"Novedades · TEST Build 24",items:["La confirmación de Reset en Quick Seed ahora aparece en una ventana emergente centrada.","Cancel conserva los datos; Reset los borra únicamente al confirmar.","No se modificaron las fórmulas."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -1032,7 +1032,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-23';
+const LOCAL_TEST_BUILD='v2.5-test-build-24';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
