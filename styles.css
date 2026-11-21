@@ -3,7 +3,7 @@
 /* v2.3 appearance and mobile quick calculator */
 :root{--accent:#2563eb;--bg:#0b1220;--fg:#e7eefc;--panel:#152033;--edge:#2c3d56;--input:#0b1627;--muted:#a5b4ca;background:var(--bg);color:var(--fg)}
 :root[data-theme="light"]{color-scheme:light;--bg:#f4f5f8;--fg:#17191e;--panel:#fff;--edge:#d9dee8;--input:#fff;--muted:#667085}
-:root[data-theme="oled"]{color-scheme:dark;--bg:#000000;--fg:#e7eefc;--panel:#101010;--edge:#303030;--input:#080808;--muted:#a5b4ca}
+
 body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-color:var(--edge)}.muted,.lines small{color:var(--muted)}label{color:var(--muted)}input,select{background:var(--input);color:var(--fg);border-color:var(--edge)}.primary,.lines button,.quickKeys button,.quickHome{background:var(--accent);border-color:var(--accent);color:white}.lines button small{color:white}.lines button{min-height:125px;text-align:center;border-radius:15px}.lines .quickHome{grid-column:1/-1;min-height:100px}.lines button:hover,.primary:hover,.quickKeys button:hover{filter:brightness(.92);background:var(--accent)}.secondary{background:var(--panel);color:var(--fg);border-color:var(--edge)}.link{color:var(--fg)}.pill{color:var(--fg);background:var(--panel)}.result{border-color:var(--edge)}.quickKeys{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-top:15px}.quickKeys button{height:72px;font-size:40px;line-height:1;border-radius:15px;padding:0;font-weight:550}.quickKeys button[data-key="AC"]{font-size:29px}.calcDisplay{background:var(--bg);padding:16px 12px;border-radius:14px;margin-top:12px;text-align:right;min-height:134px}.calcDisplay #quickExpression{min-height:20px;font-size:13px}.calcDisplay #quickNumber{font-size:clamp(36px,10vw,58px);font-weight:650;overflow-wrap:anywhere}.calcDisplay #quickConverted{font-size:23px;font-weight:650;margin-top:5px}.historyItem{display:flex;justify-content:space-between;width:100%;margin:6px 0;background:var(--panel);color:var(--fg);border-color:var(--edge);text-align:left}.historyItem small{color:var(--muted)}#preferences label{margin:14px 0}#preferences select{margin-top:8px}#packAllOutput{margin-top:15px}.sectionhead:has(#quickSummary){justify-content:flex-end;margin-bottom:8px}#quickSummary{font-size:14px}
 :root[data-theme="light"] .eyebrow,:root[data-theme="light"] footer{color:#667085}:root[data-theme="light"] .detailrow{border-color:#e5e7eb}:root[data-theme="light"] summary{color:#334155}:root[data-theme="light"] .secondary{color:#17191e}
 @media(max-width:390px){.quickKeys button{height:69px}.lines button{min-height:118px;font-size:17px}}
@@ -758,3 +758,20 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #boxSplit .splitBreakKg{font-size:19px;font-weight:750;line-height:1.2;white-space:normal;overflow-wrap:normal}
 #boxSplit .splitBreakLb{font-size:13px;line-height:1.3;white-space:normal}
 @media(max-width:430px){#boxSplit .splitBreakRow{gap:10px;padding:12px 0}#boxSplit .splitBreakLabel{font-size:16px}#boxSplit .splitBreakKg{font-size:18px}#boxSplit .splitBreakLb{font-size:13px}}
+
+/* Settings: approved visual theme and accent selectors */
+#preferences .prefVisualGroup{margin:18px 0;padding:14px;border:1px solid var(--edge);border-radius:14px;background:var(--panel)}
+#preferences .prefVisualGroup h3{margin:0 0 4px;font-size:18px;color:var(--fg)}
+#preferences .prefVisualGroup .muted{margin-bottom:12px}
+#preferences .prefNativeSelect{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+#preferences .prefThemeChoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#preferences .prefThemeChoice,#preferences .prefAccentChoice{display:flex;flex-direction:column;align-items:center;gap:7px;background:transparent;border:2px solid var(--edge);color:var(--fg);padding:8px;border-radius:12px;font-size:14px;min-width:0}
+#preferences .prefThemeChoice[aria-pressed="true"],#preferences .prefAccentChoice[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+#preferences .prefThemePreview{width:100%;height:65px;display:flex;align-items:flex-end;padding:9px;border-radius:8px}
+#preferences .prefThemePreview i{display:block;width:100%;height:30px;border-radius:6px}
+#preferences .prefLightPreview{background:#f4f5f8}#preferences .prefLightPreview i{background:#fff;border:1px solid #d9dee8}
+#preferences .prefDarkPreview{background:#0b1220}#preferences .prefDarkPreview i{background:#152033;border:1px solid #2c3d56}
+#preferences .prefAccentChoices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+#preferences .prefAccentChoice{font-size:12px;padding:7px 3px}
+#preferences .prefSwatch{display:block;width:100%;height:43px;border-radius:8px;border:1px solid rgba(128,128,128,.5)}
+@media(max-width:380px){#preferences .prefAccentChoices{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}#preferences .prefAccentChoice{font-size:11px}}
