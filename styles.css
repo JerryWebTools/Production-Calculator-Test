@@ -816,3 +816,16 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 :root[data-quick-accent="yellow"] #boxSplit .boxSplitPanel details{border-color:rgba(17,24,39,.4)}
 :root[data-quick-accent="yellow"] #quickSeed .qsUnitButton,
 :root[data-quick-accent="yellow"] #bulkCalc .qsUnitButton{color:#fff}
+
+/* Yellow contrast follow-up: Quick Seed remaining hard-coded pale text. */
+:root[data-quick-accent="yellow"] #quickSeed .qsUnitTitle,
+:root[data-quick-accent="yellow"] #quickSeed .qsMeaning,
+:root[data-quick-accent="yellow"] #quickSeed .qsOptional,
+:root[data-quick-accent="yellow"] #quickSeed .qsLb,
+:root[data-quick-accent="yellow"] #quickSeed .qsReset,
+:root[data-quick-accent="yellow"] #quickSeed .qsPackAllIntro,
+:root[data-quick-accent="yellow"] #quickSeed .qsPackAllStatus,
+:root[data-quick-accent="yellow"] #quickSeed .qsPackAllMini small,
+:root[data-quick-accent="yellow"] #quickSeed .qsPackAllMini span,
+:root[data-quick-accent="yellow"] #quickSeed .qsPackAllHero span{color:#111827}
+:root[data-quick-accent="yellow"] #quickSeed .qsReset{border-color:rgba(17,24,39,.6)}
