@@ -704,6 +704,13 @@ window.returnBrainHome=home;
 // Net Seed / EA = base seed only. Fill = (base + overpack) × (1 + chemical %).
 // Seed to Treat = ceil((base + overpack) × EA + sample KG).
 // Chemical and bag tare NEVER increase Seed to Treat.
+const QS_DRAFT_KEY='production-calculator-quick-seed-draft-v1';
+const qsDraftFields=['qsSize','qsEa','qsPc','qsOver','qsChem','qsSamples','qsTare','qsAvailable'];
+let qsOperation='both';
+function saveQuickSeedDraft(){try{localStorage.setItem(QS_DRAFT_KEY,JSON.stringify({fields:Object.fromEntries(qsDraftFields.map(id=>[id,$(id).value])),unit:$('qsUnit').value,operation:qsOperation}));}catch(e){console.warn('Quick Seed draft could not be saved',e);}}
+function restoreQuickSeedDraft(){try{const raw=localStorage.getItem(QS_DRAFT_KEY);if(!raw)return;const draft=JSON.parse(raw);if(draft&&draft.fields){qsDraftFields.forEach(id=>{if(typeof draft.fields[id]==='string')$(id).value=draft.fields[id];});if(['KS','MS','KG','LB'].includes(draft.unit))$('qsUnit').value=draft.unit;if(['treat','both','pack'].includes(draft.operation))qsOperation=draft.operation;}}catch(e){console.warn('Quick Seed draft could not be restored',e);}}
+function syncQsOperation(){document.querySelectorAll('[data-qs-operation]').forEach(b=>{const active=b.dataset.qsOperation===qsOperation;b.classList.toggle('qsOperationActive',active);b.setAttribute('aria-pressed',String(active));});const heading=$('qsTotalHeading');if(heading)heading.textContent=qsOperation==='pack'?'TOTAL SEED FOR PACKING':qsOperation==='treat'?'TOTAL SEED TO TREAT':'TOTAL SEED REQUIRED';}
+restoreQuickSeedDraft();
 function openQuickSeed(){
  show('quickSeed');title('Quick Seed Calculator','Manual seed and bag weight calculation');
  renderQuickSeed();translateUI();window.scrollTo({top:0,behavior:'smooth'});
@@ -749,8 +756,7 @@ function renderPackAll(order){
   error.hidden=false;
  }
 }
-function renderQuickSeed(){
- const es=prefs.language==='es',t=(en,sp)=>es?sp:en;
+function renderQuickSeed(){syncQsOperation();saveQuickSeedDraft();const es=prefs.language==='es',t=(en,sp)=>es?sp:en;
  const unit=$('qsUnit').value,needsPc=unit==='KS'||unit==='MS';
  $('qsPcField').hidden=!needsPc;
  document.querySelectorAll('[data-qs-unit]').forEach(b=>{const active=b.dataset.qsUnit===unit;b.classList.toggle('qsUnitActive',active);b.setAttribute('aria-pressed',String(active));});
@@ -874,7 +880,7 @@ function renderQuickSeed(){
 }
 $('qsAvailable').addEventListener('input',renderQuickSeed);
 $('quickSeedHome').onclick=openQuickSeed;
-$('qsReset').onclick=()=>{['qsSize','qsEa','qsPc','qsOver','qsChem','qsSamples','qsTare','qsAvailable'].forEach(id=>$(id).value='');$('qsUnit').value='KS';renderQuickSeed();};
+$('qsReset').onclick=()=>{$('qsResetConfirm').hidden=false;$('qsCancelReset').focus();};$('qsCancelReset').onclick=()=>{$('qsResetConfirm').hidden=true;$('qsReset').focus();};$('qsConfirmReset').onclick=()=>{qsDraftFields.forEach(id=>$(id).value='');$('qsUnit').value='KS';qsOperation='both';try{localStorage.removeItem(QS_DRAFT_KEY);}catch(e){}$('qsResetConfirm').hidden=true;renderQuickSeed();};document.querySelectorAll('[data-qs-operation]').forEach(b=>b.addEventListener('click',()=>{qsOperation=b.dataset.qsOperation;renderQuickSeed();}));
 document.querySelectorAll('[data-qs-unit]').forEach(b=>b.addEventListener('click',()=>{$('qsUnit').value=b.dataset.qsUnit;renderQuickSeed();}));
 ['qsSize','qsEa','qsPc','qsOver','qsChem','qsSamples','qsTare'].forEach(id=>{
  const el=$(id);
