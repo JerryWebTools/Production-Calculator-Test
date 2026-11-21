@@ -1,4 +1,7 @@
 # Production Calculator TEST — Change Log
+## 2026-11-21 — PO box weight input alignment and formatting
+- TEST only: Gross/Tare editable inputs and Net output right-aligned. Gross/Tare use text with decimal keyboard to support grouping commas, auto-format to one decimal on blur; calculation continues on input and parser accepts commas. No formula changes. Cache refreshed; mobile verification pending.
+
 Created: 2026-11-20
 
 ## Logging rules
