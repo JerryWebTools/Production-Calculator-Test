@@ -829,3 +829,6 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 :root[data-quick-accent="yellow"] #quickSeed .qsPackAllMini span,
 :root[data-quick-accent="yellow"] #quickSeed .qsPackAllHero span{color:#111827}
 :root[data-quick-accent="yellow"] #quickSeed .qsReset{border-color:rgba(17,24,39,.6)}
+
+/* Yellow Quick Seed unit buttons: dark labels on golden-yellow inactive buttons. */
+:root[data-quick-accent="yellow"] #quickSeed .qsUnitButton:not(.qsUnitActive){color:#111827}
