@@ -8,6 +8,12 @@ Created: 2026-11-20
 
 
 
+
+## 2026-11-21 — Yellow accent foreground contrast
+- User requested dark text on the brighter Yellow `#FACC15` accent because white was hard to read.
+- Scoped CSS to `data-quick-accent="yellow"` for accent-filled buttons, Quick Seed, Bulk, PO Weight Calculator, and results; left dark input text and other accent colors unchanged. Updated `index.html` asset cache.
+- CSS/source inspected; browser/iPhone contrast verification pending. TEST only, no formulas changed.
+
 ## 2026-11-21 — Approved Settings redesign (corrected interpretation)
 - User approved visual Appearance (Light/Dark) and Accent Color swatches (seven colors), retaining existing EN/ES language and persisted selections.
 - Removed mistakenly added OLED Black appearance; previously stored `oled` falls back to Dark. Changed Black **accent** from `#3f3f46` to true black `#000000`; kept Yellow `#FACC15`.
