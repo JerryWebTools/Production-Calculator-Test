@@ -9,6 +9,10 @@ Created: 2026-11-20
 
 
 
+## 2026-11-21 — Quick Seed Yellow contrast follow-up
+- Corrected remaining pale/white hard-coded Quick Seed text on yellow surfaces: Select Unit, result explanations (`qsMeaning`), optional labels, LB values, Reset, and Pack All notes/status. Kept dark input fields and non-yellow accents unchanged.
+- Updated asset cache in `index.html`. CSS source reviewed; browser/mobile visual verification pending. TEST only.
+
 ## 2026-11-21 — Yellow accent foreground contrast
 - User requested dark text on the brighter Yellow `#FACC15` accent because white was hard to read.
 - Scoped CSS to `data-quick-accent="yellow"` for accent-filled buttons, Quick Seed, Bulk, PO Weight Calculator, and results; left dark input text and other accent colors unchanged. Updated `index.html` asset cache.
