@@ -885,16 +885,16 @@ document.querySelectorAll('[data-qs-unit]').forEach(b=>b.addEventListener('click
 
 // PO Weight Calculator: operator enters gross and tare for each box; last box is split by NET.
 const splitRows=[{gross:'',tare:''},{gross:'',tare:''},{gross:'',tare:''},{gross:'',tare:''}];
-function splitNum(value){const x=Number(value);return String(value).trim()!==''&&Number.isFinite(x)&&x>=0?x:null;}
+function splitNum(value){const x=Number(String(value).replace(/,/g,''));return String(value).trim()!==''&&Number.isFinite(x)&&x>=0?x:null;}
 function splitWeight(x){return fmt(x,1)+' KG / '+fmt(x*F,1)+' LB';}
 function splitT(en,es){return prefs.language==='es'?es:en;}
 function splitRender(){
  const host=$('splitRows');host.replaceChildren();
  splitRows.forEach((box,i)=>{
   const row=document.createElement('div');row.className='splitRow';
-  row.innerHTML='<span class="splitIndex">'+(i+1)+'</span><label><span class="srOnly">Gross box '+(i+1)+'</span><input type="number" min="0" step="any" inputmode="decimal" aria-label="Box '+(i+1)+' Gross" placeholder="'+splitT("Gross","Bruto")+'"></label><label><span class="srOnly">Tare box '+(i+1)+'</span><input type="number" min="0" step="any" inputmode="decimal" aria-label="Box '+(i+1)+' Tare" placeholder="'+splitT("Tare","Tara")+'"></label><output class="splitNet" aria-label="Box '+(i+1)+' Net Weight">—</output><button type="button" class="secondary splitRemove" aria-label="Remove box '+(i+1)+'">×</button>';
+  row.innerHTML='<span class="splitIndex">'+(i+1)+'</span><label><span class="srOnly">Gross box '+(i+1)+'</span><input type="text" inputmode="decimal" aria-label="Box '+(i+1)+' Gross" placeholder="'+splitT("Gross","Bruto")+'"></label><label><span class="srOnly">Tare box '+(i+1)+'</span><input type="text" inputmode="decimal" aria-label="Box '+(i+1)+' Tare" placeholder="'+splitT("Tare","Tara")+'"></label><output class="splitNet" aria-label="Box '+(i+1)+' Net Weight">—</output><button type="button" class="secondary splitRemove" aria-label="Remove box '+(i+1)+'">×</button>';
   const inputs=row.querySelectorAll('input');inputs[0].value=box.gross;inputs[1].value=box.tare;
-  inputs.forEach((el,k)=>el.addEventListener('input',()=>{box[k===0?'gross':'tare']=el.value;splitCalculate();}));
+  inputs.forEach((el,k)=>{const key=k===0?'gross':'tare';el.addEventListener('input',()=>{box[key]=el.value;splitCalculate();});el.addEventListener('blur',()=>{const value=splitNum(el.value);if(value!==null){box[key]=fmt(value,1);el.value=box[key];}splitCalculate();});});
   row.querySelector('button').addEventListener('click',()=>{if(splitRows.length<=1)return;splitRows.splice(i,1);splitRender();});
   host.append(row);
  });
