@@ -829,7 +829,7 @@ function renderQuickSeed(){syncQsOperation();saveQuickSeedDraft();const es=prefs
  addHeading(t('Seed Required','Semilla requerida'));
  addRow(t('Samples','Muestras'),weight(samples));
  addRow(t('Seed + Overpack + Samples','Semilla + Overpack + Muestras'),weight(raw));
- addRow(qsOperation==='pack'?t('TOTAL TREATED FILL (rounded up)','LLENADO TRATADO TOTAL (redondeado)'):t('TOTAL SEED TO TREAT (rounded up)','SEMILLA TOTAL PARA TRATAR (redondeada)'),weight(total));
+ addRow(qsOperation==='pack'?t('TOTAL SEED FOR PACKING (rounded up)','SEMILLA TOTAL PARA EMPACAR (redondeada)'):t('TOTAL SEED TO TREAT (rounded up)','SEMILLA TOTAL PARA TRATAR (redondeada)'),weight(total));
 
  const conversion=needsPc
    ?pct(size)+' '+unit+' × '+(unit==='KS'?'1,000':'1,000,000')+' = '+fmt(size*(unit==='KS'?1000:1000000),0)+' '+t('seeds','semillas')+'\n'+fmt(size*(unit==='KS'?1000:1000000),0)+' ÷ '+pct(pc)+' PC = '+lb(base)+' LB\n'+lb(base)+' LB ÷ '+exactLbPerKg+' = '+kg(base)+' KG'
