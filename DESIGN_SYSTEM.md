@@ -39,3 +39,5 @@ Status: Design reference for TEST. No UI code is changed by this document.
 ## Settings appearance (approved 2026-11-21)
 - Separate Appearance (Light and Dark only) from Accent Color (visual swatches); do not add an OLED appearance mode without explicit authorization.
 - Yellow accent `#FACC15`; Black accent true `#000000` (not gray). Preserve EN/ES and stored preferences.
+
+- Yellow accent `#FACC15` must use near-black text on yellow backgrounds (buttons, headings, results); other accents retain their existing foregrounds. Preserve legibility of dark input fields.
