@@ -62,3 +62,5 @@ Current TEST app uses F=2.2046 LB/KG. Preserve working line-specific math.
 - 2026-11-21: PO Weight Calculator TEST: user approved right-aligned Gross/Tare/Net weights and one-decimal auto-format for Gross/Tare on blur, with comma grouping. Implemented, pending user mobile verification; formulas unchanged.
 
 - 2026-11-21: TEST What's New advanced to Build 17, bilingual announcement for PO weight alignment and automatic one-decimal formatting; pending user verification.
+
+- 2026-11-21: Quick Seed label approved as TOTAL SEED REQUIRED / SEMILLA TOTAL REQUERIDA regardless of treatment status; TEST-only results/breakdown/guide and Build 18 announcement updated; user verification pending.
