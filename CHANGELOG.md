@@ -1,4 +1,7 @@
 # Production Calculator TEST — Change Log
+## 2026-11-21 — Quick Seed universal total seed label
+- User approved TOTAL SEED REQUIRED / SEMILLA TOTAL REQUERIDA for Quick Seed regardless of chemical percentage (Stand Alone may pack previously treated seed). Updated Quick Seed results, breakdown and guide labels in TEST only; formulas unchanged. What's New Build 18 bilingual. Visual verification pending.
+
 ## 2026-11-21 — What's New Build 17
 - TEST-only release notes updated in `app.js` to announce PO box alignment and one-decimal blur formatting, in EN/ES. New localStorage release key makes modal appear once per device for Build 17; index asset version refreshed. Browser verification pending.
 
