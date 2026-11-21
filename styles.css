@@ -775,3 +775,44 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #preferences .prefAccentChoice{font-size:12px;padding:7px 3px}
 #preferences .prefSwatch{display:block;width:100%;height:43px;border-radius:8px;border:1px solid rgba(128,128,128,.5)}
 @media(max-width:380px){#preferences .prefAccentChoices{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}#preferences .prefAccentChoice{font-size:11px}}
+
+/* Yellow accent: dark foreground for accessible contrast on light yellow surfaces. */
+:root[data-quick-accent="yellow"]{--accent-ink:#111827}
+:root[data-quick-accent="yellow"] .primary,
+:root[data-quick-accent="yellow"] .lines button,
+:root[data-quick-accent="yellow"] .lines button small,
+:root[data-quick-accent="yellow"] .quickHome,
+:root[data-quick-accent="yellow"] #quick .quickKeys button,
+:root[data-quick-accent="yellow"] #calc .twocards .card,
+:root[data-quick-accent="yellow"] #quickSeed .qsPanel,
+:root[data-quick-accent="yellow"] #quickSeed .qsPanel h2,
+:root[data-quick-accent="yellow"] #quickSeed .qsPanel .qsField,
+:root[data-quick-accent="yellow"] #quickSeed .qsPanel .qsUnitTitle,
+:root[data-quick-accent="yellow"] #quickSeed .qsPanel .qsExamples,
+:root[data-quick-accent="yellow"] #quickSeed .qsPanel .qsLb,
+:root[data-quick-accent="yellow"] #quickSeed .qsTotalCard,
+:root[data-quick-accent="yellow"] #quickSeed .qsSmallCard,
+:root[data-quick-accent="yellow"] #bulkCalc .qsPanel,
+:root[data-quick-accent="yellow"] #bulkCalc .qsPanel h2,
+:root[data-quick-accent="yellow"] #bulkCalc .qsPanel .qsField,
+:root[data-quick-accent="yellow"] #bulkCalc .qsPanel .qsUnitTitle,
+:root[data-quick-accent="yellow"] #bulkCalc .qsPanel .qsExamples,
+:root[data-quick-accent="yellow"] #bulkCalc .qsPanel .qsLb,
+:root[data-quick-accent="yellow"] #bulkCalc .qsTotalCard,
+:root[data-quick-accent="yellow"] #bulkCalc .qsSmallCard,
+:root[data-quick-accent="yellow"] #boxSplit .boxSplitPanel,
+:root[data-quick-accent="yellow"] #boxSplit .boxSplitPanel h2,
+:root[data-quick-accent="yellow"] #boxSplit .boxSplitPanel .splitHead,
+:root[data-quick-accent="yellow"] #boxSplit .boxSplitPanel .splitColumns,
+:root[data-quick-accent="yellow"] #boxSplit .boxSplitPanel label,
+:root[data-quick-accent="yellow"] #boxSplit .boxSplitPanel .muted,
+:root[data-quick-accent="yellow"] #boxSplit .boxSplitPanel>p.muted,
+:root[data-quick-accent="yellow"] #boxSplit .boxSplitPanel .tiny.muted,
+:root[data-quick-accent="yellow"] #boxSplit .splitTotal,
+:root[data-quick-accent="yellow"] #boxSplit .splitCards .card,
+:root[data-quick-accent="yellow"] #boxSplit .boxSplitPanel summary{color:var(--accent-ink)}
+:root[data-quick-accent="yellow"] #boxSplit .boxSplitPanel .secondary{color:var(--accent-ink);border-color:rgba(17,24,39,.65)}
+:root[data-quick-accent="yellow"] #boxSplit .boxSplitPanel .detailrow{border-color:rgba(17,24,39,.25)}
+:root[data-quick-accent="yellow"] #boxSplit .boxSplitPanel details{border-color:rgba(17,24,39,.4)}
+:root[data-quick-accent="yellow"] #quickSeed .qsUnitButton,
+:root[data-quick-accent="yellow"] #bulkCalc .qsUnitButton{color:#fff}
