@@ -54,3 +54,5 @@ Current TEST app uses F=2.2046 LB/KG. Preserve working line-specific math.
 - 2026-11-20: Terminology rule for PO Weight Calculator: English `NET`, Spanish `Neto` (including totals, cards, breakdown and messages). Implemented in TEST; user verification pending.
 
 - 2026-11-21: User authorized TEST-only Yellow accent `#FACC15` and a third `OLED Black` theme, retaining Dark and Light. Added OLED theme variables (`--bg:#000000`, near-black panels/inputs), Settings option, cache refresh. No formula changes. JS syntax verified; browser/mobile visual approval pending.
+
+- 2026-11-21 approved Settings design: Appearance has Light/Dark only; Accent Color has seven visual swatches, including Yellow `#FACC15` and true Black `#000000`. The prior OLED Black third appearance was a misunderstanding and removed. TEST implementation pending user visual confirmation; preserve EN/ES and saved settings.
