@@ -847,3 +847,9 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #qsOperationHelp[data-align="left"]{text-align:left}
 #qsOperationHelp[data-align="center"]{text-align:center}
 #qsOperationHelp[data-align="right"]{text-align:right}
+
+/* Quick Seed reset confirmation: true centered modal, including hidden state. */
+#qsResetConfirm[hidden]{display:none!important}
+#qsResetConfirm{position:fixed;inset:0;z-index:1200;display:grid;place-items:center;padding:18px;background:rgba(0,0,0,.76);overflow:auto}
+#qsResetConfirm>.card{width:min(100%,440px);max-height:calc(100dvh - 36px);overflow:auto;padding:22px;border-radius:16px;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+#qsResetConfirm .actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
