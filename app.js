@@ -793,6 +793,10 @@ function renderQuickSeed(){
  addRow(t('Pack Size','Tamaño de bolsa'),pct(size)+' '+unit);
  if(needsPc)addRow(t('Seed Count (PC)','Conteo de semillas (PC)'),pct(pc)+' '+t('seeds/LB','semillas/LB'));
  addRow(t('Quantity','Cantidad'),ea+' EA');
+ addRow(t('Overpack (%)','Overpack (%)'),pct(over)+'%');
+ addRow(t('Chemical (%)','Químico (%)'),pct(chem)+'%');
+ addRow(t('Samples (KG)','Muestras (KG)'),kg(samples)+' KG');
+ addRow(t('Bag Tare (KG)','Tara de bolsa (KG)'),$('qsTare').value===''?t('Not entered','No ingresada'):kg(tare)+' KG');
  addHeading(t('Per Bag (1 EA)','Por bolsa (1 EA)'));
  [
  [t('Net Seed / EA (before overpack)','Net Seed / EA (antes de overpack)'),weight(base)],
@@ -941,10 +945,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-18';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-19';
 const releaseNotes={
- en:{title:"What's New · TEST Build 18",items:["Quick Seed Calculator: TOTAL SEED TO TREAT is now TOTAL SEED REQUIRED, for treated and untreated packing orders.","The same wording is used in Quick Seed Calculation Breakdown and How Was This Calculated?","No calculation formulas or percentages changed."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
- es:{title:'Novedades · TEST Build 18',items:['Quick Seed Calculator: SEMILLA TOTAL PARA TRATAR ahora es SEMILLA TOTAL REQUERIDA, para órdenes tratadas y sin tratar.','La misma terminología se utiliza en el Desglose del cálculo y ¿Cómo se calculó?','No cambiaron las fórmulas ni los porcentajes.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
+ en:{title:"What's New · TEST Build 19",items:["Quick Seed Calculation Breakdown → Order Details now includes Overpack, Chemical, Samples and Bag Tare.","If optional Bag Tare is empty, it shows Not entered; a typed zero displays 0.000 KG.","Calculation formulas and all other sections are unchanged."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
+ es:{title:'Novedades · TEST Build 19',items:['Quick Seed → Desglose del cálculo → Detalles de la orden ahora incluye Overpack, Químico, Muestras y Tara de bolsa.','Si la tara opcional está vacía, aparece No ingresada; si escribes cero, muestra 0.000 KG.','Las fórmulas y las demás secciones no cambiaron.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
