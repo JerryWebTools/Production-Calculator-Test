@@ -66,3 +66,5 @@ Current TEST app uses F=2.2046 LB/KG. Preserve working line-specific math.
 - 2026-11-21: Quick Seed label approved as TOTAL SEED REQUIRED / SEMILLA TOTAL REQUERIDA regardless of treatment status; TEST-only results/breakdown/guide and Build 18 announcement updated; user verification pending.
 
 - 2026-11-21: User approved expanding Quick Seed Calculation Breakdown Order Details with Overpack, Chemical, Samples and optional Bag Tare; TEST Build 19 implemented, awaiting user visual verification. Formulas unchanged.
+
+- 2026-11-21: Quick Seed breakdown headings increased 14→17px in TEST, Build 20 What's New; awaiting user approval.
