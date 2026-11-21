@@ -832,3 +832,6 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 
 /* Yellow Quick Seed unit buttons: dark labels on golden-yellow inactive buttons. */
 :root[data-quick-accent="yellow"] #quickSeed .qsUnitButton:not(.qsUnitActive){color:#111827}
+
+/* Yellow Quick Seed selected unit: override generic yellow button text on white active surface. */
+:root[data-quick-accent="yellow"] #quickSeed .qsUnitButton.qsUnitActive{background:#fff;color:#111827;border-color:#fff}
