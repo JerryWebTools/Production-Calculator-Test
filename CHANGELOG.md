@@ -6,6 +6,13 @@ Created: 2026-11-20
 - Distinguish implemented, code-checked, browser-tested, and user-approved. Do not imply one means another.
 - Record commits for traceability. Production promotion requires explicit user approval.
 
+
+## 2026-11-21 — Yellow accent and OLED Black theme
+- User-authorized TEST-only appearance change: Yellow accent `#b88a00` → `#FACC15` in `app.js`.
+- Added `OLED Black` as a third Theme option in `index.html`, preserving existing Dark and Light; `styles.css` uses true-black `--bg:#000000` with near-black panels/inputs and neutral borders in OLED mode.
+- Refreshed asset cache query. No changes to calculations or other app functionality.
+- Verification: JavaScript syntax passed; source inspected for option and variables. Browser/iPhone visual and contrast testing pending user confirmation.
+
 ## 2026-11-20 — PO Spanish terminology consistency
 - User requested consistent English NET / Spanish Neto throughout PO Weight Calculator.
 - Corrected Spanish static labels, dynamic totals, cards, breakdown rows, messages, and screen-reader box labels in TEST. No formulas or styling changed.
