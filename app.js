@@ -779,7 +779,7 @@ function renderQuickSeed(){syncQsOperation();saveQuickSeedDraft();const es=prefs
  const chemicalKg=seedWithOverpack*chem/100,fill=seedWithOverpack+chemicalKg,gross=fill+tare;
  const orderSeed=seedWithOverpack*ea,raw=orderSeed+samples;
  // Packing Only estimates finished treated fill weight; treatment modes use untreated seed.
- const modeRaw=qsOperation==='pack'?fill*ea+samples:raw,total=Math.ceil(modeRaw);
+ const modeRaw=raw,total=Math.ceil(modeRaw); // Available seed and samples are measured before chemical treatment in all modes.
  if(![base,overKg,seedWithOverpack,chemicalKg,fill,gross,orderSeed,raw,total].every(Number.isFinite)||!Number.isSafeInteger(total)){
    clear();$('qsError').textContent=t('The values are too large to calculate safely.','Los valores son demasiado grandes para calcular con seguridad.');$('qsError').hidden=false;return;
  }
@@ -788,7 +788,7 @@ function renderQuickSeed(){syncQsOperation();saveQuickSeedDraft();const es=prefs
  setWeight('qsNet',base);setWeight('qsFill',fill);setWeight('qsGross',gross);setWeight('qsTotal',total,true);
  const fillCard=$('qsFillKg').closest('.qsSmallCard');if(fillCard)fillCard.hidden=qsOperation==='treat';
  const totalMeaning=$('qsTotalKg').closest('.qsTotalCard')?.querySelector('.qsMeaning');
- if(totalMeaning)totalMeaning.textContent=qsOperation==='pack'?t('Estimated treated fill weight for all bags plus samples, rounded up. Excludes empty-bag tare.','Peso estimado de llenado tratado para todas las bolsas más muestras, redondeado hacia arriba. No incluye tara.'):t('Untreated seed needed for the order, including overpack and samples. Excludes chemical and tare.','Semilla sin tratar necesaria para la orden, incluyendo overpack y muestras. Excluye químico y tara.');
+ if(totalMeaning)totalMeaning.textContent=t('Seed required before chemical, including overpack and samples. Chemical and bag tare are excluded in every operation mode.','Semilla requerida antes del químico, incluyendo overpack y muestras. Se excluyen químico y tara en todos los modos.');
  $('qsGrossCard').hidden=qsOperation==='treat'||$('qsTare').value===''||tare<=0;
  renderPackAll({seedPerBag:seedWithOverpack,fillPerBag:fill,samples,chemicalPct:chem,ea});
 
@@ -872,7 +872,7 @@ function renderQuickSeed(){syncQsOperation();saveQuickSeedDraft();const es=prefs
  }
  ];
  const guide=$('qsGuide');guide.replaceChildren();
- const visibleSteps=qsOperation==='treat'?steps.filter((_,i)=>![3,4,5].includes(i)):qsOperation==='pack'?steps.filter((_,i)=>i!==2):steps;
+ const visibleSteps=qsOperation==='treat'?steps.filter((_,i)=>![3,4,5].includes(i)):steps;
  const intro=document.createElement('p');intro.className='muted tiny';
  intro.textContent=t('Steps display rounded numbers, but calculations use full internal precision. KG: 3 decimals; LB: 2 decimals.','Los pasos muestran números redondeados, pero los cálculos usan precisión interna completa. KG: 3 decimales; LB: 2 decimales.');
  guide.append(intro);
