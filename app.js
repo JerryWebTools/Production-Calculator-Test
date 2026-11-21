@@ -704,6 +704,13 @@ window.returnBrainHome=home;
 // Net Seed / EA = base seed only. Fill = (base + overpack) × (1 + chemical %).
 // Seed to Treat = ceil((base + overpack) × EA + sample KG).
 // Chemical and bag tare NEVER increase Seed to Treat.
+const QS_DRAFT_KEY='production-calculator-quick-seed-draft-v1';
+const qsDraftFields=['qsSize','qsEa','qsPc','qsOver','qsChem','qsSamples','qsTare','qsAvailable'];
+let qsOperation='both';
+function saveQuickSeedDraft(){try{localStorage.setItem(QS_DRAFT_KEY,JSON.stringify({fields:Object.fromEntries(qsDraftFields.map(id=>[id,$(id).value])),unit:$('qsUnit').value,operation:qsOperation}));}catch(e){console.warn('Quick Seed draft could not be saved',e);}}
+function restoreQuickSeedDraft(){try{const raw=localStorage.getItem(QS_DRAFT_KEY);if(!raw)return;const draft=JSON.parse(raw);if(draft&&draft.fields){qsDraftFields.forEach(id=>{if(typeof draft.fields[id]==='string')$(id).value=draft.fields[id];});if(['KS','MS','KG','LB'].includes(draft.unit))$('qsUnit').value=draft.unit;if(['treat','both','pack'].includes(draft.operation))qsOperation=draft.operation;}}catch(e){console.warn('Quick Seed draft could not be restored',e);}}
+function syncQsOperation(){document.querySelectorAll('[data-qs-operation]').forEach(b=>{const active=b.dataset.qsOperation===qsOperation;b.classList.toggle('qsOperationActive',active);b.setAttribute('aria-pressed',String(active));});const heading=$('qsTotalHeading');if(heading)heading.textContent=qsOperation==='pack'?'TOTAL SEED FOR PACKING':qsOperation==='treat'?'TOTAL SEED TO TREAT':'TOTAL SEED REQUIRED';}
+restoreQuickSeedDraft();
 function openQuickSeed(){
  show('quickSeed');title('Quick Seed Calculator','Manual seed and bag weight calculation');
  renderQuickSeed();translateUI();window.scrollTo({top:0,behavior:'smooth'});
@@ -749,8 +756,7 @@ function renderPackAll(order){
   error.hidden=false;
  }
 }
-function renderQuickSeed(){
- const es=prefs.language==='es',t=(en,sp)=>es?sp:en;
+function renderQuickSeed(){syncQsOperation();saveQuickSeedDraft();const es=prefs.language==='es',t=(en,sp)=>es?sp:en;
  const unit=$('qsUnit').value,needsPc=unit==='KS'||unit==='MS';
  $('qsPcField').hidden=!needsPc;
  document.querySelectorAll('[data-qs-unit]').forEach(b=>{const active=b.dataset.qsUnit===unit;b.classList.toggle('qsUnitActive',active);b.setAttribute('aria-pressed',String(active));});
@@ -771,14 +777,19 @@ function renderQuickSeed(){
  const base=unit==='KS'?size*1000/pc/exactLbPerKg:unit==='MS'?size*1000000/pc/exactLbPerKg:unit==='LB'?size/exactLbPerKg:size;
  const overKg=base*over/100,seedWithOverpack=base+overKg;
  const chemicalKg=seedWithOverpack*chem/100,fill=seedWithOverpack+chemicalKg,gross=fill+tare;
- const orderSeed=seedWithOverpack*ea,raw=orderSeed+samples,total=Math.ceil(raw);
+ const orderSeed=seedWithOverpack*ea,raw=orderSeed+samples;
+ // Packing Only estimates finished treated fill weight; treatment modes use untreated seed.
+ const modeRaw=raw,total=Math.ceil(modeRaw); // Available seed and samples are measured before chemical treatment in all modes.
  if(![base,overKg,seedWithOverpack,chemicalKg,fill,gross,orderSeed,raw,total].every(Number.isFinite)||!Number.isSafeInteger(total)){
    clear();$('qsError').textContent=t('The values are too large to calculate safely.','Los valores son demasiado grandes para calcular con seguridad.');$('qsError').hidden=false;return;
  }
  const kg=x=>fmt(x,3),lb=x=>fmt(x*exactLbPerKg,2),pct=x=>Number(x).toLocaleString('en-US',{maximumFractionDigits:5});
  const setWeight=(prefix,value,round=false)=>{$(prefix+'Kg').textContent=fmt(value,round?0:3)+' KG';$(prefix+'Lb').textContent=lb(value)+' LB';};
  setWeight('qsNet',base);setWeight('qsFill',fill);setWeight('qsGross',gross);setWeight('qsTotal',total,true);
- $('qsGrossCard').hidden=$('qsTare').value===''||tare<=0;
+ const fillCard=$('qsFillKg').closest('.qsSmallCard');if(fillCard)fillCard.hidden=qsOperation==='treat';
+ const totalMeaning=$('qsTotalKg').closest('.qsTotalCard')?.querySelector('.qsMeaning');
+ if(totalMeaning)totalMeaning.textContent=t('Seed required before chemical, including overpack and samples. Chemical and bag tare are excluded in every operation mode.','Semilla requerida antes del químico, incluyendo overpack y muestras. Se excluyen químico y tara en todos los modos.');
+ $('qsGrossCard').hidden=qsOperation==='treat'||$('qsTare').value===''||tare<=0;
  renderPackAll({seedPerBag:seedWithOverpack,fillPerBag:fill,samples,chemicalPct:chem,ea});
 
  // Show a complete per-bag section first, then the matching totals for the entire order.
@@ -818,7 +829,7 @@ function renderQuickSeed(){
  addHeading(t('Seed Required','Semilla requerida'));
  addRow(t('Samples','Muestras'),weight(samples));
  addRow(t('Seed + Overpack + Samples','Semilla + Overpack + Muestras'),weight(raw));
- addRow(t('TOTAL SEED REQUIRED (rounded up)','SEMILLA TOTAL REQUERIDA (redondeada)'),weight(total));
+ addRow(qsOperation==='pack'?t('TOTAL SEED FOR PACKING (rounded up)','SEMILLA TOTAL PARA EMPACAR (redondeada)'):t('TOTAL SEED TO TREAT (rounded up)','SEMILLA TOTAL PARA TRATAR (redondeada)'),weight(total));
 
  const conversion=needsPc
    ?pct(size)+' '+unit+' × '+(unit==='KS'?'1,000':'1,000,000')+' = '+fmt(size*(unit==='KS'?1000:1000000),0)+' '+t('seeds','semillas')+'\n'+fmt(size*(unit==='KS'?1000:1000000),0)+' ÷ '+pct(pc)+' PC = '+lb(base)+' LB\n'+lb(base)+' LB ÷ '+exactLbPerKg+' = '+kg(base)+' KG'
@@ -861,10 +872,11 @@ function renderQuickSeed(){
  }
  ];
  const guide=$('qsGuide');guide.replaceChildren();
+ const visibleSteps=qsOperation==='treat'?steps.filter((_,i)=>![3,4,5].includes(i)):steps;
  const intro=document.createElement('p');intro.className='muted tiny';
  intro.textContent=t('Steps display rounded numbers, but calculations use full internal precision. KG: 3 decimals; LB: 2 decimals.','Los pasos muestran números redondeados, pero los cálculos usan precisión interna completa. KG: 3 decimales; LB: 2 decimales.');
  guide.append(intro);
- steps.forEach((step,i)=>{
+ visibleSteps.forEach((step,i)=>{
   const section=document.createElement('section');section.className='guideStep';
   const h=document.createElement('strong');h.textContent=(i+1)+'. '+step.title;
   const desc=document.createElement('p');desc.className='qsStepMeaning';desc.textContent=step.explanation;
@@ -874,7 +886,7 @@ function renderQuickSeed(){
 }
 $('qsAvailable').addEventListener('input',renderQuickSeed);
 $('quickSeedHome').onclick=openQuickSeed;
-$('qsReset').onclick=()=>{['qsSize','qsEa','qsPc','qsOver','qsChem','qsSamples','qsTare','qsAvailable'].forEach(id=>$(id).value='');$('qsUnit').value='KS';renderQuickSeed();};
+$('qsReset').onclick=()=>{$('qsResetConfirm').hidden=false;$('qsCancelReset').focus();};$('qsCancelReset').onclick=()=>{$('qsResetConfirm').hidden=true;$('qsReset').focus();};$('qsConfirmReset').onclick=()=>{qsDraftFields.forEach(id=>$(id).value='');$('qsUnit').value='KS';qsOperation='both';try{localStorage.removeItem(QS_DRAFT_KEY);}catch(e){}$('qsResetConfirm').hidden=true;renderQuickSeed();};document.querySelectorAll('[data-qs-operation]').forEach(b=>b.addEventListener('click',()=>{qsOperation=b.dataset.qsOperation;renderQuickSeed();}));
 document.querySelectorAll('[data-qs-unit]').forEach(b=>b.addEventListener('click',()=>{$('qsUnit').value=b.dataset.qsUnit;renderQuickSeed();}));
 ['qsSize','qsEa','qsPc','qsOver','qsChem','qsSamples','qsTare'].forEach(id=>{
  const el=$(id);

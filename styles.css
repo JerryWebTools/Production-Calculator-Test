@@ -839,3 +839,5 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 /* PO box weights: align editable Gross/Tare and computed Net to the right. */
 #boxSplit .splitRow input{text-align:right;font-variant-numeric:tabular-nums}
 #boxSplit .splitNet{justify-content:flex-end;text-align:right}
+
+.qsOrderHeading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.qsOrderHeading h2{margin:0}.qsOperation{margin-bottom:15px}.qsOperationButtons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:7px}.qsOperationButtons button{min-width:0;padding:11px 6px;font-size:12px;line-height:1.25;border:1px solid var(--edge);background:var(--panel);color:var(--fg);border-radius:10px}.qsOperationButtons button.qsOperationActive{background:#fff;color:#111827;border-color:#fff;font-weight:800}@media(max-width:390px){.qsOperationButtons{gap:5px}.qsOperationButtons button{font-size:11px;padding:10px 3px}}
