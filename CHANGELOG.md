@@ -1,4 +1,7 @@
 # Production Calculator TEST — Change Log
+## 2026-11-21 — Quick Seed breakdown heading visibility
+- TEST-only: increased `.qsBreakHeading` font size from 14px to 17px, retaining weight, color, spacing, and formula layout. What's New Build 20 bilingual; awaiting visual approval.
+
 ## 2026-11-21 — Quick Seed breakdown Order Details expanded
 - User-approved TEST-only change: Order Details in Quick Seed Calculation Breakdown now lists Overpack (%), Chemical (%), Samples (KG), and optional Bag Tare (KG), in addition to Pack Size, PC when applicable, and EA. Empty tare displays Not entered / No ingresada; explicitly entered zero remains zero. No math changes. What's New Build 19 bilingual; mobile/browser verification pending.
 
