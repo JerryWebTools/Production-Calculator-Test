@@ -957,10 +957,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-21';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-22';
 const releaseNotes={
- en:{title:"What's New · TEST Build 21",items:["Added three Operation Mode choices in Quick Seed: Treating Only, Treating & Packing, and Packing Only.","A short instruction below Operation Mode now changes with the selected choice.","Reset now requires confirmation, and Auto Save restores the current calculation when you return.","Quick Seed results and breakdown respond to the selected operation. Please verify calculations before use."],note:"TEST VERSION — NOT FOR PRODUCTION. Check calculations before use.",close:'Continue'},
- es:{title:'Novedades · TEST Build 21',items:['Se agregaron tres modos de operación en Quick Seed: solo tratamiento, tratamiento y empaque, y solo empaque.','Una breve instrucción debajo de Operation Mode cambia según el modo seleccionado.','Reset ahora pide confirmación y Auto Save conserva el cálculo para cuando regreses.','Los resultados y el desglose de Quick Seed responden al modo seleccionado. Verifica los cálculos antes de usar.'],note:'VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.',close:'Continuar'}
+ en:{title:"What's New · TEST Build 22",items:["Operation Mode instructions now align with the selected button: left for Treating Only, center for Treating & Packing, and right for Packing Only.","No calculation formulas were changed."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
+ es:{title:"Novedades · TEST Build 22",items:["Las instrucciones de Operation Mode ahora se alinean con el botón seleccionado: izquierda, centro o derecha.","No se modificaron las fórmulas."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -1032,7 +1032,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-21';
+const LOCAL_TEST_BUILD='v2.5-test-build-22';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
