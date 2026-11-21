@@ -1,4 +1,7 @@
 # Production Calculator TEST — Change Log
+## 2026-11-21 — Quick Seed breakdown Order Details expanded
+- User-approved TEST-only change: Order Details in Quick Seed Calculation Breakdown now lists Overpack (%), Chemical (%), Samples (KG), and optional Bag Tare (KG), in addition to Pack Size, PC when applicable, and EA. Empty tare displays Not entered / No ingresada; explicitly entered zero remains zero. No math changes. What's New Build 19 bilingual; mobile/browser verification pending.
+
 ## 2026-11-21 — Quick Seed universal total seed label
 - User approved TOTAL SEED REQUIRED / SEMILLA TOTAL REQUERIDA for Quick Seed regardless of chemical percentage (Stand Alone may pack previously treated seed). Updated Quick Seed results, breakdown and guide labels in TEST only; formulas unchanged. What's New Build 18 bilingual. Visual verification pending.
 
