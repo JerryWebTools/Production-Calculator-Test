@@ -7,6 +7,12 @@ Created: 2026-11-20
 - Record commits for traceability. Production promotion requires explicit user approval.
 
 
+
+## 2026-11-21 — Approved Settings redesign (corrected interpretation)
+- User approved visual Appearance (Light/Dark) and Accent Color swatches (seven colors), retaining existing EN/ES language and persisted selections.
+- Removed mistakenly added OLED Black appearance; previously stored `oled` falls back to Dark. Changed Black **accent** from `#3f3f46` to true black `#000000`; kept Yellow `#FACC15`.
+- Files: `index.html`, `styles.css`, `app.js`; no calculator formula changes. JS syntax checked; browser/mobile visual testing pending.
+
 ## 2026-11-21 — Yellow accent and OLED Black theme
 - User-authorized TEST-only appearance change: Yellow accent `#b88a00` → `#FACC15` in `app.js`.
 - Added `OLED Black` as a third Theme option in `index.html`, preserving existing Dark and Light; `styles.css` uses true-black `--bg:#000000` with near-black panels/inputs and neutral borders in OLED mode.
