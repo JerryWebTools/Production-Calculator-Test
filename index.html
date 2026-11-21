@@ -84,7 +84,7 @@
 
 <section id="quickSeed" hidden>
  <div class="qsPanel qsOrderPanel">
-  <h2>Enter Order Details</h2>
+  <div class="qsOrderHeading"><h2>Enter Order Details</h2><button id="qsReset" type="button" class="qsReset">↺ Reset</button></div><div class="qsOperation"><div class="qsUnitTitle">Operation Mode</div><div class="qsOperationButtons" role="group" aria-label="Operation Mode"><button type="button" data-qs-operation="treat" aria-pressed="false">Treating Only</button><button type="button" data-qs-operation="both" class="qsOperationActive" aria-pressed="true">Treating &amp; Packing</button><button type="button" data-qs-operation="pack" aria-pressed="false">Packing Only</button></div></div>
   <div class="qsPackRow">
    <label class="qsField qsPackSize">Pack Size
     <input id="qsSize" type="text" inputmode="decimal" autocomplete="off" placeholder="100">
@@ -130,9 +130,9 @@
   <p id="qsError" class="qsError" hidden role="alert"></p>
  </div>
  <div class="qsPanel qsResultPanel">
-  <div class="qsResultHeading"><h2>Results</h2><button id="qsReset" type="button" class="qsReset">↺ Reset</button></div>
+  <div class="qsResultHeading"><h2>Results</h2></div>
   <div class="qsTotalCard">
-   <strong>TOTAL SEED REQUIRED</strong>
+   <strong id="qsTotalHeading">TOTAL SEED REQUIRED</strong>
    <div class="qsTotalNumber" id="qsTotalKg">—</div>
    <div class="qsLb" id="qsTotalLb">—</div><p class="qsMeaning">Total seed required for the order, including overpack and samples. Excludes chemical weight and bag tare.</p>
   </div>
@@ -142,7 +142,7 @@
    <div id="qsGrossCard" class="qsSmallCard qsGrossCard" hidden><span>Gross Bag Weight / EA (with tare)</span><div class="qsSmallNumber" id="qsGrossKg">—</div><div class="qsLb" id="qsGrossLb">—</div><p class="qsMeaning">Fill weight plus bag tare. Shown only when tare is entered.</p></div>
   </div>
  </div>
- <div class="qsPanel qsPackAllPanel">
+ <div id="qsResetConfirm" class="splitConfirm" hidden><div class="card" role="dialog" aria-modal="true" aria-labelledby="qsConfirmTitle"><h2 id="qsConfirmTitle">Reset this calculation?</h2><p>All order details and current results will be cleared.</p><div class="actions"><button type="button" id="qsCancelReset" class="secondary">Cancel</button><button type="button" id="qsConfirmReset" class="primary">Reset</button></div></div></div><div class="qsPanel qsPackAllPanel">
   <h2>Pack All Calculator</h2>
   <label class="qsField qsAvailableField">Available Seed (KG) — Before Chemical
    <input id="qsAvailable" type="text" inputmode="decimal" placeholder="e.g. 1838" autocomplete="off">
