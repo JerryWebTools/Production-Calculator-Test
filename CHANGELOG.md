@@ -1,4 +1,7 @@
 # Production Calculator TEST — Change Log
+## 2026-11-21 — What's New Build 17
+- TEST-only release notes updated in `app.js` to announce PO box alignment and one-decimal blur formatting, in EN/ES. New localStorage release key makes modal appear once per device for Build 17; index asset version refreshed. Browser verification pending.
+
 ## 2026-11-21 — PO box weight input alignment and formatting
 - TEST only: Gross/Tare editable inputs and Net output right-aligned. Gross/Tare use text with decimal keyboard to support grouping commas, auto-format to one decimal on blur; calculation continues on input and parser accepts commas. No formula changes. Cache refreshed; mobile verification pending.
 
