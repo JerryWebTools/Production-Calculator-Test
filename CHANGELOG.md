@@ -9,6 +9,9 @@ Created: 2026-11-20
 
 
 
+## 2026-11-21 — Quick Seed selected unit contrast
+- User screenshot identified selected KS white-on-white text under Yellow accent. Added a specific yellow-only `.qsUnitButton.qsUnitActive` rule for black text on white background, leaving inactive buttons dark on gold. Refreshed CSS cache. TEST only; browser verification pending.
+
 ## 2026-11-21 — Quick Seed unit button text correction
 - User screenshot confirmed Select Unit heading was already dark, but inactive MS/KG/LB buttons retained white text. Scoped dark text to yellow-accent inactive Quick Seed unit buttons; selected white button remains dark. Cache refreshed in `index.html`. TEST only; browser confirmation pending.
 
