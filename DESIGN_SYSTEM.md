@@ -35,3 +35,7 @@ Status: Design reference for TEST. No UI code is changed by this document.
 5. Check Settings accent choices, light/dark, English/Spanish, iPhone responsive and input zoom; run available regression checks.
 6. Report what was actually tested and what still requires visual user approval. Never claim browser testing based on code inspection alone.
 7. Update `CHANGELOG.md` and `PROJECT_MEMORY.md` for each accepted implementation.
+
+## Settings appearance (approved 2026-11-21)
+- Separate Appearance (Light and Dark only) from Accent Color (visual swatches); do not add an OLED appearance mode without explicit authorization.
+- Yellow accent `#FACC15`; Black accent true `#000000` (not gray). Preserve EN/ES and stored preferences.
