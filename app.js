@@ -827,7 +827,7 @@ function renderQuickSeed(){syncQsOperation();saveQuickSeedDraft();const es=prefs
  addHeading(t('Seed Required','Semilla requerida'));
  addRow(t('Samples','Muestras'),weight(samples));
  addRow(t('Seed + Overpack + Samples','Semilla + Overpack + Muestras'),weight(raw));
- addRow(qsOperation==='pack'?t('TOTAL SEED FOR PACKING (rounded up)','SEMILLA TOTAL PARA EMPACAR (redondeada)'):t('TOTAL SEED TO TREAT (rounded up)','SEMILLA TOTAL PARA TRATAR (redondeada)'),weight(total));
+ addRow(qsOperation==='pack'?t('TOTAL SEED FOR PACKING (rounded up)','SEMILLA TOTAL PARA EMPACAR (redondeada)'):qsOperation==='both'?t('TOTAL SEED TO TREAT & PACK (rounded up)','SEMILLA TOTAL PARA TRATAR Y EMPACAR (redondeada)'):t('TOTAL SEED TO TREAT (rounded up)','SEMILLA TOTAL PARA TRATAR (redondeada)'),weight(total));
 
  const conversion=needsPc
    ?pct(size)+' '+unit+' × '+(unit==='KS'?'1,000':'1,000,000')+' = '+fmt(size*(unit==='KS'?1000:1000000),0)+' '+t('seeds','semillas')+'\n'+fmt(size*(unit==='KS'?1000:1000000),0)+' ÷ '+pct(pc)+' PC = '+lb(base)+' LB\n'+lb(base)+' LB ÷ '+exactLbPerKg+' = '+kg(base)+' KG'
@@ -955,10 +955,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-26';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-27';
 const releaseNotes={
- en:{title:"What's New · TEST Build 26",items:["Treating Only Calculation Breakdown now hides Chemical, Fill Weight and Bag Tare rows.","Net Seed, Overpack, Samples and Total Seed to Treat remain visible.","Treating & Packing and Packing Only retain their full breakdown. No formulas changed."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
- es:{title:"Novedades · TEST Build 26",items:["El desglose de Treating Only oculta las filas de químicos, peso de llenado y tara.","Se conservan semilla neta, overpack, muestras y total de semilla para tratar.","Los otros modos mantienen el desglose completo. No cambiaron las fórmulas."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
+ en:{title:"What's New · TEST Build 27",items:["Treating & Packing now shows TOTAL SEED TO TREAT & PACK in the Calculation Breakdown.","Treating Only and Packing Only keep their respective labels.","No calculation formulas changed."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
+ es:{title:"Novedades · TEST Build 27",items:["Treating & Packing ahora muestra TOTAL SEED TO TREAT & PACK en el desglose.","Treating Only y Packing Only conservan sus títulos correspondientes.","No se modificaron las fórmulas."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -1030,7 +1030,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-26';
+const LOCAL_TEST_BUILD='v2.5-test-build-27';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
