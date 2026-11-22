@@ -321,8 +321,8 @@ const originalText=new WeakMap();
 function translateUI(){const spanish=prefs.language==='es';document.querySelectorAll('button, label, h1, h2, strong, summary, .eyebrow, .pill, small, #preferences .prefVisualGroup h3, #preferences .prefVisualGroup p, #boxSplit .splitHead span, #boxSplit .boxSplitPanel > p, #boxSplit .splitColumns strong').forEach(el=>{if(el.closest('#quickHistory,#packAllOutput,#savedList,#breakdown'))return;for(const node of el.childNodes){if(node.nodeType!==3)continue;if(!originalText.has(node))originalText.set(node,node.nodeValue);const base=originalText.get(node);const trimmed=base.trim();if(!trimmed)continue;const clean=trimmed.replace(/^[←▦⚙️💾]+\s*/u,'');const t=translations[clean];if(t)node.nodeValue=spanish?base.replace(clean,t):base;}});const qs=$('quickSeed');if(qs){qs.querySelectorAll('*').forEach(el=>{if(el.closest('#qsBreakdown,#qsGuide')||el.matches('#qsOperationHelp,#qsChemHelp,#qsTotalHeading,#qsPackAllStatus,#qsPackAllDifferenceMessage,#qsError,#qsPackAllError,#qsTotalCard .qsMeaning'))return;for(const node of el.childNodes){if(node.nodeType!==3)continue;if(!originalText.has(node))originalText.set(node,node.nodeValue);const base=originalText.get(node),trimmed=base.trim();const translated=translations[trimmed];if(translated)node.nodeValue=spanish?base.replace(trimmed,translated):base;}});}const pageTitle=$('title'),pageSubtitle=$('subtitle');for(const el of [pageTitle,pageSubtitle]){if(!el)continue;const current=el.textContent;const english=Object.entries(translations).find(([en,sp])=>sp===current)?.[0]||current;const translated=translations[english];if(translated)el.textContent=spanish?translated:english;}const splitTarget=$('splitTarget');if(splitTarget)splitTarget.placeholder=spanish?'Ingresa el peso neto requerido':'Enter required NET';document.querySelectorAll('option').forEach(el=>{if(!el.dataset.originalLabel)el.dataset.originalLabel=el.textContent;const t=translations[el.dataset.originalLabel];el.textContent=spanish&&t?t:el.dataset.originalLabel;});}
 function openPrefs(){prefReturn=document.querySelector('#quick:not([hidden])')?'quick':document.querySelector('#quickSeed:not([hidden])')?'quickSeed':document.querySelector('#boxSplit:not([hidden])')?'boxSplit':document.querySelector('#calc:not([hidden])')?'calc':document.querySelector('#settings:not([hidden])')?'settings':'home';show('preferences');title('Settings','Language, theme and button color');applyPrefs();}
 function closePrefs(){show(prefReturn==='settings'?'calc':prefReturn);if(prefReturn==='home')home();else if(prefReturn==='quick')title('Quick Calculator','Calculator + Unit Converter');else if(prefReturn==='quickSeed'){title('Quick Seed Calculator','Manual seed and bag weight calculation');renderQuickSeed();}else if(prefReturn==='boxSplit'){title(splitT('PO Weight Calculator','Calculadora de peso del PO'),splitT('Gross / Tare / Net','Bruto / Tara / Neto'));splitRender();}else title(lineName(line),'Calculator');}
-function openQuick(from){qActive='right';$('percentPanel').hidden=true;quickReturn=from;show('quick');$('quickHistoryPanel').hidden=true;$('unitPanel').hidden=true;$('seedPanel').hidden=true;title('Quick Calculator','Calculator + Unit Converter');$('quickBack').textContent=from==='home'?'← Back to Home':`← Back to ${lineName(line)} Summary`;renderQuick();translateUI();}
-function backQuick(){if(quickReturn==='home')home();else{show('calc');title(lineName(line),'Calculator');calculate();}}
+function openQuick(from){qActive='right';$('percentPanel').hidden=true;quickReturn=from;show('quick');$('quickHistoryPanel').hidden=true;$('unitPanel').hidden=true;$('seedPanel').hidden=true;title('Quick Calculator','Calculator + Unit Converter');$('quickBack').textContent=from==='home'?'← Back to Home':from==='quickSeed'?'← Back to Quick Seed':`← Back to ${lineName(line)} Summary`;renderQuick();translateUI();}
+function backQuick(){if(quickReturn==='home')home();else if(quickReturn==='quickSeed')openQuickSeed();else{show('calc');title(lineName(line),'Calculator');calculate();}}
 const KG_TO_LB=2.2046226218487757;
 const convPairs={'kg-lb':['KG','LB',KG_TO_LB],'lb-kg':['LB','KG',1/KG_TO_LB],'g-oz':['g','oz',1/28.349523125],'oz-g':['oz','g',28.349523125],'ml-foz':['mL','fl oz',1/29.5735295625],'foz-ml':['fl oz','mL',29.5735295625],'l-gal':['L','gal',1/3.785411784],'gal-l':['gal','L',3.785411784]};
 function quickFmt(x){return Number.isFinite(x)?Number(x.toPrecision(14)).toLocaleString('en-US',{maximumFractionDigits:8}):'Error';}
@@ -711,10 +711,49 @@ let qsOperation='both';
 function saveQuickSeedDraft(){try{localStorage.setItem(QS_DRAFT_KEY,JSON.stringify({fields:Object.fromEntries(qsDraftFields.map(id=>[id,$(id).value])),unit:$('qsUnit').value,operation:qsOperation}));}catch(e){console.warn('Quick Seed draft could not be saved',e);}}
 function restoreQuickSeedDraft(){try{const raw=localStorage.getItem(QS_DRAFT_KEY);if(!raw)return;const draft=JSON.parse(raw);if(draft&&draft.fields){qsDraftFields.forEach(id=>{if(typeof draft.fields[id]==='string')$(id).value=draft.fields[id];});if(['KS','MS','KG','LB'].includes(draft.unit))$('qsUnit').value=draft.unit;if(['treat','both','pack'].includes(draft.operation))qsOperation=draft.operation;}}catch(e){console.warn('Quick Seed draft could not be restored',e);}}
 function syncQsOperation(){const chemField=$('qsChem'),chemHelp=$('qsChemHelp');if(chemField){const treatingOnly=qsOperation==='treat';chemField.disabled=treatingOnly;chemField.hidden=treatingOnly;const na=$('qsChemNA');if(na)na.hidden=!treatingOnly;chemField.placeholder=treatingOnly?'N/A':'1';chemField.setAttribute('aria-label',treatingOnly?'Chemical percentage not applicable for Treating Only':'Chemical percentage');if(chemHelp)chemHelp.textContent=prefs.language==='es'?(treatingOnly?'No requerido para Solo tratamiento':'Ejemplos: 1% normal · 1.2% arrugada · 0% sin tratar'):(treatingOnly?'Not required for Treating Only':'Examples: 1% Normal · 1.2% Shrunken · 0% Untreated');}document.querySelectorAll('[data-qs-operation]').forEach(b=>{const active=b.dataset.qsOperation===qsOperation;b.classList.toggle('qsOperationActive',active);b.setAttribute('aria-pressed',String(active));});const heading=$('qsTotalHeading');if(heading)heading.textContent=prefs.language==='es'?(qsOperation==='pack'?'SEMILLA TOTAL PARA EMPACAR':qsOperation==='treat'?'SEMILLA TOTAL PARA TRATAR':'SEMILLA TOTAL REQUERIDA'):(qsOperation==='pack'?'TOTAL SEED FOR PACKING':qsOperation==='treat'?'TOTAL SEED TO TREAT':'TOTAL SEED REQUIRED');const help=$('qsOperationHelp');if(help){const es=prefs.language==='es';const messages={treat:es?'Calcula la semilla necesaria para tratamiento, sin pesos de empaque.':'Calculate seed needed for treatment. No packing weights.',both:es?'Calcula la semilla para tratamiento y los pesos objetivo por bolsa.':'Calculate seed needed for treatment and target bag weights.',pack:es?'Calcula la semilla para empaque y los pesos objetivo por bolsa.':'Calculate seed needed for packing and target bag weights.'};help.textContent=messages[qsOperation]||messages.both;help.dataset.align=qsOperation==='treat'?'left':qsOperation==='pack'?'right':'center';}}
+const QS_ORDERS_KEY='production-calculator-quick-seed-saved-orders-v1';
+function qsReadOrders(){try{const v=JSON.parse(localStorage.getItem(QS_ORDERS_KEY)||'[]');return Array.isArray(v)?v:[]}catch{return []}}
+function qsWriteOrders(v){try{localStorage.setItem(QS_ORDERS_KEY,JSON.stringify(v));return true}catch{return false}}
+function qsSavedMessage(en,es){$('qsSaveMessage').textContent=prefs.language==='es'?es:en}
+function qsRenderOrders(){
+ const es=prefs.language==='es',target=$('qsSavedOrders');target.replaceChildren();
+ const orders=qsReadOrders();
+ if(!orders.length){const p=document.createElement('p');p.className='qsExamples';p.textContent=es?'Todavía no hay órdenes guardadas.':'No saved orders yet.';target.append(p);return}
+ orders.forEach(order=>{
+  const row=document.createElement('div');row.className='qsSavedItem';
+  const info=document.createElement('div');info.className='qsSavedInfo';
+  const name=document.createElement('strong');name.textContent=order.name;
+  const detail=document.createElement('small');detail.textContent=[order.operation==='treat'?(es?'Solo tratamiento':'Treating Only'):order.operation==='pack'?(es?'Solo empaque':'Packing Only'):(es?'Tratamiento y empaque':'Treating & Packing'),order.fields?.qsEa?order.fields.qsEa+' EA':'',order.date?new Date(order.date).toLocaleDateString(es?'es-US':'en-US'):''].filter(Boolean).join(' · ');
+  info.append(name,detail);
+  const actions=document.createElement('div');actions.className='qsSavedActions';
+  const load=document.createElement('button');load.type='button';load.textContent=es?'Abrir':'Open';load.onclick=()=>{
+   qsDraftFields.forEach(id=>{$(id).value=typeof order.fields?.[id]==='string'?order.fields[id]:''});
+   $('qsUnit').value=['KS','MS','KG','LB'].includes(order.unit)?order.unit:'KS';
+   qsOperation=['treat','both','pack'].includes(order.operation)?order.operation:'both';
+   $('qsOrderName').value=order.name;renderQuickSeed();qsSavedMessage('Order loaded.','Orden cargada.');window.scrollTo({top:0,behavior:'smooth'});
+  };
+  const del=document.createElement('button');del.type='button';del.className='qsDeleteOrder';del.textContent=es?'Eliminar':'Delete';del.onclick=()=>{
+   if(!confirm(es?'¿Eliminar esta orden guardada?':'Delete this saved order?'))return;
+   if(qsWriteOrders(qsReadOrders().filter(x=>x.id!==order.id))){qsRenderOrders();qsSavedMessage('Saved order deleted.','Orden guardada eliminada.')}else qsSavedMessage('Could not delete the order.','No se pudo eliminar la orden.');
+  };
+  actions.append(load,del);row.append(info,actions);target.append(row);
+ });
+}
+$('qsSaveOrder').onclick=()=>{
+ const name=$('qsOrderName').value.trim();const es=prefs.language==='es';
+ if(!name){qsSavedMessage('Enter an order name or number first.','Primero ingresa un nombre o número de orden.');$('qsOrderName').focus();return}
+ if($('qsTotalKg').textContent==='—'){qsSavedMessage('Complete a valid calculation before saving.','Completa un cálculo válido antes de guardar.');return}
+ const orders=qsReadOrders();
+ if(orders.some(x=>x.name.toLowerCase()===name.toLowerCase())&&!confirm(es?'Ya existe una orden con ese nombre. ¿Reemplazarla?':'An order with that name exists. Replace it?'))return;
+ const record={id:String(Date.now())+'-'+Math.random().toString(36).slice(2),name,date:new Date().toISOString(),fields:Object.fromEntries(qsDraftFields.map(id=>[id,$(id).value])),unit:$('qsUnit').value,operation:qsOperation};
+ const updated=[record,...orders.filter(x=>x.name.toLowerCase()!==name.toLowerCase())];
+ if(qsWriteOrders(updated)){qsRenderOrders();qsSavedMessage('Order saved on this device.','Orden guardada en este dispositivo.')}else qsSavedMessage('Could not save. Check device storage.','No se pudo guardar. Revisa el almacenamiento.');
+};
+$('qsQuickShortcut').onclick=()=>openQuick('quickSeed');
 restoreQuickSeedDraft();
 function openQuickSeed(){
  show('quickSeed');title('Quick Seed Calculator','Manual seed and bag weight calculation');
- renderQuickSeed();translateUI();window.scrollTo({top:0,behavior:'smooth'});
+ renderQuickSeed();translateUI();qsRenderOrders();window.scrollTo({top:0,behavior:'smooth'});
 }
 // Pack All works from available seed BEFORE chemical treatment.
 // Samples are reserved first; only full EA can be packed. The remainder is seed,
@@ -959,10 +998,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-31';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-32';
 const releaseNotes={
- en:{title:"What's New · TEST Build 31",items:["Pack All now shows a short instruction above the available seed field.","The field placeholder says Example and uses the current calculated total seed requirement in KG.","The example and instructions switch between English and Spanish."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
- es:{title:"Novedades · TEST Build 31",items:["Pack All ahora muestra una breve instrucción sobre el campo de semilla disponible.","El campo dice Ejemplo y muestra la cantidad total de semilla calculada en KG.","El ejemplo y las instrucciones cambian según el idioma seleccionado."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
+ en:{title:"What's New · TEST Build 32",items:["Save multiple Quick Seed orders using an operator-entered name or order number.","Open or delete saved orders; saved separately from Line 3 on this device.","Quick Calculator shortcut in Results returns to Quick Seed without losing the order."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
+ es:{title:"Novedades · TEST Build 32",items:["Guarda varias órdenes de Quick Seed con nombre o número de orden.","Abre o elimina órdenes guardadas, separadas de Line 3 en este dispositivo.","Acceso directo a Calculadora rápida en Results; regresa sin perder la orden."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -1034,7 +1073,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-31';
+const LOCAL_TEST_BUILD='v2.5-test-build-32';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
