@@ -709,7 +709,7 @@ const qsDraftFields=['qsSize','qsEa','qsPc','qsOver','qsChem','qsSamples','qsTar
 let qsOperation='both';
 function saveQuickSeedDraft(){try{localStorage.setItem(QS_DRAFT_KEY,JSON.stringify({fields:Object.fromEntries(qsDraftFields.map(id=>[id,$(id).value])),unit:$('qsUnit').value,operation:qsOperation}));}catch(e){console.warn('Quick Seed draft could not be saved',e);}}
 function restoreQuickSeedDraft(){try{const raw=localStorage.getItem(QS_DRAFT_KEY);if(!raw)return;const draft=JSON.parse(raw);if(draft&&draft.fields){qsDraftFields.forEach(id=>{if(typeof draft.fields[id]==='string')$(id).value=draft.fields[id];});if(['KS','MS','KG','LB'].includes(draft.unit))$('qsUnit').value=draft.unit;if(['treat','both','pack'].includes(draft.operation))qsOperation=draft.operation;}}catch(e){console.warn('Quick Seed draft could not be restored',e);}}
-function syncQsOperation(){document.querySelectorAll('[data-qs-operation]').forEach(b=>{const active=b.dataset.qsOperation===qsOperation;b.classList.toggle('qsOperationActive',active);b.setAttribute('aria-pressed',String(active));});const heading=$('qsTotalHeading');if(heading)heading.textContent=qsOperation==='pack'?'TOTAL SEED FOR PACKING':qsOperation==='treat'?'TOTAL SEED TO TREAT':'TOTAL SEED REQUIRED';const help=$('qsOperationHelp');if(help){const es=prefs.language==='es';const messages={treat:es?'Calcula la semilla necesaria para tratamiento, sin pesos de empaque.':'Calculate seed needed for treatment. No packing weights.',both:es?'Calcula la semilla para tratamiento y los pesos objetivo por bolsa.':'Calculate seed needed for treatment and target bag weights.',pack:es?'Calcula la semilla para empaque y los pesos objetivo por bolsa.':'Calculate seed needed for packing and target bag weights.'};help.textContent=messages[qsOperation]||messages.both;help.dataset.align=qsOperation==='treat'?'left':qsOperation==='pack'?'right':'center';}}
+function syncQsOperation(){const chemField=$('qsChem'),chemHelp=$('qsChemHelp');if(chemField){const treatingOnly=qsOperation==='treat';chemField.disabled=treatingOnly;chemField.placeholder=treatingOnly?'N/A':'1';chemField.setAttribute('aria-label',treatingOnly?'Chemical percentage not applicable for Treating Only':'Chemical percentage');if(chemHelp)chemHelp.textContent=treatingOnly?'Not required for Treating Only':'Examples: 1% Normal · 1.2% Shrunken · 0% Untreated';}document.querySelectorAll('[data-qs-operation]').forEach(b=>{const active=b.dataset.qsOperation===qsOperation;b.classList.toggle('qsOperationActive',active);b.setAttribute('aria-pressed',String(active));});const heading=$('qsTotalHeading');if(heading)heading.textContent=qsOperation==='pack'?'TOTAL SEED FOR PACKING':qsOperation==='treat'?'TOTAL SEED TO TREAT':'TOTAL SEED REQUIRED';const help=$('qsOperationHelp');if(help){const es=prefs.language==='es';const messages={treat:es?'Calcula la semilla necesaria para tratamiento, sin pesos de empaque.':'Calculate seed needed for treatment. No packing weights.',both:es?'Calcula la semilla para tratamiento y los pesos objetivo por bolsa.':'Calculate seed needed for treatment and target bag weights.',pack:es?'Calcula la semilla para empaque y los pesos objetivo por bolsa.':'Calculate seed needed for packing and target bag weights.'};help.textContent=messages[qsOperation]||messages.both;help.dataset.align=qsOperation==='treat'?'left':qsOperation==='pack'?'right':'center';}}
 restoreQuickSeedDraft();
 function openQuickSeed(){
  show('quickSeed');title('Quick Seed Calculator','Manual seed and bag weight calculation');
@@ -760,15 +760,15 @@ function renderQuickSeed(){syncQsOperation();saveQuickSeedDraft();const es=prefs
  const unit=$('qsUnit').value,needsPc=unit==='KS'||unit==='MS';
  $('qsPcField').hidden=!needsPc;
  document.querySelectorAll('[data-qs-unit]').forEach(b=>{const active=b.dataset.qsUnit===unit;b.classList.toggle('qsUnitActive',active);b.setAttribute('aria-pressed',String(active));});
- const ids=['qsSize','qsEa','qsOver','qsChem','qsSamples'];
+ const ids=['qsSize','qsEa','qsOver','qsSamples'];if(qsOperation!=='treat')ids.push('qsChem');
  const fieldsComplete=ids.every(id=>$(id).value!=='')&&(!needsPc||$('qsPc').value!=='');
  const size=Number($('qsSize').value),ea=Number($('qsEa').value),pc=Number($('qsPc').value);
- const over=Number($('qsOver').value),chem=Number($('qsChem').value),samples=Number($('qsSamples').value);
+ const over=Number($('qsOver').value),chem=qsOperation==='treat'?0:Number($('qsChem').value),samples=Number($('qsSamples').value);
  const tare=$('qsTare').value===''?0:Number($('qsTare').value);
  const clear=()=>{renderPackAll(null);['qsNetKg','qsNetLb','qsFillKg','qsFillLb','qsGrossKg','qsGrossLb','qsTotalKg','qsTotalLb'].forEach(id=>$(id).textContent='—');$('qsBreakdown').replaceChildren();$('qsGuide').replaceChildren();$('qsGrossCard').hidden=true;};
  $('qsError').hidden=true;
  if(!fieldsComplete){clear();return;}
- const numericFields=['qsSize','qsEa','qsPc','qsOver','qsChem','qsSamples','qsTare'];
+ const numericFields=['qsSize','qsEa','qsPc','qsOver','qsSamples','qsTare'];if(qsOperation!=='treat')numericFields.push('qsChem');
  const numericSyntax=numericFields.every(id=>id==='qsPc'&&!needsPc||id==='qsTare'&&$('qsTare').value===''||/^(?:\d+(?:\.\d*)?|\.\d+)$/.test($(id).value.trim()));
  const valid=numericSyntax&&Number.isFinite(size)&&size>0&&Number.isSafeInteger(ea)&&ea>0&&(!needsPc||Number.isFinite(pc)&&pc>0)&&
    [over,chem].every(x=>Number.isFinite(x)&&x>=0&&x<=100)&&[samples,tare].every(x=>Number.isFinite(x)&&x>=0);
