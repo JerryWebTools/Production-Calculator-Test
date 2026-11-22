@@ -866,7 +866,7 @@ function renderQuickSeed(){syncQsOperation();saveQuickSeedDraft();const es=prefs
  }]:[]),
  {
   title:t('Calculate Total Seed Required','Calcular semilla total requerida'),
-  explanation:t('Start with total seed plus overpack for all bags, then add the sample weight in KG. Round the result UP to the next whole KG. Chemical weight and bag tare are never included.','Comienza con la semilla total más overpack para todas las bolsas y agrega el peso de muestras en KG. Redondea HACIA ARRIBA al siguiente KG entero. Nunca incluyas químico ni tara.'),
+  explanation:t('Start with total seed plus overpack for all bags, then add the sample weight in KG. Round the result UP to the next whole KG. Chemical weight and bag tare are never included.','Comienza con la semilla total más sobrellenado para todas las bolsas y agrega el peso de muestras en KG. Redondea HACIA ARRIBA al siguiente KG entero. Nunca incluyas químico ni tara.'),
   math:kg(orderSeed)+' KG + '+kg(samples)+' KG '+t('samples','muestras')+' = '+kg(raw)+' KG\n'+t('Round up','Redondear hacia arriba')+': '+fmt(total,0)+' KG / '+lb(total)+' LB'
  }
  ];
@@ -956,10 +956,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-28';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-29';
 const releaseNotes={
- en:{title:"What's New · TEST Build 28",items:["Expanded Spanish translations throughout Quick Seed Calculator: operation modes, order fields, results, Pack All and instructions.","Updated dynamic labels, chemical guidance and Pack All messages to follow the selected language.","Calculation formulas and saved values were not changed."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
- es:{title:"Novedades · TEST Build 28",items:["Se ampliaron las traducciones de Quick Seed: modos, campos, resultados, Pack All e instrucciones.","Los mensajes dinámicos y las ayudas ahora siguen el idioma seleccionado.","No se modificaron las fórmulas ni los datos guardados."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
+ en:{title:"What's New · TEST Build 29",items:["Standardized Spanish terminology in Quick Seed Calculator: Net Seed is Semilla neta and Overpack is Sobrellenado.","Updated Calculation Breakdown and How Was This Calculated? headings, descriptions and formulas.","No calculation formulas or saved data changed."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
+ es:{title:"Novedades · TEST Build 29",items:["Se unificaron los términos del Quick Seed Calculator: Net Seed es Semilla neta y Overpack es Sobrellenado.","Se corrigieron títulos, descripciones y textos del desglose y de ¿Cómo se calculó?","No se modificaron las fórmulas ni los datos guardados."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -1031,7 +1031,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-28';
+const LOCAL_TEST_BUILD='v2.5-test-build-29';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
