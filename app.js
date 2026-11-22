@@ -873,8 +873,8 @@ function renderQuickSeed(){syncQsOperation();saveQuickSeedDraft();const es=prefs
  addRow(qsOperation==='pack'?t('TOTAL SEED FOR PACKING (rounded up)','SEMILLA TOTAL PARA EMPACAR (redondeada)'):qsOperation==='both'?t('TOTAL SEED TO TREAT & PACK (rounded up)','SEMILLA TOTAL PARA TRATAR Y EMPACAR (redondeada)'):t('TOTAL SEED TO TREAT (rounded up)','SEMILLA TOTAL PARA TRATAR (redondeada)'),weight(total));
 
  const conversion=needsPc
-   ?pct(size)+' '+unit+' × '+(unit==='KS'?'1,000':'1,000,000')+' = '+fmt(size*(unit==='KS'?1000:1000000),0)+' '+t('seeds','semillas')+'\n'+fmt(size*(unit==='KS'?1000:1000000),0)+' ÷ '+pct(pc)+' PC = '+lb(base)+' LB\n'+lb(base)+' LB ÷ '+exactLbPerKg+' = '+kg(base)+' KG'
-   :unit==='LB'?pct(size)+' LB ÷ '+exactLbPerKg+' = '+kg(base)+' KG':pct(size)+' KG = '+kg(base)+' KG';
+   ?pct(size)+' '+unit+' × '+(unit==='KS'?'1,000':'1,000,000')+' = '+fmt(size*(unit==='KS'?1000:1000000),0)+' '+t('seeds','semillas')+'\n'+fmt(size*(unit==='KS'?1000:1000000),0)+' ÷ '+pct(pc)+' PC = '+lb(base)+' LB\n'+lb(base)+' LB ÷ 2.20462 ≈ '+kg(base)+' KG'
+   :unit==='LB'?pct(size)+' LB ÷ 2.20462 ≈ '+kg(base)+' KG':pct(size)+' KG = '+kg(base)+' KG';
  const steps=[
  {
   title:t('Calculate Net Seed per Bag','Calcular semilla neta por bolsa'),
@@ -998,10 +998,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-34';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-35';
 const releaseNotes={
- en:{title:"What's New · TEST Build 34",items:["Unified black backgrounds and subtle blue borders across Quick Seed sections.","Kept blue accents for icons, inputs and calculation details.","Design-only change. Build 33 styling can be restored if preferred."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
- es:{title:"Novedades · TEST Build 34",items:["Fondos negros y bordes azules discretos unificados en Quick Seed.","Se conservan los detalles azules para iconos, campos y cálculos.","Cambio solo de diseño. Podemos recuperar el estilo de Build 33."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
+ en:{title:"What's New · TEST Build 35",items:["Shortened the displayed LB-to-KG conversion factor to 2.20462 with an approximate-equals sign.","Improved Calculation Breakdown alignment and wrapping on narrow screens.","All calculations retain the same full internal precision."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
+ es:{title:"Novedades · TEST Build 35",items:["La conversión visible de LB a KG ahora muestra 2.20462 y el símbolo de aproximación.","Mejor alineación y ajuste de líneas en Calculation Breakdown para teléfonos.","Todos los cálculos conservan su precisión interna."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -1073,7 +1073,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-34';
+const LOCAL_TEST_BUILD='v2.5-test-build-35';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
