@@ -998,10 +998,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-33';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-34';
 const releaseNotes={
- en:{title:"What's New · TEST Build 33",items:["Calculation Breakdown and How Was This Calculated? now have matching blue expandable cards.","The explanation sections are grouped together before Saved Orders.","Improved readability inside step-by-step formula cards. Calculations are unchanged."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
- es:{title:"Novedades · TEST Build 33",items:["Calculation Breakdown y How Was This Calculated? ahora tienen tarjetas azules desplegables con el mismo diseño.","Las dos secciones están juntas antes de Órdenes guardadas.","Mejor legibilidad de las fórmulas paso a paso. Los cálculos no cambiaron."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
+ en:{title:"What's New · TEST Build 34",items:["Unified black backgrounds and subtle blue borders across Quick Seed sections.","Kept blue accents for icons, inputs and calculation details.","Design-only change. Build 33 styling can be restored if preferred."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
+ es:{title:"Novedades · TEST Build 34",items:["Fondos negros y bordes azules discretos unificados en Quick Seed.","Se conservan los detalles azules para iconos, campos y cálculos.","Cambio solo de diseño. Podemos recuperar el estilo de Build 33."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -1073,7 +1073,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-33';
+const LOCAL_TEST_BUILD='v2.5-test-build-34';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
