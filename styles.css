@@ -865,3 +865,15 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #qsResetConfirm #qsCancelReset{background:transparent;border:1px solid #64748b;color:#f8fafc;border-radius:10px}
 #qsResetConfirm #qsConfirmReset{background:#b91c1c;border:1px solid #ef4444;color:white;border-radius:10px;font-weight:700}
 #qsResetConfirm #qsConfirmReset:hover,#qsResetConfirm #qsConfirmReset:focus-visible{background:#991b1b}
+
+/* TEST Build 32 — Quick Seed saved orders */
+#quickSeed .qsSaveRow{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+#quickSeed .qsSaveRow input{flex:1 1 200px;min-width:0;background:#0b172a;border:1px solid #47658b;border-radius:10px;color:#fff;padding:12px;font-size:16px}
+#quickSeed .qsSaveRow button,#quickSeed .qsSavedActions button{border-radius:9px;padding:10px 13px;font-weight:650;background:#e2e8f0;color:#152238;border:1px solid #cbd5e1}
+#quickSeed .qsSavedItem{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid rgba(255,255,255,.23);padding:13px 0;flex-wrap:wrap}
+#quickSeed .qsSavedInfo{display:grid;gap:5px;min-width:0;overflow-wrap:anywhere}
+#quickSeed .qsSavedInfo small{color:#d7e3ff}
+#quickSeed .qsSavedActions{display:flex;gap:8px}
+#quickSeed .qsSavedActions .qsDeleteOrder{background:rgba(153,27,27,.3);color:#fecaca;border-color:#f87171}
+#quickSeed #qsQuickShortcut{white-space:nowrap}
+#quickSeed .qsSavedPanel h2{margin-bottom:10px}
