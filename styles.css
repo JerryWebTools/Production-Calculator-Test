@@ -856,3 +856,12 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 
 #quickSeed #qsChem[hidden],#quickSeed #qsChemNA[hidden]{display:none!important}
 #quickSeed .qsChemNA{display:flex;align-items:center;width:100%;min-height:58px;padding:12px 15px;border:1px solid var(--edge);border-radius:10px;background:var(--panel);color:var(--muted);font-weight:700;font-size:18px;opacity:.8}
+
+/* TEST Build 30 — Quick Seed destructive reset warning */
+#qsResetConfirm>.card{background:#141c2a;border:1px solid rgba(239,100,100,.48);color:#f8fafc}
+#qsResetConfirm #qsConfirmTitle{display:flex;align-items:center;gap:12px;color:#fda4a4;margin:0 0 12px}
+#qsResetConfirm .qsWarningIcon{display:inline-grid;place-items:center;flex:none;width:40px;height:40px;border-radius:11px;background:rgba(220,38,38,.16);color:#f87171;font-size:23px}
+#qsResetConfirm .actions{margin-top:20px}
+#qsResetConfirm #qsCancelReset{background:transparent;border:1px solid #64748b;color:#f8fafc;border-radius:10px}
+#qsResetConfirm #qsConfirmReset{background:#b91c1c;border:1px solid #ef4444;color:white;border-radius:10px;font-weight:700}
+#qsResetConfirm #qsConfirmReset:hover,#qsResetConfirm #qsConfirmReset:focus-visible{background:#991b1b}
