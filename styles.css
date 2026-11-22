@@ -877,3 +877,17 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #quickSeed .qsSavedActions .qsDeleteOrder{background:rgba(153,27,27,.3);color:#fecaca;border-color:#f87171}
 #quickSeed #qsQuickShortcut{white-space:nowrap}
 #quickSeed .qsSavedPanel h2{margin-bottom:10px}
+
+/* TEST Build 33 — matching explanatory cards */
+#quickSeed .qsInfoCard{background:#101d31;border:1px solid #7197d3;border-radius:15px;box-shadow:0 3px 15px rgba(0,0,0,.13);margin:12px 0;overflow:hidden}
+#quickSeed .qsInfoCard>summary{padding:17px;display:flex;align-items:center;justify-content:flex-start;gap:12px;color:#f8fafc;font-size:15px}
+#quickSeed .qsInfoCard>summary::after{content:"⌄";font-size:22px;margin-left:auto;color:#a8c9ff}
+#quickSeed .qsInfoCard[open]>summary::after{content:"⌃"}
+#quickSeed .qsInfoIcon{display:grid;place-items:center;width:42px;height:42px;flex:none;border-radius:11px;background:#1b3655;color:#a8c9ff;font-size:23px}
+#quickSeed .qsInfoHeading{display:flex;flex-direction:column;gap:4px;min-width:0}
+#quickSeed .qsInfoHeading strong{font-size:15px;line-height:1.3;color:#f8fafc}
+#quickSeed .qsInfoHeading small{font-size:11px;font-weight:400;color:#b8cbe4;line-height:1.35}
+#quickSeed .qsInfoCard[open]>summary{border-bottom:1px solid #344d70}
+#quickSeed .qsInfoCard #qsBreakdown,#quickSeed .qsInfoCard #qsGuide{padding:12px 16px 18px}
+#quickSeed .qsInfoCard #qsGuide .guideStep{background:#15253a;border:1px solid #344d70;border-radius:12px;padding:13px;margin:10px 0}
+#quickSeed .qsInfoCard #qsGuide .guideMath{background:#091626;border:1px solid #344d70;color:#e7f0ff}
