@@ -903,3 +903,12 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #quickSeed .qsInfoCard #qsGuide .guideMath{background:#081321;border-color:#364b69}
 #quickSeed .qsSaveRow button{background:#263d5b;border-color:#466b9c;color:#fff}
 #quickSeed .qsSavedActions button{background:#263d5b;border-color:#466b9c;color:#fff}
+
+/* TEST Build 35 — compact readable mobile calculation rows */
+#quickSeed #qsBreakdown .detailrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);align-items:start;column-gap:12px;row-gap:3px}
+#quickSeed #qsBreakdown .detailrow>span{min-width:0;overflow-wrap:normal}
+#quickSeed #qsBreakdown .detailrow>strong{min-width:0;text-align:right;overflow-wrap:normal;word-break:normal;font-variant-numeric:tabular-nums}
+@media(max-width:540px){
+ #quickSeed #qsBreakdown .detailrow{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:9px;font-size:12px}
+ #quickSeed #qsBreakdown .detailrow>strong{font-size:12px;line-height:1.45}
+}
