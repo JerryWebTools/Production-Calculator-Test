@@ -805,26 +805,24 @@ function renderQuickSeed(){syncQsOperation();saveQuickSeedDraft();const es=prefs
  if(needsPc)addRow(t('Seed Count (PC)','Conteo de semillas (PC)'),pct(pc)+' '+t('seeds/LB','semillas/LB'));
  addRow(t('Quantity','Cantidad'),ea+' EA');
  addRow(t('Overpack (%)','Overpack (%)'),pct(over)+'%');
- addRow(t('Chemical (%)','Químico (%)'),pct(chem)+'%');
+ if(qsOperation!=='treat')addRow(t('Chemical (%)','Químico (%)'),pct(chem)+'%');
  addRow(t('Samples (KG)','Muestras (KG)'),kg(samples)+' KG');
- addRow(t('Bag Tare (KG)','Tara de bolsa (KG)'),$('qsTare').value===''?t('Not entered','No ingresada'):kg(tare)+' KG');
+ if(qsOperation!=='treat')addRow(t('Bag Tare (KG)','Tara de bolsa (KG)'),$('qsTare').value===''?t('Not entered','No ingresada'):kg(tare)+' KG');
  addHeading(t('Per Bag (1 EA)','Por bolsa (1 EA)'));
  [
  [t('Net Seed / EA (before overpack)','Net Seed / EA (antes de overpack)'),weight(base)],
  [t('Overpack / EA','Overpack / EA'),pct(over)+'% = '+weight(overKg)],
  [t('Seed + Overpack / EA','Semilla + Overpack / EA'),weight(seedWithOverpack)],
- [t('Chemical Weight / EA','Peso químico / EA'),pct(chem)+'% = '+weight(chemicalKg)],
- [t('Fill Weight / EA','Peso de llenado / EA'),weight(fill)],
- ...(tare>0?[[t('Bag Tare / EA','Tara de bolsa / EA'),weight(tare)],[t('Gross Bag Weight / EA','Peso bruto / EA'),weight(gross)]]:[])
+ ...(qsOperation!=='treat'?[[t('Chemical Weight / EA','Peso químico / EA'),pct(chem)+'% = '+weight(chemicalKg)],[t('Fill Weight / EA','Peso de llenado / EA'),weight(fill)]]:[]),
+ ...(qsOperation!=='treat'&&tare>0?[[t('Bag Tare / EA','Tara de bolsa / EA'),weight(tare)],[t('Gross Bag Weight / EA','Peso bruto / EA'),weight(gross)]]:[])
  ].forEach(([name,value])=>addRow(name,value));
  addHeading(t('Order Totals ('+ea+' EA)','Totales de la orden ('+ea+' EA)'));
  [
  [t('Total Net Seed (before overpack)','Semilla neta total (antes de overpack)'),weight(totalNet)],
  [t('Total Overpack','Overpack total'),weight(totalOver)],
  [t('Total Seed + Overpack','Semilla total + Overpack'),weight(orderSeed)],
- [t('Total Chemical Weight','Peso químico total'),weight(totalChemical)],
- [t('Total Fill Weight','Peso de llenado total'),weight(totalFill)],
- ...(tare>0?[[t('Total Bag Tare','Tara total de bolsas'),weight(totalTare)],[t('Total Gross Bag Weight','Peso bruto total de bolsas'),weight(totalGross)]]:[])
+ ...(qsOperation!=='treat'?[[t('Total Chemical Weight','Peso químico total'),weight(totalChemical)],[t('Total Fill Weight','Peso de llenado total'),weight(totalFill)]]:[]),
+ ...(qsOperation!=='treat'&&tare>0?[[t('Total Bag Tare','Tara total de bolsas'),weight(totalTare)],[t('Total Gross Bag Weight','Peso bruto total de bolsas'),weight(totalGross)]]:[])
  ].forEach(([name,value])=>addRow(name,value));
  addHeading(t('Seed Required','Semilla requerida'));
  addRow(t('Samples','Muestras'),weight(samples));
