@@ -758,6 +758,8 @@ function renderPackAll(order){
  }
 }
 function renderQuickSeed(){syncQsOperation();saveQuickSeedDraft();const es=prefs.language==='es',t=(en,sp)=>es?sp:en;
+ $('qsPackAllHint').textContent=t('Enter available seed to estimate how many full bags you can pack.','Ingresa la semilla disponible para calcular cuántas bolsas completas puedes empacar.');
+ $('qsAvailable').placeholder=t('Example: ','Ejemplo: ')+(($('qsTotalKg').textContent.match(/[\\d,]+/)||[])[0]||'1838')+' KG';
  const unit=$('qsUnit').value,needsPc=unit==='KS'||unit==='MS';
  $('qsPcField').hidden=!needsPc;
  document.querySelectorAll('[data-qs-unit]').forEach(b=>{const active=b.dataset.qsUnit===unit;b.classList.toggle('qsUnitActive',active);b.setAttribute('aria-pressed',String(active));});
@@ -787,6 +789,7 @@ function renderQuickSeed(){syncQsOperation();saveQuickSeedDraft();const es=prefs
  const kg=x=>fmt(x,3),lb=x=>fmt(x*exactLbPerKg,2),pct=x=>Number(x).toLocaleString('en-US',{maximumFractionDigits:5});
  const setWeight=(prefix,value,round=false)=>{$(prefix+'Kg').textContent=fmt(value,round?0:3)+' KG';$(prefix+'Lb').textContent=lb(value)+' LB';};
  setWeight('qsNet',base);setWeight('qsFill',fill);setWeight('qsGross',gross);setWeight('qsTotal',total,true);
+ $('qsAvailable').placeholder=t('Example: ','Ejemplo: ')+fmt(total,0)+' KG';
  const fillCard=$('qsFillKg').closest('.qsSmallCard');if(fillCard)fillCard.hidden=qsOperation==='treat';
  const totalMeaning=$('qsTotalKg').closest('.qsTotalCard')?.querySelector('.qsMeaning');
  if(totalMeaning)totalMeaning.textContent=t('Seed required before chemical, including overpack and samples. Chemical and bag tare are excluded in every operation mode.','Semilla requerida antes del químico, incluyendo sobrellenado y muestras. Se excluyen químico y tara en todos los modos.');
@@ -956,10 +959,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-30';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-31';
 const releaseNotes={
- en:{title:"What's New · TEST Build 30",items:["Quick Seed Reset confirmation now uses a red warning icon and a red Reset button.","The warning explains that resetting cannot be undone.","Cancel remains neutral and no calculation or reset behavior was changed."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
- es:{title:"Novedades · TEST Build 30",items:["La confirmación de Reset ahora tiene un icono de advertencia y un botón rojo.","El mensaje indica que restablecer no se puede deshacer.","Cancelar conserva su estilo neutral. No cambiaron los cálculos ni el funcionamiento de Reset."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
+ en:{title:"What's New · TEST Build 31",items:["Pack All now shows a short instruction above the available seed field.","The field placeholder says Example and uses the current calculated total seed requirement in KG.","The example and instructions switch between English and Spanish."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
+ es:{title:"Novedades · TEST Build 31",items:["Pack All ahora muestra una breve instrucción sobre el campo de semilla disponible.","El campo dice Ejemplo y muestra la cantidad total de semilla calculada en KG.","El ejemplo y las instrucciones cambian según el idioma seleccionado."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -1031,7 +1034,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-30';
+const LOCAL_TEST_BUILD='v2.5-test-build-31';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
