@@ -876,18 +876,6 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #quickSeed .qsInfoCard #qsGuide .guideStep{background:#15253a;border:1px solid #344d70;border-radius:12px;padding:13px;margin:10px 0}
 #quickSeed .qsInfoCard #qsGuide .guideMath{background:#091626;border:1px solid #344d70;color:#e7f0ff}
 
-/* TEST Build 34 — reversible unified Quick Seed section surfaces.
-   Restore Build 33 by removing this block; no calculation markup changes. */
-#quickSeed .qsPanel,#quickSeed .qsInfoCard{background:#050608;border:1px solid #364b69;border-radius:15px;color:#f8fafc}
-#quickSeed .qsInfoCard{box-shadow:none}
-#quickSeed .qsInfoIcon{background:#0c1b30;color:#9fc2f7}
-#quickSeed .qsInfoCard>summary::after{color:#9fc2f7}
-#quickSeed .qsInfoCard[open]>summary{border-bottom-color:#364b69}
-#quickSeed .qsInfoCard #qsGuide .guideStep{background:#0c1b30;border-color:#364b69}
-#quickSeed .qsInfoCard #qsGuide .guideMath{background:#081321;border-color:#364b69}
-#quickSeed .qsSaveRow button{background:#263d5b;border-color:#466b9c;color:#fff}
-#quickSeed .qsSavedActions button{background:#263d5b;border-color:#466b9c;color:#fff}
-
 /* TEST Build 35 — compact readable mobile calculation rows */
 #quickSeed #qsBreakdown .detailrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);align-items:start;column-gap:12px;row-gap:3px}
 #quickSeed #qsBreakdown .detailrow>span{min-width:0;overflow-wrap:normal}
@@ -897,16 +885,33 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
  #quickSeed #qsBreakdown .detailrow>strong{font-size:12px;line-height:1.45}
 }
 
-/* TEST Build 36 — foreground follows the actual surface, not the selected accent. */
-#quickSeed .qsPanel{color:#f8fafc}
-#quickSeed .qsPanel :is(h2,.qsField,.qsUnitTitle){color:#f8fafc}
-#quickSeed .qsPanel :is(.qsExamples,.qsOptional,.qsPackAllIntro,.qsPackAllStatus,.qsPackAllMini small){color:#b8cbe4}
-#quickSeed .qsPanel .qsReset{color:#f8fafc;border-color:#64748b}
-#quickSeed .qsPanel .qsField input{color:#f8fafc}
+
+/* TEST Build 37 — shared accent surfaces and foreground tokens.
+   Neutral controls keep their own foreground; no fixed black section backgrounds. */
+:root{--accent-ink:#fff;--accent-muted:rgba(255,255,255,.88);--accent-edge:rgba(255,255,255,.4)}
+:root[data-quick-accent="yellow"]{--accent-ink:#111827;--accent-muted:#374151;--accent-edge:rgba(17,24,39,.35)}
+#calc .card,#quickSeed .qsPanel,#quickSeed .qsInfoCard,#bulkCalc .qsPanel,#boxSplit .boxSplitPanel{background:var(--accent);color:var(--accent-ink);border-color:var(--accent-edge)}
+#calc .card :is(h2,strong,.number,.huge,.muted,label,summary,.tiny,.detailrow),#calc .twocards .card,#calc .card .settingmodified{color:var(--accent-ink)}
+#calc .card .primary{color:var(--accent-ink);border-color:var(--accent-edge)}
+#calc .card :is(.detailrow,details){border-color:var(--accent-edge)}
+#quickSeed .qsPanel :is(h2,.qsField,.qsUnitTitle,.qsReset,.qsPackAllStatus),#quickSeed .qsInfoHeading strong,#quickSeed .qsInfoCard>summary::after{color:var(--accent-ink)}
+#quickSeed .qsPanel :is(.qsExamples,.qsOptional,.qsPackAllIntro,.qsPackAllMini small),#quickSeed .qsInfoHeading small,#quickSeed .qsInfoCard .muted{color:var(--accent-muted)}
+#quickSeed .qsPanel .qsReset{border-color:var(--accent-edge)}
+#quickSeed .qsTotalCard,#quickSeed .qsSmallCard{color:var(--accent-ink);border-color:var(--accent-edge)}
+#quickSeed :is(.qsTotalCard,.qsSmallCard) :is(.qsMeaning,.qsLb){color:var(--accent-ink)}
+#quickSeed .qsInfoCard{box-shadow:none}
+#quickSeed .qsInfoCard[open]>summary{border-bottom-color:var(--accent-edge)}
+#quickSeed .qsInfoIcon{background:#152033;color:#f8fafc}
+#quickSeed .qsInfoCard #qsGuide .guideStep{background:rgba(0,0,0,.12);border-color:var(--accent-edge);color:var(--accent-ink)}
+#quickSeed .qsInfoCard #qsGuide .guideMath{background:#0b172a;color:#e7f0ff;border-color:#364b69}
+#quickSeed .qsPanel .qsField input{background:#0b172a;color:#f8fafc}
 #quickSeed .qsPanel .qsField input::placeholder{color:#91a8c9;opacity:.75;font-weight:400}
 #quickSeed .qsPanel .qsChemNA{background:#0b172a;color:#b8cbe4;border-color:#364b69}
-#quickSeed .qsInfoCard .muted{color:#b8cbe4}
-#quickSeed .qsOperationButtons button:not(.qsOperationActive){background:#152033;color:#f8fafc;border-color:#364b69}
-#quickSeed .qsSavedActions .qsDeleteOrder{background:rgba(153,27,27,.3);color:#fecaca;border-color:#f87171}
+#quickSeed .qsOperationButtons button:not(.qsOperationActive),#quickSeed .qsSaveRow button,#quickSeed .qsSavedActions button{background:#152033;color:#f8fafc;border-color:#364b69}
+#quickSeed .qsSavedInfo small{color:var(--accent-muted)}
+#quickSeed .qsSavedActions .qsDeleteOrder{background:#991b1b;color:#fff;border-color:#f87171}
 #quickSeed #qsResetConfirm .card{color:#f8fafc}
 #quickSeed #qsResetConfirm #qsConfirmTitle{color:#fda4a4}
+#calc .card #standaloneGuide summary{background:var(--panel);color:var(--fg)}
+#standaloneGuide .guideNum{color:var(--accent-ink)}
+:root[data-quick-accent="yellow"] #quickSeed :is(.qsTotalCard,.qsSmallCard) :is(.qsMeaning,.qsLb){color:var(--accent-ink)}
