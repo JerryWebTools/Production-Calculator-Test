@@ -998,10 +998,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-35';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-36';
 const releaseNotes={
- en:{title:"What's New · TEST Build 35",items:["Shortened the displayed LB-to-KG conversion factor to 2.20462 with an approximate-equals sign.","Improved Calculation Breakdown alignment and wrapping on narrow screens.","All calculations retain the same full internal precision."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
- es:{title:"Novedades · TEST Build 35",items:["La conversión visible de LB a KG ahora muestra 2.20462 y el símbolo de aproximación.","Mejor alineación y ajuste de líneas en Calculation Breakdown para teléfonos.","Todos los cálculos conservan su precisión interna."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
+ en:{title:"What's New · TEST Build 36",items:["Restored readable text on dark Quick Seed panels with Yellow accent.","Kept dark text on yellow result cards and improved placeholder contrast.","Calculation formulas are unchanged."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
+ es:{title:"Novedades · TEST Build 36",items:["Texto legible en paneles oscuros con acento amarillo.","Texto oscuro en tarjetas amarillas y ejemplos más distinguibles.","Las fórmulas no cambiaron."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -1073,7 +1073,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-35';
+const LOCAL_TEST_BUILD='v2.5-test-build-36';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
