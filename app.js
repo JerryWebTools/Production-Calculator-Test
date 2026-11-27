@@ -715,6 +715,25 @@ const QS_ORDERS_KEY='production-calculator-quick-seed-saved-orders-v1';
 function qsReadOrders(){try{const v=JSON.parse(localStorage.getItem(QS_ORDERS_KEY)||'[]');return Array.isArray(v)?v:[]}catch{return []}}
 function qsWriteOrders(v){try{localStorage.setItem(QS_ORDERS_KEY,JSON.stringify(v));return true}catch{return false}}
 function qsSavedMessage(en,es){$('qsSaveMessage').textContent=prefs.language==='es'?es:en}
+function qsConfirmSavedAction(kind,name){
+ const es=prefs.language==='es',del=kind==='delete',dialog=$('qsSavedConfirm'),previous=document.activeElement;
+ $('qsSavedConfirmTitle').textContent=del?(es?'¿Eliminar orden guardada?':'Delete saved order?'):(es?'¿Reemplazar orden guardada?':'Replace saved order?');
+ $('qsSavedConfirmName').textContent=name;
+ $('qsSavedConfirmText').textContent=del?(es?'Esta orden se eliminará permanentemente. Esta acción no se puede deshacer.':'This order will be permanently deleted. This action cannot be undone.'):(es?'Ya existe una orden con este nombre. Se reemplazará el cálculo guardado.':'An order with this name already exists. The saved calculation will be overwritten.');
+ $('qsSavedConfirmCancel').textContent=es?'Cancelar':'Cancel';
+ $('qsSavedConfirmAccept').textContent=del?(es?'Eliminar orden':'Delete Order'):(es?'Reemplazar orden':'Replace Order');
+ dialog.dataset.action=kind;
+ return new Promise(resolve=>{
+  let finished=false;
+  const finish=value=>{if(finished)return;finished=true;dialog.removeEventListener('cancel',cancel);dialog.removeEventListener('close',closed);dialog.close();if(previous?.isConnected)previous.focus();resolve(value);};
+  const cancel=e=>{e.preventDefault();finish(false)};
+  const closed=()=>finish(false);
+  $('qsSavedConfirmCancel').onclick=()=>finish(false);
+  $('qsSavedConfirmAccept').onclick=()=>finish(true);
+  dialog.addEventListener('cancel',cancel);dialog.addEventListener('close',closed);
+  dialog.showModal();$('qsSavedConfirmCancel').focus();
+ });
+}
 function qsRenderOrders(){
  const es=prefs.language==='es',target=$('qsSavedOrders');target.replaceChildren();
  const orders=qsReadOrders();
@@ -732,21 +751,21 @@ function qsRenderOrders(){
    qsOperation=['treat','both','pack'].includes(order.operation)?order.operation:'both';
    $('qsOrderName').value=order.name;renderQuickSeed();qsSavedMessage('Order loaded.','Orden cargada.');window.scrollTo({top:0,behavior:'smooth'});
   };
-  const del=document.createElement('button');del.type='button';del.className='qsDeleteOrder';del.textContent=es?'Eliminar':'Delete';del.onclick=()=>{
-   if(!confirm(es?'¿Eliminar esta orden guardada?':'Delete this saved order?'))return;
+  const del=document.createElement('button');del.type='button';del.className='qsDeleteOrder';del.textContent=es?'Eliminar':'Delete';del.onclick=async()=>{
+   if(!await qsConfirmSavedAction('delete',order.name))return;
    if(qsWriteOrders(qsReadOrders().filter(x=>x.id!==order.id))){qsRenderOrders();qsSavedMessage('Saved order deleted.','Orden guardada eliminada.')}else qsSavedMessage('Could not delete the order.','No se pudo eliminar la orden.');
   };
   actions.append(load,del);row.append(info,actions);target.append(row);
  });
 }
-$('qsSaveOrder').onclick=()=>{
+$('qsSaveOrder').onclick=async()=>{
  const name=$('qsOrderName').value.trim();const es=prefs.language==='es';
  if(!name){qsSavedMessage('Enter an order name or number first.','Primero ingresa un nombre o número de orden.');$('qsOrderName').focus();return}
  if($('qsTotalKg').textContent==='—'){qsSavedMessage('Complete a valid calculation before saving.','Completa un cálculo válido antes de guardar.');return}
  const orders=qsReadOrders();
- if(orders.some(x=>x.name.toLowerCase()===name.toLowerCase())&&!confirm(es?'Ya existe una orden con ese nombre. ¿Reemplazarla?':'An order with that name exists. Replace it?'))return;
+ if(orders.some(x=>x.name.toLowerCase()===name.toLowerCase())&&!await qsConfirmSavedAction('replace',name))return;
  const record={id:String(Date.now())+'-'+Math.random().toString(36).slice(2),name,date:new Date().toISOString(),fields:Object.fromEntries(qsDraftFields.map(id=>[id,$(id).value])),unit:$('qsUnit').value,operation:qsOperation};
- const updated=[record,...orders.filter(x=>x.name.toLowerCase()!==name.toLowerCase())];
+ const updated=[record,...qsReadOrders().filter(x=>x.name.toLowerCase()!==name.toLowerCase())];
  if(qsWriteOrders(updated)){qsRenderOrders();qsSavedMessage('Order saved on this device.','Orden guardada en este dispositivo.')}else qsSavedMessage('Could not save. Check device storage.','No se pudo guardar. Revisa el almacenamiento.');
 };
 $('qsQuickShortcut').onclick=()=>openQuick('quickSeed');
@@ -998,10 +1017,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-38';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-39';
 const releaseNotes={
- en:{title:"What's New · TEST Build 38",items:["Fixed accent contrast in Settings, installation instructions and refresh section.","Appearance and Accent Color previews retain their neutral theme colors.","Calculation formulas are unchanged."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
- es:{title:"Novedades · TEST Build 38",items:["Contraste corregido en Configuración, instrucciones de instalación y actualización.","Las vistas de apariencia y color conservan los colores del tema.","Las fórmulas no cambiaron."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
+ en:{title:"What's New · TEST Build 39",items:["Custom bilingual confirmation dialogs for replacing and deleting saved orders.","Cancel is focused by default; order names are displayed before confirmation.","Calculation formulas are unchanged."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
+ es:{title:"Novedades · TEST Build 39",items:["Ventanas bilingües para reemplazar y eliminar órdenes guardadas.","Cancelar seleccionado inicialmente y nombre de la orden visible.","Las fórmulas no cambiaron."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -1073,7 +1092,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-38';
+const LOCAL_TEST_BUILD='v2.5-test-build-39';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
