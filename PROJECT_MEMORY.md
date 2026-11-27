@@ -84,3 +84,9 @@ Current TEST app uses F=2.2046 LB/KG. Preserve working line-specific math.
 - Spanish terminology: Net Seed = Semilla neta, Overpack = Sobrellenado, Fill Weight = Peso de llenado. Technical units KG/LB/KS/MS/PC/EA remain. Maintain complete EN/ES support; new saved-order and explanation labels still require explicit bilingual regression.
 - Every TEST release increments LOCAL_TEST_BUILD, RELEASE_KEY, bilingual releaseNotes, index.html build labels and asset cache-busters, version.json and sw.js cache name. Verify actual deployed build rather than assuming GitHub Pages has refreshed.
 - Next: continue user-directed incremental changes, verify pending functional and bilingual/theme tests, keep Bulk paused unless requested. Do not modify Production without explicit approval.
+
+## TEST Build 38 — approved accent design (2026-11-26)
+- Supersedes Build 34 fixed black panel backgrounds and Build 36 dark-panel workaround. Build 37 restores full accent-colored panels and shared foreground tokens; Build 38 extends contrast to Settings and other accent-backed screens.
+- Mandatory design rule: full accent-backed panels follow selected Accent Color; Yellow uses dark ink (#111827), other accents use white. Neutral controls and Appearance/Accent Color previews use their own theme foreground. Never hard-code black panel surfaces in place of accent backgrounds. Preserve existing layout and formulas.
+- User confirmed Settings works and all seven accent colors in both Light and Dark appearances look good (14 combinations). Visual color review approved by user; not an automated exhaustive regression test.
+- Next: Saved Orders functional tests, Quick Calculator shortcut and bilingual regression. Production remains untouched. No application changes in this documentation commit.
