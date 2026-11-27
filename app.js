@@ -998,10 +998,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-37';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-38';
 const releaseNotes={
- en:{title:"What's New · TEST Build 37",items:["Restored full accent-colored Quick Seed panels.","Shared contrast rules for production calculator panels: dark text on yellow, white on other accents.","Calculation formulas are unchanged."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
- es:{title:"Novedades · TEST Build 37",items:["Paneles completos de Quick Seed con el color de acento.","Contraste compartido: texto oscuro sobre amarillo y blanco sobre otros acentos.","Las fórmulas no cambiaron."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
+ en:{title:"What's New · TEST Build 38",items:["Fixed accent contrast in Settings, installation instructions and refresh section.","Appearance and Accent Color previews retain their neutral theme colors.","Calculation formulas are unchanged."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
+ es:{title:"Novedades · TEST Build 38",items:["Contraste corregido en Configuración, instrucciones de instalación y actualización.","Las vistas de apariencia y color conservan los colores del tema.","Las fórmulas no cambiaron."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -1073,7 +1073,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-37';
+const LOCAL_TEST_BUILD='v2.5-test-build-38';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
