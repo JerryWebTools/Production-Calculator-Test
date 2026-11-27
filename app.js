@@ -323,6 +323,7 @@ function openPrefs(){prefReturn=document.querySelector('#quick:not([hidden])')?'
 function closePrefs(){show(prefReturn==='settings'?'calc':prefReturn);if(prefReturn==='home')home();else if(prefReturn==='quick')title('Quick Calculator','Calculator + Unit Converter');else if(prefReturn==='quickSeed'){title('Quick Seed Calculator','Manual seed and bag weight calculation');renderQuickSeed();}else if(prefReturn==='boxSplit'){title(splitT('PO Weight Calculator','Calculadora de peso del PO'),splitT('Gross / Tare / Net','Bruto / Tara / Neto'));splitRender();}else title(lineName(line),'Calculator');}
 let quickFloatOrigin=null,quickFloatFocus=null;
 function openQuick(from){
+ $('quickFloatDialog').classList.remove('quickMinimized');$('quickMinimize').hidden=from==='home';$('quickMinimize').textContent='−';$('quickMinimize').setAttribute('aria-expanded','true');$('quickMinimize').setAttribute('aria-label',prefs.language==='es'?'Minimizar':'Minimize');
  qActive='right';qConverter=false;$('percentPanel').hidden=true;quickReturn=from;
  $('quickHistoryPanel').hidden=true;$('unitPanel').hidden=true;$('seedPanel').hidden=true;
  if(from==='home'){show('quick');title('Quick Calculator','Calculator + Unit Converter');$('quickBack').textContent='← Back to Home';}
@@ -338,6 +339,7 @@ function openQuick(from){
  if(from!=='home')$('quickExit').focus();
 }
 function closeQuickFloat(){
+ $('quickFloatDialog').classList.remove('quickMinimized');$('quickMinimize').hidden=true;
  if(!quickFloatOrigin)return;
  const quick=$('quick'),dialog=$('quickFloatDialog');
  quick.hidden=true;dialog.close();dialog.before(quick);
@@ -346,6 +348,7 @@ function closeQuickFloat(){
 }
 function backQuick(){if(quickFloatOrigin){closeQuickFloat();return;}if(quickReturn==='home')home();else if(quickReturn==='quickSeed')openQuickSeed();else{show('calc');title(lineName(line),'Calculator');calculate();}}
 $('quickFloatDialog').addEventListener('cancel',e=>{e.preventDefault();closeQuickFloat()});
+$('quickMinimize').onclick=()=>{const d=$('quickFloatDialog'),m=d.classList.toggle('quickMinimized'),b=$('quickMinimize');b.textContent=m?'□':'−';b.setAttribute('aria-expanded',String(!m));b.setAttribute('aria-label',m?(prefs.language==='es'?'Expandir':'Expand'):(prefs.language==='es'?'Minimizar':'Minimize'));const r=d.getBoundingClientRect();clampQuickFloat(r.left,r.top);};
 const quickDragHeader=$('quick').querySelector('.quickToolbar');
 let quickDrag=null;
 function clampQuickFloat(x,y){const d=$('quickFloatDialog');d.style.left=Math.max(0,Math.min(x,innerWidth-d.offsetWidth))+'px';d.style.top=Math.max(0,Math.min(y,innerHeight-d.offsetHeight))+'px';}
@@ -1049,10 +1052,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-41';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-42';
 const releaseNotes={
- en:{title:"What's New · TEST Build 41",items:["Draggable non-modal Quick Calculator with a compact display.","Order remains interactive while calculator is open.","Accent keys share one color; number keys are neutral."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
- es:{title:"Novedades · TEST Build 41",items:["Calculadora flotante desplazable con pantalla compacta.","La orden permanece interactiva.","Teclas de operaciones con color de acento uniforme y números neutrales."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
+ en:{title:"What's New · TEST Build 42",items:["Minimize and expand the floating Quick Calculator without losing calculations.","Move the minimized header to access order details.","Converter remains OFF by default."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
+ es:{title:"Novedades · TEST Build 42",items:["Minimiza y expande la calculadora flotante sin perder operaciones.","Mueve el encabezado minimizado para acceder a la orden.","Conversor desactivado por defecto."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -1124,7 +1127,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-41';
+const LOCAL_TEST_BUILD='v2.5-test-build-42';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
