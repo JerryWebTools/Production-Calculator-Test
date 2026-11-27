@@ -8,7 +8,7 @@ const fmt=(x,d)=>Number(x).toLocaleString('en-US',{minimumFractionDigits:d,maxim
 const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const validPositive=x=>Number.isFinite(x)&&x>0;
 const persist=(key,obj)=>{try{localStorage.setItem(key,JSON.stringify(obj));return true}catch{alert('Unable to save on this device. Check browser storage settings.');return false}};
-function show(view){['home','modeScreen','coming','bulkCalc','calc','settings','saved','quick','quickSeed','boxSplit','preferences','brain'].forEach(id=>$(id).hidden=id!==view);$('settingsBtn').hidden=false;$('homeRefreshBtn').hidden=view!=='home';document.body.classList.toggle('quick-active',view==='quick');if($('installBanner'))$('installBanner').hidden=view!=='home'||window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true||(()=>{try{return localStorage.getItem('production-calculator-install-banner-dismissed')==='yes'}catch{return false}})();document.body.classList.toggle('brain-active',view==='brain');const navOn=view!=='home'&&view!=='quick'&&view!=='brain';$('globalNav').hidden=!navOn;['back','modeBack','quickBack'].forEach(id=>$(id).hidden=true);const backId=(view==='calc'||view==='bulkCalc'||view==='boxSplit')?'back':view==='modeScreen'?'modeBack':view==='quick'?'quickBack':null;if(backId)$(backId).hidden=false;$('modeLabel').hidden=true;document.querySelector('header').classList.toggle('insideView',navOn);}
+function show(view){if(typeof quickFloatOrigin!=='undefined'&&quickFloatOrigin)closeQuickFloat();['home','modeScreen','coming','bulkCalc','calc','settings','saved','quick','quickSeed','boxSplit','preferences','brain'].forEach(id=>$(id).hidden=id!==view);$('settingsBtn').hidden=false;$('homeRefreshBtn').hidden=view!=='home';document.body.classList.toggle('quick-active',view==='quick');if($('installBanner'))$('installBanner').hidden=view!=='home'||window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true||(()=>{try{return localStorage.getItem('production-calculator-install-banner-dismissed')==='yes'}catch{return false}})();document.body.classList.toggle('brain-active',view==='brain');const navOn=view!=='home'&&view!=='quick'&&view!=='brain';$('globalNav').hidden=!navOn;['back','modeBack','quickBack'].forEach(id=>$(id).hidden=true);const backId=(view==='calc'||view==='bulkCalc'||view==='boxSplit')?'back':view==='modeScreen'?'modeBack':view==='quick'?'quickBack':null;if(backId)$(backId).hidden=false;$('modeLabel').hidden=true;document.querySelector('header').classList.toggle('insideView',navOn);}
 function title(name,sub){const tr=v=>prefs.language==='es'?(translations[v]||v):v;const label=(document.querySelector('#calc:not([hidden])')&&sub&&['Treat & Pack','Treat Only','Pack Only'].includes(sub))?name+' · '+sub:name;$('title').textContent=tr(label);$('subtitle').textContent=tr(sub);}
 function home(){line=null;mode=null;show('home');title('Production Calculator','Choose a production line.');}
 function openLine(v){line=v;if(v==='bulk'){show('bulkCalc');title('Bulk Line','Pack Only · TEST');bulkDefaults();return;}if(v==='3'||v==='4'){show('modeScreen');title('Line '+v,'Choose a calculation mode.');return;}openCalc(v==='1'?'treat':'standalone');}
@@ -329,7 +329,7 @@ function openQuick(from){
  else{
   quickFloatOrigin=from;quickFloatFocus=document.activeElement;
   const quick=$('quick');$('quickFloatDialog').append(quick);quick.hidden=false;
-  $('quickFloatDialog').showModal();
+  const d=$('quickFloatDialog');d.show();d.style.left=Math.max(8,(innerWidth-d.offsetWidth)/2)+'px';d.style.top=Math.max(8,(innerHeight-d.offsetHeight)/2)+'px';
  }
  renderQuick();translateUI();
  $('quickExit').textContent=from==='home'?(prefs.language==='es'?'← Atrás':'← Back'):'×';
@@ -346,6 +346,15 @@ function closeQuickFloat(){
 }
 function backQuick(){if(quickFloatOrigin){closeQuickFloat();return;}if(quickReturn==='home')home();else if(quickReturn==='quickSeed')openQuickSeed();else{show('calc');title(lineName(line),'Calculator');calculate();}}
 $('quickFloatDialog').addEventListener('cancel',e=>{e.preventDefault();closeQuickFloat()});
+const quickDragHeader=$('quick').querySelector('.quickToolbar');
+let quickDrag=null;
+function clampQuickFloat(x,y){const d=$('quickFloatDialog');d.style.left=Math.max(0,Math.min(x,innerWidth-d.offsetWidth))+'px';d.style.top=Math.max(0,Math.min(y,innerHeight-d.offsetHeight))+'px';}
+quickDragHeader.addEventListener('pointerdown',e=>{if(!quickFloatOrigin||e.target.closest('button')||e.button!==0)return;const d=$('quickFloatDialog'),r=d.getBoundingClientRect();quickDrag={id:e.pointerId,x:e.clientX-r.left,y:e.clientY-r.top};quickDragHeader.setPointerCapture(e.pointerId);e.preventDefault()});
+quickDragHeader.addEventListener('pointermove',e=>{if(quickDrag?.id===e.pointerId)clampQuickFloat(e.clientX-quickDrag.x,e.clientY-quickDrag.y)});
+for(const event of ['pointerup','pointercancel','lostpointercapture'])quickDragHeader.addEventListener(event,()=>{quickDrag=null});
+window.addEventListener('resize',()=>{if(quickFloatOrigin){const r=$('quickFloatDialog').getBoundingClientRect();clampQuickFloat(r.left,r.top)}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&quickFloatOrigin){closeQuickFloat();e.preventDefault()}});
+
 const KG_TO_LB=2.2046226218487757;
 const convPairs={'kg-lb':['KG','LB',KG_TO_LB],'lb-kg':['LB','KG',1/KG_TO_LB],'g-oz':['g','oz',1/28.349523125],'oz-g':['oz','g',28.349523125],'ml-foz':['mL','fl oz',1/29.5735295625],'foz-ml':['fl oz','mL',29.5735295625],'l-gal':['L','gal',1/3.785411784],'gal-l':['gal','L',3.785411784]};
 function quickFmt(x){return Number.isFinite(x)?Number(x.toPrecision(14)).toLocaleString('en-US',{maximumFractionDigits:8}):'Error';}
@@ -1040,10 +1049,10 @@ $('samplesToggle').onclick=()=>{$('samplesBody').hidden=!$('samplesBody').hidden
 ['crop','seedType','condition','packSize','packUnit','pc','regular','tare'].forEach(id=>$(id).addEventListener('input',calculate));$('ea').addEventListener('input',()=>{extraManual=false;calculate();});$('tareUnit').addEventListener('change',changeTareUnit);$('tareUnit').dataset.previous='KG';home();
 // TEST release notes: each TEST build has its own seen key.
 // Increment the build and update the notes with every future TEST release.
-const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-40';
+const RELEASE_KEY='production-calculator-whats-new-v2.5-test-build-41';
 const releaseNotes={
- en:{title:"What's New · TEST Build 40",items:["Quick Calculator opens with Converter OFF.","Order shortcuts open a floating calculator without leaving the order.","AC, Delete and percent keys follow the selected accent."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
- es:{title:"Novedades · TEST Build 40",items:["Calculadora rápida con conversor desactivado al abrir.","Ventana flotante desde las órdenes sin salir de la pantalla.","AC, borrar y porcentaje respetan el color de acento."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
+ en:{title:"What's New · TEST Build 41",items:["Draggable non-modal Quick Calculator with a compact display.","Order remains interactive while calculator is open.","Accent keys share one color; number keys are neutral."],note:"TEST VERSION — NOT FOR PRODUCTION. Verify calculations before use.",close:"Continue"},
+ es:{title:"Novedades · TEST Build 41",items:["Calculadora flotante desplazable con pantalla compacta.","La orden permanece interactiva.","Teclas de operaciones con color de acento uniforme y números neutrales."],note:"VERSIÓN DE PRUEBA — NO USAR EN PRODUCCIÓN. Verifica los cálculos antes de usar.",close:"Continuar"}
 };
 let whatsNewPreviouslyFocused=null;
 function showWhatsNew(){
@@ -1115,7 +1124,7 @@ try{if(localStorage.getItem(RELEASE_KEY)!=='seen')showWhatsNew()}catch{showWhats
 
 // TEST build update discovery: version.json is fetched from the network, not local storage.
 // A build is advertised only after the hosting server returns a different build id.
-const LOCAL_TEST_BUILD='v2.5-test-build-40';
+const LOCAL_TEST_BUILD='v2.5-test-build-41';
 const updateCopy={
  en:{title:'Update Available',description:'A newer TEST build is available.',button:'Update Now',working:'Installing update…',retry:'Could not finish updating. Check your connection and try again.'},
  es:{title:'Actualización disponible',description:'Hay una versión más reciente de TEST.',button:'Actualizar ahora',working:'Instalando actualización…',retry:'No se pudo completar la actualización. Revisa tu conexión e inténtalo de nuevo.'}
