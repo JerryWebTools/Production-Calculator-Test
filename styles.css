@@ -916,7 +916,7 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #standaloneGuide .guideNum{color:var(--accent-ink)}
 :root[data-quick-accent="yellow"] #quickSeed :is(.qsTotalCard,.qsSmallCard) :is(.qsMeaning,.qsLb){color:var(--accent-ink)}
 
-/* TEST Build 38 — shared contrast on settings and other accent-backed screens. */
+/* TEST Build 39 — shared contrast on settings and other accent-backed screens. */
 :is(#preferences,#settings,#saved,#modeScreen,#coming,#packAll).card{color:var(--accent-ink)}
 :is(#preferences,#settings,#saved,#modeScreen,#coming,#packAll).card :is(h2,label,.muted,summary){color:var(--accent-ink)}
 #preferences .prefVisualGroup{color:var(--fg)}
@@ -925,3 +925,19 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #preferences .installSection a{color:var(--accent-ink);text-decoration:underline}
 #preferences .installSection,#preferences .installPlatforms>div{border-color:var(--accent-edge)}
 :is(#preferences,#settings).card .primary{color:var(--accent-ink);border-color:var(--accent-edge)}
+
+/* TEST Build 39 — saved order confirmation dialogs, matching Reset */
+#qsSavedConfirm{box-sizing:border-box;width:min(440px,calc(100% - 36px));max-height:calc(100dvh - 36px);overflow:auto;background:#141c2a;color:#f8fafc;border:1px solid #d97706;border-radius:16px;padding:22px;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+#qsSavedConfirm::backdrop{background:rgba(0,0,0,.76)}
+#qsSavedConfirm h2{display:flex;align-items:center;gap:12px;color:#fcd34d;margin:0 0 14px;font-size:20px}
+#qsSavedConfirm .qsSavedWarning{display:inline-grid;place-items:center;flex:none;width:40px;height:40px;border-radius:11px;background:rgba(217,119,6,.16);font-size:23px}
+#qsSavedConfirmName{display:block;overflow-wrap:anywhere;color:#fff}
+#qsSavedConfirmText{line-height:1.5;color:#dbe5f5}
+#qsSavedConfirm .qsSavedConfirmActions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:20px}
+#qsSavedConfirm button{border-radius:10px;padding:11px 15px;font-weight:700}
+#qsSavedConfirmCancel{background:transparent;color:#f8fafc;border:1px solid #64748b}
+#qsSavedConfirmAccept{background:#92400e;color:#fff;border:1px solid #f59e0b}
+#qsSavedConfirm[data-action="delete"]{border-color:#ef4444}
+#qsSavedConfirm[data-action="delete"] h2{color:#fda4a4}
+#qsSavedConfirm[data-action="delete"] .qsSavedWarning{background:rgba(220,38,38,.16)}
+#qsSavedConfirm[data-action="delete"] #qsSavedConfirmAccept{background:#b91c1c;border-color:#ef4444}
