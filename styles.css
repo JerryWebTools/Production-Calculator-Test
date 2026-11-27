@@ -784,12 +784,6 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 :root[data-quick-accent="yellow"] .quickHome,
 :root[data-quick-accent="yellow"] #quick .quickKeys button,
 :root[data-quick-accent="yellow"] #calc .twocards .card,
-:root[data-quick-accent="yellow"] #quickSeed .qsPanel,
-:root[data-quick-accent="yellow"] #quickSeed .qsPanel h2,
-:root[data-quick-accent="yellow"] #quickSeed .qsPanel .qsField,
-:root[data-quick-accent="yellow"] #quickSeed .qsPanel .qsUnitTitle,
-:root[data-quick-accent="yellow"] #quickSeed .qsPanel .qsExamples,
-:root[data-quick-accent="yellow"] #quickSeed .qsPanel .qsLb,
 :root[data-quick-accent="yellow"] #quickSeed .qsTotalCard,
 :root[data-quick-accent="yellow"] #quickSeed .qsSmallCard,
 :root[data-quick-accent="yellow"] #bulkCalc .qsPanel,
@@ -818,17 +812,7 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 :root[data-quick-accent="yellow"] #bulkCalc .qsUnitButton{color:#fff}
 
 /* Yellow contrast follow-up: Quick Seed remaining hard-coded pale text. */
-:root[data-quick-accent="yellow"] #quickSeed .qsUnitTitle,
-:root[data-quick-accent="yellow"] #quickSeed .qsMeaning,
-:root[data-quick-accent="yellow"] #quickSeed .qsOptional,
-:root[data-quick-accent="yellow"] #quickSeed .qsLb,
-:root[data-quick-accent="yellow"] #quickSeed .qsReset,
-:root[data-quick-accent="yellow"] #quickSeed .qsPackAllIntro,
-:root[data-quick-accent="yellow"] #quickSeed .qsPackAllStatus,
-:root[data-quick-accent="yellow"] #quickSeed .qsPackAllMini small,
-:root[data-quick-accent="yellow"] #quickSeed .qsPackAllMini span,
-:root[data-quick-accent="yellow"] #quickSeed .qsPackAllHero span{color:#111827}
-:root[data-quick-accent="yellow"] #quickSeed .qsReset{border-color:rgba(17,24,39,.6)}
+:root[data-quick-accent="yellow"] #quickSeed :is(.qsTotalCard,.qsSmallCard) :is(.qsMeaning,.qsLb){color:#111827}
 
 /* Yellow Quick Seed unit buttons: dark labels on golden-yellow inactive buttons. */
 :root[data-quick-accent="yellow"] #quickSeed .qsUnitButton:not(.qsUnitActive){color:#111827}
@@ -912,3 +896,17 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
  #quickSeed #qsBreakdown .detailrow{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:9px;font-size:12px}
  #quickSeed #qsBreakdown .detailrow>strong{font-size:12px;line-height:1.45}
 }
+
+/* TEST Build 36 — foreground follows the actual surface, not the selected accent. */
+#quickSeed .qsPanel{color:#f8fafc}
+#quickSeed .qsPanel :is(h2,.qsField,.qsUnitTitle){color:#f8fafc}
+#quickSeed .qsPanel :is(.qsExamples,.qsOptional,.qsPackAllIntro,.qsPackAllStatus,.qsPackAllMini small){color:#b8cbe4}
+#quickSeed .qsPanel .qsReset{color:#f8fafc;border-color:#64748b}
+#quickSeed .qsPanel .qsField input{color:#f8fafc}
+#quickSeed .qsPanel .qsField input::placeholder{color:#91a8c9;opacity:.75;font-weight:400}
+#quickSeed .qsPanel .qsChemNA{background:#0b172a;color:#b8cbe4;border-color:#364b69}
+#quickSeed .qsInfoCard .muted{color:#b8cbe4}
+#quickSeed .qsOperationButtons button:not(.qsOperationActive){background:#152033;color:#f8fafc;border-color:#364b69}
+#quickSeed .qsSavedActions .qsDeleteOrder{background:rgba(153,27,27,.3);color:#fecaca;border-color:#f87171}
+#quickSeed #qsResetConfirm .card{color:#f8fafc}
+#quickSeed #qsResetConfirm #qsConfirmTitle{color:#fda4a4}
