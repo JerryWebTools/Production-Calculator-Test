@@ -1,5 +1,5 @@
 # Production Calculator — Project Memory
-Updated: 2026-11-20
+Updated: 2026-11-26
 Status: Implementation authorized in TEST ONLY. Production must remain unchanged until explicit approval.
 Repositories: JerryWebTools/Production-Calculator-Test (TEST); JerryWebTools/Production-Calculator (PRODUCTION).
 Current TEST app uses F=2.2046 LB/KG. Preserve working line-specific math.
@@ -68,3 +68,19 @@ Current TEST app uses F=2.2046 LB/KG. Preserve working line-specific math.
 - 2026-11-21: User approved expanding Quick Seed Calculation Breakdown Order Details with Overpack, Chemical, Samples and optional Bag Tare; TEST Build 19 implemented, awaiting user visual verification. Formulas unchanged.
 
 - 2026-11-21: Quick Seed breakdown headings increased 14→17px in TEST, Build 20 What's New; awaiting user approval.
+
+## Quick Seed Calculator — checkpoint through TEST Build 35 (2026-11-26)
+- Build 35 is the last user-approved visual checkpoint in the conversation. TEST only; no production promotion authorized. Archived chats are not a substitute for this repository record.
+- Three operation modes: Treating Only, Treating & Packing (default), Packing Only. Treating Only disables chemical input and omits chemical/fill/tare details. Seed requirement always excludes chemical and bag tare. Packing Only supports untreated seed with chemical 0%.
+- Quick Seed uses exact 2.2046226218487757 LB/KG internally; do not replace other lines' existing F=2.2046 without explicit review. Build 35 displays 2.20462 with approximate-equals symbol in conversion explanations only.
+- KS/MS convert seeds via PC (seeds/LB); KG/LB direct. Base seed per EA + overpack = seed per EA; chemical percentage applies to seed plus overpack; fill includes chemical; gross adds tare. Total required seed = ceil(seed per EA × EA + samples), whole KG; show LB equivalent. Keep full precision internally.
+- Pack All available seed is measured BEFORE chemical. Reserve samples, floor remaining available seed / seed per EA, compare full EA with order, show remaining seed, seed used and total fill. Chemical changes fill, not available seed requirement. If available < samples, warn and show zero available for packing; if insufficient for one bag after samples, zero bags without that warning.
+- Regression case: 100 KS, PC 2500, 100 EA, overpack 1%, chemical 1%, samples 5 KG, tare .100 KG: net 18.144 KG/EA, seed+overpack 18.325, fill 18.508, gross 18.608, total seed required 1838 KG (raw 1837.513). Treating Only, Treating & Packing and Packing Only tested successfully.
+- Pack All regression tests passed: 1838 KG -> 100 EA, remaining .487 KG; 1800 -> 97 EA, remaining 17.462; 1900 -> 103 EA, remaining 7.511; 1900 with chemical 0% -> 103 EA, fill 1887.489 KG; 3 KG with samples 5 -> zero EA and warning; 20 KG with samples 5 -> zero EA, 15 KG remaining, no warning.
+- Auto Save draft key production-calculator-quick-seed-draft-v1. Home Screen iPhone PWA restored draft after full close; Safari opened separately and did not share that draft (Safari persistence itself not tested). Reset cancel preserves values; confirm clears draft and values, reopening does not restore old draft. Both tested and approved. Build 30 red warning dialog approved.
+- Build 31 Pack All short bilingual instruction and dynamic gray Example/Ejemplo placeholder using calculated total KG; user verified.
+- Build 32 Saved Orders separate from Line 3, operator-entered name or order number, open/delete, duplicate-name replacement confirmation, device-local storage key production-calculator-quick-seed-saved-orders-v1. Save fields, operation and unit; recalculate on open. Quick Calculator shortcut on right side of Results heading, where Reset previously was; Reset remains beside Enter Order Details. Back should return to Quick Seed without losing inputs. End-to-end save/open/delete and shortcut navigation not explicitly confirmed in conversation; test before promotion. Verify bilingual labels and theme behavior.
+- Build 33 grouped Calculation Breakdown and How Was This Calculated? together before Saved Orders; expandable matching cards with icons/subtitles. Build 34 unified black section backgrounds, subtle blue borders, blue inner details. Build 35 compact mobile breakdown columns and shorter displayed conversion factor; user approved appearance. Preserve consistent visual language across sections and existing settings; verify other accent/light themes before promotion. Build 34 style changes isolated in CSS block, Build 33 recoverable from Git history.
+- Spanish terminology: Net Seed = Semilla neta, Overpack = Sobrellenado, Fill Weight = Peso de llenado. Technical units KG/LB/KS/MS/PC/EA remain. Maintain complete EN/ES support; new saved-order and explanation labels still require explicit bilingual regression.
+- Every TEST release increments LOCAL_TEST_BUILD, RELEASE_KEY, bilingual releaseNotes, index.html build labels and asset cache-busters, version.json and sw.js cache name. Verify actual deployed build rather than assuming GitHub Pages has refreshed.
+- Next: continue user-directed incremental changes, verify pending functional and bilingual/theme tests, keep Bulk paused unless requested. Do not modify Production without explicit approval.
