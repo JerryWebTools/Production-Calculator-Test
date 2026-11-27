@@ -916,7 +916,7 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #standaloneGuide .guideNum{color:var(--accent-ink)}
 :root[data-quick-accent="yellow"] #quickSeed :is(.qsTotalCard,.qsSmallCard) :is(.qsMeaning,.qsLb){color:var(--accent-ink)}
 
-/* TEST Build 41 — shared contrast on settings and other accent-backed screens. */
+/* TEST Build 42 — shared contrast on settings and other accent-backed screens. */
 :is(#preferences,#settings,#saved,#modeScreen,#coming,#packAll).card{color:var(--accent-ink)}
 :is(#preferences,#settings,#saved,#modeScreen,#coming,#packAll).card :is(h2,label,.muted,summary){color:var(--accent-ink)}
 #preferences .prefVisualGroup{color:var(--fg)}
@@ -926,7 +926,7 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #preferences .installSection,#preferences .installPlatforms>div{border-color:var(--accent-edge)}
 :is(#preferences,#settings).card .primary{color:var(--accent-ink);border-color:var(--accent-edge)}
 
-/* TEST Build 41 — saved order confirmation dialogs, matching Reset */
+/* TEST Build 42 — saved order confirmation dialogs, matching Reset */
 #qsSavedConfirm{box-sizing:border-box;width:min(440px,calc(100% - 36px));max-height:calc(100dvh - 36px);overflow:auto;background:#141c2a;color:#f8fafc;border:1px solid #d97706;border-radius:16px;padding:22px;box-shadow:0 24px 80px rgba(0,0,0,.6)}
 #qsSavedConfirm::backdrop{background:rgba(0,0,0,.76)}
 #qsSavedConfirm h2{display:flex;align-items:center;gap:12px;color:#fcd34d;margin:0 0 14px;font-size:20px}
@@ -942,7 +942,7 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #qsSavedConfirm[data-action="delete"] .qsSavedWarning{background:rgba(220,38,38,.16)}
 #qsSavedConfirm[data-action="delete"] #qsSavedConfirmAccept{background:#b91c1c;border-color:#ef4444}
 
-/* TEST Build 41 — same calculator, modal presentation from order screens. */
+/* TEST Build 42 — same calculator, modal presentation from order screens. */
 #quickFloatDialog{box-sizing:border-box;width:min(430px,calc(100% - 24px));max-height:calc(100dvh - 24px);padding:0;border:1px solid var(--edge);border-radius:17px;background:var(--panel);color:var(--fg);overflow:auto;box-shadow:0 20px 70px rgba(0,0,0,.5)}
 #quickFloatDialog::backdrop{background:rgba(0,0,0,.48)}
 #quickFloatDialog #quick{width:100%;max-width:none;margin:0}
@@ -956,7 +956,7 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 :root[data-quick-accent="yellow"] #quick .quickKeys button:is([data-key="AC"],[data-key="⌫"],[data-key="%"]){color:#111827}
 #bulkQuickShortcut{color:var(--accent-ink);border-color:var(--accent-edge)}
 
-/* TEST Build 41 — nonmodal movable calculator and uniform keypad */
+/* TEST Build 42 — nonmodal movable calculator and uniform keypad */
 #quickFloatDialog{position:fixed;inset:auto;margin:0;z-index:1000;max-height:calc(100dvh - 16px)}
 #quickFloatDialog .quickToolbar{cursor:grab;touch-action:none;user-select:none}
 #quickFloatDialog .quickToolbar:active{cursor:grabbing}
@@ -966,3 +966,11 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #quick .quickKeys button:is([data-key="AC"],[data-key="⌫"],[data-key="%"],[data-key="÷"],[data-key="×"],[data-key="−"],[data-key="+"],[data-key="="]){background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 :root[data-quick-accent="yellow"] #quick .quickKeys button[data-key]{color:var(--fg)}
 :root[data-quick-accent="yellow"] #quick .quickKeys button:is([data-key="AC"],[data-key="⌫"],[data-key="%"],[data-key="÷"],[data-key="×"],[data-key="−"],[data-key="+"],[data-key="="]){background:var(--accent);border-color:var(--accent);color:#111827}
+
+/* TEST Build 42 — collapse floating calculator without resetting its state */
+#quickFloatDialog #quickMinimize{order:1;min-width:44px;font-size:23px}
+#quickFloatDialog.quickMinimized{width:min(340px,calc(100% - 16px))}
+#quickFloatDialog.quickMinimized #quick .quickMain{min-height:0;height:auto;padding:8px}
+#quickFloatDialog.quickMinimized #quick .quickMain > :not(.quickToolbar){display:none!important}
+#quickFloatDialog.quickMinimized #quick .quickToolbar{min-height:44px}
+#quickMinimize[hidden]{display:none!important}
