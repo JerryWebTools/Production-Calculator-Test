@@ -916,7 +916,7 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #standaloneGuide .guideNum{color:var(--accent-ink)}
 :root[data-quick-accent="yellow"] #quickSeed :is(.qsTotalCard,.qsSmallCard) :is(.qsMeaning,.qsLb){color:var(--accent-ink)}
 
-/* TEST Build 39 — shared contrast on settings and other accent-backed screens. */
+/* TEST Build 40 — shared contrast on settings and other accent-backed screens. */
 :is(#preferences,#settings,#saved,#modeScreen,#coming,#packAll).card{color:var(--accent-ink)}
 :is(#preferences,#settings,#saved,#modeScreen,#coming,#packAll).card :is(h2,label,.muted,summary){color:var(--accent-ink)}
 #preferences .prefVisualGroup{color:var(--fg)}
@@ -926,7 +926,7 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #preferences .installSection,#preferences .installPlatforms>div{border-color:var(--accent-edge)}
 :is(#preferences,#settings).card .primary{color:var(--accent-ink);border-color:var(--accent-edge)}
 
-/* TEST Build 39 — saved order confirmation dialogs, matching Reset */
+/* TEST Build 40 — saved order confirmation dialogs, matching Reset */
 #qsSavedConfirm{box-sizing:border-box;width:min(440px,calc(100% - 36px));max-height:calc(100dvh - 36px);overflow:auto;background:#141c2a;color:#f8fafc;border:1px solid #d97706;border-radius:16px;padding:22px;box-shadow:0 24px 80px rgba(0,0,0,.6)}
 #qsSavedConfirm::backdrop{background:rgba(0,0,0,.76)}
 #qsSavedConfirm h2{display:flex;align-items:center;gap:12px;color:#fcd34d;margin:0 0 14px;font-size:20px}
@@ -941,3 +941,17 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #qsSavedConfirm[data-action="delete"] h2{color:#fda4a4}
 #qsSavedConfirm[data-action="delete"] .qsSavedWarning{background:rgba(220,38,38,.16)}
 #qsSavedConfirm[data-action="delete"] #qsSavedConfirmAccept{background:#b91c1c;border-color:#ef4444}
+
+/* TEST Build 40 — same calculator, modal presentation from order screens. */
+#quickFloatDialog{box-sizing:border-box;width:min(430px,calc(100% - 24px));max-height:calc(100dvh - 24px);padding:0;border:1px solid var(--edge);border-radius:17px;background:var(--panel);color:var(--fg);overflow:auto;box-shadow:0 20px 70px rgba(0,0,0,.5)}
+#quickFloatDialog::backdrop{background:rgba(0,0,0,.48)}
+#quickFloatDialog #quick{width:100%;max-width:none;margin:0}
+#quickFloatDialog #quick .quickMain{margin:0;border:0;padding:12px;border-radius:16px}
+#quickFloatDialog #quick .quickToolbar{justify-content:space-between}
+#quickFloatDialog #quick .quickToolbar h2{flex:1}
+#quickFloatDialog #quickExit{order:2;font-size:25px;min-width:44px}
+#quickFloatDialog #quick .quickKeys button{height:clamp(40px,7.5dvh,62px)}
+#quickFloatDialog #quick .calcDisplay{min-height:65px}
+#quick .quickKeys button:is([data-key="AC"],[data-key="⌫"],[data-key="%"]){background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+:root[data-quick-accent="yellow"] #quick .quickKeys button:is([data-key="AC"],[data-key="⌫"],[data-key="%"]){color:#111827}
+#bulkQuickShortcut{color:var(--accent-ink);border-color:var(--accent-edge)}
