@@ -10,13 +10,13 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 
 /* v2.3 visual refinement: accent-colored boxes throughout production lines. */
 #calc .card, #modeScreen.card, #settings.card, #preferences.card, #saved.card, #coming.card, #packAll.card,
-#calc .twocards .card {background:var(--accent);border-color:var(--accent);color:#fff}
+#calc .twocards .card {background:var(--accent);border-color:var(--accent);color:var(--accent-ink,#fff)}
 #calc .card h2,#calc .card strong,#calc .card .number,#calc .card .huge,
 #calc .card .muted,#calc .card label,#calc .card summary,#calc .card .tiny,
 #modeScreen.card h2,#settings.card h2,#preferences.card h2,#saved.card h2,
 #settings.card label,#preferences.card label,#settings.card .muted,#preferences.card .muted,
 #saved.card .muted,#saved.card summary,#packAll.card .muted,#packAll.card label,
-#calc .card .detailrow,#calc .card .detailrow strong {color:#fff}
+#calc .card .detailrow,#calc .card .detailrow strong {color:var(--accent-ink,#fff)}
 #calc .card input,#calc .card select,#settings.card input,#settings.card select,
 #preferences.card select,#packAll.card input {background:var(--input);color:var(--fg);border-color:var(--edge)}
 #calc .card .secondary,#settings.card .secondary,#preferences.card .secondary,#saved.card .secondary {background:var(--panel);color:var(--fg);border-color:var(--edge)}
@@ -915,3 +915,13 @@ body{background:var(--bg);color:var(--fg)}.card{background:var(--panel);border-c
 #calc .card #standaloneGuide summary{background:var(--panel);color:var(--fg)}
 #standaloneGuide .guideNum{color:var(--accent-ink)}
 :root[data-quick-accent="yellow"] #quickSeed :is(.qsTotalCard,.qsSmallCard) :is(.qsMeaning,.qsLb){color:var(--accent-ink)}
+
+/* TEST Build 38 — shared contrast on settings and other accent-backed screens. */
+:is(#preferences,#settings,#saved,#modeScreen,#coming,#packAll).card{color:var(--accent-ink)}
+:is(#preferences,#settings,#saved,#modeScreen,#coming,#packAll).card :is(h2,label,.muted,summary){color:var(--accent-ink)}
+#preferences .prefVisualGroup{color:var(--fg)}
+#preferences .prefVisualGroup :is(h3,.muted,label){color:var(--fg)}
+#preferences .prefVisualGroup .prefThemeChoice,#preferences .prefVisualGroup .prefAccentChoice{color:var(--fg)}
+#preferences .installSection a{color:var(--accent-ink);text-decoration:underline}
+#preferences .installSection,#preferences .installPlatforms>div{border-color:var(--accent-edge)}
+:is(#preferences,#settings).card .primary{color:var(--accent-ink);border-color:var(--accent-edge)}
